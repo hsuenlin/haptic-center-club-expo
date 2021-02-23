@@ -1,3 +1,7 @@
+ProjectSettings/*
+Packages/*
+InitCodeMarker
+
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
