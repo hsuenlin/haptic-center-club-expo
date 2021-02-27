@@ -5,9 +5,11 @@ using DG.Tweening;
 
 public class TargetManager : MonoBehaviour
 {
-    public int[] shootingSequence = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1 };
+    public int[] targetSequence = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1 };
     public float occurrenceFrequency = 2.0f;
-    public float airTimeRatio = 0.5f;
+    public float risingTime = 1.0f;
+    public float airTime = 0.5f;
+    public float dashingTime = 5.0f;
     public float maxHeight = 1.5f;
     public float minHeight = -0.1f;
     public GameObject targetPrefab;
@@ -15,9 +17,13 @@ public class TargetManager : MonoBehaviour
     public AnimationCurve targetCurve;
 
     public Transform[] targetGenerators;
+
+    public Queue<GameObject> dashingQueue;
+    public Queue<bool> shootingQueue;
     
     private int shootingIndex = 0;
-    private int shootingCount = 0;
+    private int risingCount = 0;
+    private int dashReady = 0;
 
     private enum TargetState {
         Idle,
@@ -31,6 +37,7 @@ public class TargetManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dashingQueue = new Queue<GameObject>();
         List<Transform> targetGeneratorsList = new List<Transform>();
         foreach(Transform child in gameObject.transform) {
             targetGeneratorsList.Add(child);
@@ -40,13 +47,16 @@ public class TargetManager : MonoBehaviour
     
     private GameObject target;
 
-    TweenCallback OnShootingComplete(GameObject target) {
-        shootingCount--;
-        Destroy(target);
-        if(shootingCount == 0) {
+    void OnRisingComplete() {
+        risingCount--;
+        dashReady++;
+        if(risingCount == 0) {
             targetState = TargetState.Ready;
         }
-        return null;
+    }
+
+    void OnTargetHitOnPlayer(GameObject target) {
+        Debug.Log("HP--");
     }
 
     // Update is called once per frame
@@ -59,39 +69,44 @@ public class TargetManager : MonoBehaviour
         }
         if (targetState == TargetState.Ready)
         {
-            if(shootingIndex < shootingSequence.Length) {
+            if(shootingIndex < targetSequence.Length) {
                 targetState = TargetState.OnShoot;
             }
             else {
-                shootingIndex %= shootingSequence.Length;
+                shootingIndex %= targetSequence.Length;
                 targetState = TargetState.Idle;
             }
         }
         if(targetState == TargetState.OnShoot) {
             
             for(int i = 0; i < targetGenerators.Length; i++) {
-                if(shootingSequence[shootingIndex + i] == 1) {
-                    shootingCount++;
+                if(targetSequence[shootingIndex + i] == 1) {
+                    risingCount++;
                     // Instantiate target
                     target = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
                     target.transform.parent = targetGenerators[i];
                     target.transform.localPosition = new Vector3(0, minHeight, 0);
+                    dashingQueue.Enqueue(target);
                     // Tween
-                    float movingTime = occurrenceFrequency * ((1 - airTimeRatio) / 2);
-                    float airTime = occurrenceFrequency * airTimeRatio;
-                    int test;
-                    Sequence movingSequence = DOTween.Sequence();
-                    movingSequence.Append(target.transform.DOLocalMoveY(maxHeight, movingTime))
+                    Sequence risingSequence = DOTween.Sequence();
+                    risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
                         .SetEase(targetCurve)
                         .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); })
                         .AppendInterval(airTime)
-                        .Append(target.transform.DOLocalMoveY(minHeight, movingTime))
-                        .AppendCallback(() => {OnShootingComplete(target);});
-                    movingSequence.Play();
-                } 
+                        .AppendCallback(() => {OnRisingComplete();});
+                    risingSequence.Play();
+                }
             }
             shootingIndex += targetGenerators.Length;
             targetState = TargetState.Shooting;
+        }
+        while(dashReady > 0 && dashingQueue.Count > 0) {
+            dashReady--;
+            GameObject target = dashingQueue.Dequeue();
+            Sequence dashingSequence = DOTween.Sequence();
+            dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
+                .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); });
+            dashingSequence.Play();
         }
     }
 }
