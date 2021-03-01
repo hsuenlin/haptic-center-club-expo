@@ -26,7 +26,7 @@ public class ShootingScript : MonoBehaviour
         if(timer < gunColdDownTime) {
             timer += Time.deltaTime;
         }
-        if(Input.GetKeyDown(KeyCode.Space)) {
+        if(Input.GetKeyDown(KeyCode.X)) {
             if(timer >= gunColdDownTime) {
                 // Fire
                 StartCoroutine(ShotEffect());

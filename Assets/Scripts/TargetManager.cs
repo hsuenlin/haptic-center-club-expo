@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class TargetManager : MonoBehaviour
 {
-    public int[] targetSequence = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1 };
+    public int[] shootingOrder = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1 };
     public float occurrenceFrequency = 2.0f;
     public float risingTime = 1.0f;
     public float airTime = 0.5f;
@@ -17,96 +17,139 @@ public class TargetManager : MonoBehaviour
     public AnimationCurve targetCurve;
 
     public Transform[] targetGenerators;
-
-    public Queue<GameObject> dashingQueue;
-    public Queue<bool> shootingQueue;
+    public List<float> targetColorsList;
+    public float[] targetColors;
     
     private int shootingIndex = 0;
     private int risingCount = 0;
-    private int dashReady = 0;
 
-    private enum TargetState {
+    private GameObject targetDemo;
+    private GameObject target;
+    
+
+    public enum ShootingState {
         Idle,
+        Intro,
+        IntroEnd,
         Ready,
         OnShoot,
-        Shooting,  
+        Shooting,
     };
 
-    private TargetState targetState = TargetState.Idle;
+    public ShootingState state = ShootingState.Idle;
 
     // Start is called before the first frame update
     void Start()
     {
-        dashingQueue = new Queue<GameObject>();
+        targetColorsList = new List<float>();
         List<Transform> targetGeneratorsList = new List<Transform>();
         foreach(Transform child in gameObject.transform) {
             targetGeneratorsList.Add(child);
         }
         targetGenerators = targetGeneratorsList.ToArray();
     }
-    
-    private GameObject target;
 
-    void OnRisingComplete() {
+    void OnRisingComplete(GameObject target) {
         risingCount--;
-        dashReady++;
+        TargetDash(target);
         if(risingCount == 0) {
-            targetState = TargetState.Ready;
+            state = ShootingState.Ready;
         }
     }
 
-    void OnTargetHitOnPlayer(GameObject target) {
-        Debug.Log("HP--");
+    void ShootTarget(GameObject target) {
+        Sequence risingSequence = DOTween.Sequence();
+        risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
+            .SetEase(targetCurve)
+            .OnUpdate(() => {target.transform.LookAt(Camera.main.transform);})
+            .AppendInterval(airTime)
+            .AppendCallback(() => {OnRisingComplete(target);});
+        risingSequence.Play();
+    }
+
+    void TargetDash(GameObject target) {
+        Sequence dashingSequence = DOTween.Sequence();
+        dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
+            .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); });
+        dashingSequence.Play();
+    }
+
+    void GenerateTargetDemo() {
+        targetDemo = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
+        targetDemo.transform.parent = Camera.main.transform;
+        targetDemo.transform.localPosition = new Vector3(0, 0, 5);
+        targetDemo.transform.LookAt(Camera.main.transform);
+
+        float hue = Random.Range(0f, 1f);
+        targetColorsList.Add(hue);
+
+        Renderer renderer = targetDemo.transform.GetChild(1).GetComponent<Renderer>();
+        renderer.material.color = Color.HSVToRGB(hue, 0.6f, 1f);
     }
 
     // Update is called once per frame
     void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.S)) {
-            if(targetState == TargetState.Idle) {
-                targetState = TargetState.Ready;
-            }   
+    {   
+        
+        if(Input.GetKeyDown(KeyCode.DownArrow)) {
+            if(state == ShootingState.Idle) {
+                state = ShootingState.Intro;
+                GenerateTargetDemo();
+            }
+            else if(state == ShootingState.IntroEnd) {
+                state = ShootingState.Ready;
+            }
         }
-        if (targetState == TargetState.Ready)
+        if(state == ShootingState.Intro) {
+            // Choose color
+            if(Input.GetKeyDown(KeyCode.RightArrow)) {
+                if(targetDemo != null) {
+                    Destroy(targetDemo);
+                }
+                GenerateTargetDemo();
+            }
+            else if(Input.GetKeyDown(KeyCode.Space)) {
+                if(targetDemo != null) {
+                    Destroy(targetDemo);
+                }
+                targetColors = targetColorsList.ToArray();
+                state = ShootingState.IntroEnd;
+            }
+        }
+        if (state == ShootingState.Ready)
         {
-            if(shootingIndex < targetSequence.Length) {
-                targetState = TargetState.OnShoot;
+            if(shootingIndex < shootingOrder.Length) {
+                state = ShootingState.OnShoot;
             }
             else {
-                shootingIndex %= targetSequence.Length;
-                targetState = TargetState.Idle;
+                shootingIndex %= shootingOrder.Length;
+                state = ShootingState.IntroEnd;
             }
         }
-        if(targetState == TargetState.OnShoot) {
+        if(state == ShootingState.OnShoot) {
             
             for(int i = 0; i < targetGenerators.Length; i++) {
-                if(targetSequence[shootingIndex + i] == 1) {
+                Debug.Log(shootingIndex + i);
+                if(shootingOrder[shootingIndex + i] == 1) {
                     risingCount++;
                     // Instantiate target
                     target = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
+                    
+                    // Set target position
                     target.transform.parent = targetGenerators[i];
                     target.transform.localPosition = new Vector3(0, minHeight, 0);
-                    dashingQueue.Enqueue(target);
-                    // Tween
-                    Sequence risingSequence = DOTween.Sequence();
-                    risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
-                        .SetEase(targetCurve)
-                        .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); })
-                        .AppendInterval(airTime)
-                        .AppendCallback(() => {OnRisingComplete();});
-                    risingSequence.Play();
+                    
+                    //Set target color
+                    Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
+                    int colorIndex = (shootingIndex + i) % targetColors.Length;
+                    renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
+                    
+                    // Shoot target
+                    ShootTarget(target);
                 }
             }
             shootingIndex += targetGenerators.Length;
-            targetState = TargetState.Shooting;
-        }
-        while(dashReady > 0 && dashingQueue.Count > 0) {
-            dashReady--;
-            GameObject target = dashingQueue.Dequeue();
-            Sequence dashingSequence = DOTween.Sequence();
-            dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
-                .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); });
-            dashingSequence.Play();
+            state = ShootingState.Shooting;
         }
     }
 }
