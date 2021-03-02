@@ -13,7 +13,7 @@ public class Client : MonoBehaviour
     //public string multicastAddress = "224.0.0.26";
     public string ip = "127.0.0.1";
     public int port = 26950;
-    public int myId = 0;
+    public int myId = 1;
     public TCP tcp;
     public UDP udp;
 
@@ -309,7 +309,7 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            { (int)ServerCommand.Welcome, ClientHandle.Welcome },
+            { (int)ServerCommand.Welcome, ClientHandle.WelcomeHandle },
             { (int)ServerCommand.SendTrackerInfo, ClientHandle.TrackerInfoHandle },
             { (int)ServerCommand.SendDeviceStatus, ClientHandle.DeviceStatusHandle} ,
             { (int)ServerCommand.SendRequestIsSuccess, ClientHandle.RequestResultHandle },
