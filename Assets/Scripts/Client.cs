@@ -309,10 +309,14 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            { (int)ServerPackets.welcome, ClientHandle.Welcome },
-            { (int)ServerPackets.TrackerTransform, ClientHandle.TrackerTransform},
-            { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
-
+            { (int)ServerCommand.Welcome, ClientHandle.Welcome },
+            { (int)ServerCommand.SendTrackerInfo, ClientHandle.TrackerInfoHandle },
+            { (int)ServerCommand.SendDeviceStatus, ClientHandle.DeviceStatusHandle} ,
+            { (int)ServerCommand.SendRequestIsSuccess, ClientHandle.RequestResultHandle },
+            { (int)ServerCommand.SendDeviceReady, ClientHandle.DeviceReadyHandle },
+            { (int)ServerCommand.SendControllerTriggerPress, ClientHandle.TriggerHandle },
+            { (int)ServerCommand.SendPanelInfo, ClientHandle.PanelInfoHandle },
+            { (int)ServerCommand.PlayerDisconnected, ClientHandle.PlayerDisconnected },
         };
 
 

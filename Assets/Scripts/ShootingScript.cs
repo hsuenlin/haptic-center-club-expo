@@ -12,6 +12,8 @@ public class ShootingScript : MonoBehaviour
     private LineRenderer trajectory;
     private Vector3 cameraCenter;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
+
+    public bool isTrigger = false;
     
     void Start()
     {
@@ -26,7 +28,7 @@ public class ShootingScript : MonoBehaviour
         if(timer < gunColdDownTime) {
             timer += Time.deltaTime;
         }
-        if(Input.GetKeyDown(KeyCode.X)) {
+        if(Input.GetKeyDown(KeyCode.X) || isTrigger) {
             if(timer >= gunColdDownTime) {
                 // Fire
                 StartCoroutine(ShotEffect());
@@ -39,6 +41,7 @@ public class ShootingScript : MonoBehaviour
                     }
                 }
             }
+            isTrigger = false;
         }
     }
     private IEnumerator ShotEffect()

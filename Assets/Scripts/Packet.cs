@@ -7,19 +7,27 @@ using UnityEngine;
 
 
 /// <summary>Sent from server to client.</summary>
-public enum ServerPackets
+public enum ServerCommand
 {
-    welcome = 1,
-    TrackerTransform,
-    playerDisconnected,
+    Welcome = 1,
+    SendTrackerInfo = 2,
+    SendDeviceStatus = 3,
+    SendRequestIsSuccess = 4,
+    SendDeviceReady = 5,
+    SendControllerTriggerPress = 60,
+    SendPanelInfo = 50,
+    PlayerDisconnected = 100,
 
 }
 
 /// <summary>Sent from client to server.</summary>
-public enum ClientPackets
+public enum ClientCommand
 {
-    welcomeReceived = 1,
-
+    SendWelcomeBack = 1,
+    NotifyGameStateChange = 2,
+    NotifyStageStateChange = 3,
+    RequestDevicesStatus = 4,
+    RequestDevice = 5
 }
 
 public class Packet : IDisposable
