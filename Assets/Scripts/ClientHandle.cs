@@ -1,11 +1,51 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.Events;
+
+public class Tracker {
+    public Tracker() {
+        pos = Vector3.zero;
+        rot = Quaternion.identity;
+    }
+    public Tracker (Vector3 _pos, Quaternion _rot) {
+        pos = _pos;
+        rot = _rot;
+    }
+    public Vector3 pos;
+    public Quaternion rot;
+}
+public class Panel {
+    public Panel() {
+        sliders = new int[4];
+    }
+    public int red, blue;
+    public int[] sliders;
+    public int x, y;
+    public int deg;
+}
 
 public class ClientHandle : MonoBehaviour
 {
     public static ClientHandle instance;
+
+    /* Server Data */
+    public static Tracker[] trackers;
+    public static Panel panel;
+    public static bool[] deviceStatusArray;
+    public static bool deviceReady;
+    public static bool requestResult;
+
+    /* Actions */
+    public static Action OnTrackerInfoReady;
+    public static Action OnDeviceStatusReady;
+    public static Action OnRequestResultReady;
+    public static Action OnPanelInfoReady;
+    public static Action OnTriggered;
+    public static Action OnDeviceReady;
+
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -15,16 +55,20 @@ public class ClientHandle : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+
+        trackers = new Tracker[14];
+        panel = new Panel();
+        deviceStatusArray = new bool[5];
     }
     
+    // TODO: Move the following part to tennis club.
+    //private static Vector3 refPosition;
+    //private static bool isFirstPosition = true;
 
-    private static Vector3 refPosition;
-    private static bool isFirstPosition = true;
+    //public Camera player;
+    //public Transform gun;
 
-    public Camera player;
-    public Transform gun;
-
-    private static int cnt = 0;
+    //private static int cnt = 0;
 
     public static void WelcomeHandle(Packet _packet)
     {
@@ -37,19 +81,36 @@ public class ClientHandle : MonoBehaviour
     }
 
     public static void TrackerInfoHandle(Packet _packet) {
-
+        Dictionary<TrackerType, int> typeToIndex = new Dictionary<TrackerType, int>()
+        {
+            {TrackerType.HC_Origin, 0},
+            {TrackerType.Player1, 1},
+            {TrackerType.Player2, 2},
+            {TrackerType.Player3, 3},
+            {TrackerType.Shifty, 4},
+            {TrackerType.Shifty_Cartridge, 5},
+            {TrackerType.Panel, 6},
+            {TrackerType.Vive_Controller_Left, 7}, 
+            {TrackerType.Vive_Controller_Right, 8},
+            {TrackerType.Controller_Cartridge, 9},
+            {TrackerType.Gun, 10}, 
+            {TrackerType.Gun_Cartridge, 11},
+            {TrackerType.Shield, 12}, 
+            {TrackerType.Shield_Cartridge, 13}
+        };
         int trackerNum = _packet.ReadInt();
-        //Debug.Log($"trackerNum = {trackerNum}");
+        
         for (int i = 0; i < trackerNum; ++i)
         {
             TrackerType type = (TrackerType)_packet.ReadInt();
             Vector3 pos = _packet.ReadVector3();
             Quaternion rot = _packet.ReadQuaternion();
+            trackers[typeToIndex[type]] = new Tracker(pos, rot);
             
+            // TODO: Move following parts to tennis club.
+            /*
             if (type == TrackerType.HC_Origin)
             {
-                // Pass
-                //Debug.Log("Get origin");
             }
             else if (type == TrackerType.Player1) {
                 // Camera
@@ -74,31 +135,46 @@ public class ClientHandle : MonoBehaviour
                     instance.gun.rotation = rot;
                 }
             }
+            */
         }
+        OnTrackerInfoReady();
     }
-
     public static void DeviceStatusHandle(Packet _packet) {
-        
+        // Shifty, Shiled, Gun, Controller, Panel
+        // TODO: Inform game manager.
+        for(int i = 0; i < 5; ++i) {
+            deviceStatusArray[i] = (_packet.ReadInt() == 1);
+        }
+        OnDeviceStatusReady();
     }
 
     public static void RequestResultHandle(Packet _packet) {
-
+        requestResult = (_packet.ReadInt() == 1);
+        OnRequestResultReady();
     }
 
     public static void DeviceReadyHandle(Packet _packet) {
-
+        deviceReady = true;
+        OnDeviceReady();
     }
 
     public static void TriggerHandle(Packet _packet)
     {
-        // Trigger
-        cnt++;
-        Debug.Log($"射 {cnt}");
-        ShootingScript ss = instance.player.GetComponent<ShootingScript>();
-        ss.isTrigger = true;
+        // TODO: Notify gun
+        OnTriggered();
     }
     public static void PanelInfoHandle(Packet _packet) {
-        
+        // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
+        panel.red = _packet.ReadInt();
+        panel.blue = _packet.ReadInt();
+        panel.sliders[0] = _packet.ReadInt();
+        panel.sliders[1] = _packet.ReadInt();
+        panel.sliders[2] = _packet.ReadInt();
+        panel.sliders[3] = _packet.ReadInt();
+        panel.x = _packet.ReadInt();
+        panel.y = _packet.ReadInt();
+        panel.deg = _packet.ReadInt();
+        OnPanelInfoReady();
     }
     public static void PlayerDisconnected(Packet _packet)
     {
