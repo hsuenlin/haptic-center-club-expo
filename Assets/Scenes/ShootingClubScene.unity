@@ -430,8 +430,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 588176285}
+  - component: {fileID: 588176287}
+  - component: {fileID: 588176286}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -451,6 +453,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &588176286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588176284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61013449c325f4327a5a950a72cf79df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  muzzle: {fileID: 258125003}
+  gunColdDownTime: 0.25
+  shootingRange: 100
+--- !u!114 &588176287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588176284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d9974acf03b0441497bf0ba5a38c1ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &765737781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,8 +1111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9344f05d2e0fe41ebbc39e5b8fda0e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 765737783}
-  gun: {fileID: 1750699554}
 --- !u!1 &1685563259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,7 +1217,6 @@ GameObject:
   - component: {fileID: 1750699557}
   - component: {fileID: 1750699556}
   - component: {fileID: 1750699555}
-  - component: {fileID: 1750699558}
   - component: {fileID: 1750699559}
   m_Layer: 0
   m_Name: Cube
@@ -1273,22 +1299,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1750699553}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1750699558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750699553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61013449c325f4327a5a950a72cf79df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  muzzle: {fileID: 258125003}
-  gunColdDownTime: 0.25
-  shootingRange: 100
-  isTrigger: 0
 --- !u!120 &1750699559
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -38,13 +38,7 @@ public class ClientHandle : MonoBehaviour
     public static bool deviceReady;
     public static bool requestResult;
 
-    /* Actions */
-    public static Action OnTrackerInfoReady;
-    public static Action OnDeviceStatusReady;
-    public static Action OnRequestResultReady;
-    public static Action OnPanelInfoReady;
-    public static Action OnTriggered;
-    public static Action OnDeviceReady;
+
 
     private void Awake() {
         if (instance == null) {

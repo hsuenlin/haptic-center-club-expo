@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootingScript : MonoBehaviour
+public class ShootingClubManager : MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform muzzle;
@@ -12,14 +12,28 @@ public class ShootingScript : MonoBehaviour
     private LineRenderer trajectory;
     private Vector3 cameraCenter;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
-
-    public bool isTrigger = false;
+    
+    public void TriggerGun() {
+        if(timer >= gunColdDownTime) {
+            StartCoroutine(ShotEffect());
+            RaycastHit hit;
+            if(Physics.Raycast(cameraCenter, Camera.main.transform.forward, out hit, shootingRange)) {
+                trajectory.SetPosition(0, muzzle.position);
+                trajectory.SetPosition(1, hit.point);
+                if(hit.collider.gameObject.tag == "Target") {
+                    Destroy(hit.collider.gameObject);
+                }
+            }
+        }
+    }
     
     void Start()
     {
         cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         trajectory = GetComponent<LineRenderer>();
         timer = gunColdDownTime + 1;
+
+        ClientHandle.OnTriggered += TriggerGun;
     }
 
     // Update is called once per frame
@@ -27,21 +41,6 @@ public class ShootingScript : MonoBehaviour
     {
         if(timer < gunColdDownTime) {
             timer += Time.deltaTime;
-        }
-        if(Input.GetKeyDown(KeyCode.X) || isTrigger) {
-            if(timer >= gunColdDownTime) {
-                // Fire
-                StartCoroutine(ShotEffect());
-                RaycastHit hit;
-                if(Physics.Raycast(cameraCenter, Camera.main.transform.forward, out hit, shootingRange)) {
-                    trajectory.SetPosition(0, muzzle.position);
-                    trajectory.SetPosition(1, hit.point);
-                    if(hit.collider.gameObject.tag == "Target") {
-                        Destroy(hit.collider.gameObject);
-                    }
-                }
-            }
-            isTrigger = false;
         }
     }
     private IEnumerator ShotEffect()
