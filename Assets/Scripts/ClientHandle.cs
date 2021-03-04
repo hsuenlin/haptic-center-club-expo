@@ -32,13 +32,11 @@ public class ClientHandle : MonoBehaviour
     public static ClientHandle instance;
 
     /* Server Data */
-    public static Tracker[] trackers;
-    public static Panel panel;
-    public static bool[] deviceStatusArray;
-    public static bool deviceReady;
-    public static bool requestResult;
-
-
+    public Tracker[] trackers;
+    public Panel panel;
+    public bool[] deviceStatusArray;
+    public bool deviceReady;
+    public bool requestResult;
 
     private void Awake() {
         if (instance == null) {
@@ -64,7 +62,7 @@ public class ClientHandle : MonoBehaviour
 
     //private static int cnt = 0;
 
-    public static void WelcomeHandle(Packet _packet)
+    public void WelcomeHandle(Packet _packet)
     {
         string _msg = _packet.ReadString();
         Debug.Log($"Welcome message from server: {_msg}");
@@ -74,7 +72,7 @@ public class ClientHandle : MonoBehaviour
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
-    public static void TrackerInfoHandle(Packet _packet) {
+    public void TrackerInfoHandle(Packet _packet) {
         Dictionary<TrackerType, int> typeToIndex = new Dictionary<TrackerType, int>()
         {
             {TrackerType.HC_Origin, 0},
@@ -131,33 +129,33 @@ public class ClientHandle : MonoBehaviour
             }
             */
         }
-        GameManager.OnTrackerInfoReady();
+        GameManager.instance.OnTrackerInfoReady();
     }
-    public static void DeviceStatusHandle(Packet _packet) {
+    public void DeviceStatusHandle(Packet _packet) {
         // Shifty, Shiled, Gun, Controller, Panel
         // TODO: Inform game manager.
         for(int i = 0; i < 5; ++i) {
             deviceStatusArray[i] = (_packet.ReadInt() == 1);
         }
-        GameManager.OnDeviceStatusReady();
+        GameManager.instance.OnDeviceStatusReady();
     }
 
-    public static void RequestResultHandle(Packet _packet) {
+    public void RequestResultHandle(Packet _packet) {
         requestResult = (_packet.ReadInt() == 1);
-        GameManager.OnRequestResultReady();
+        GameManager.instance.OnRequestResultReady();
     }
 
-    public static void DeviceReadyHandle(Packet _packet) {
+    public void DeviceReadyHandle(Packet _packet) {
         deviceReady = true;
-        GameManager.OnDeviceReady();
+        GameManager.instance.OnDeviceReady();
     }
 
-    public static void TriggerHandle(Packet _packet)
+    public void TriggerHandle(Packet _packet)
     {
         // TODO: Notify gun
-        GameManager.OnTriggered();
+        GameManager.instance.OnTriggered();
     }
-    public static void PanelInfoHandle(Packet _packet) {
+    public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
         panel.red = _packet.ReadInt();
         panel.blue = _packet.ReadInt();
@@ -168,9 +166,9 @@ public class ClientHandle : MonoBehaviour
         panel.x = _packet.ReadInt();
         panel.y = _packet.ReadInt();
         panel.deg = _packet.ReadInt();
-        GameManager.OnPanelInfoReady();
+        GameManager.instance.OnPanelInfoReady();
     }
-    public static void PlayerDisconnected(Packet _packet)
+    public void PlayerDisconnected(Packet _packet)
     {
         int _id = _packet.ReadInt();
     }

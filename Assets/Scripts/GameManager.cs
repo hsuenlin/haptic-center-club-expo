@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 {
 
     /* Singleton */
-    public GameManager instance;
+    public static GameManager instance;
 
     /* Client State */
     public SceneState sceneState;
@@ -88,17 +88,18 @@ public class GameManager : MonoBehaviour
     public ServerStageState serverStageState;
     
     /* Actions */
-    public static Action OnTrackerInfoReady;
-    public static Action OnDeviceStatusReady;
-    public static Action OnRequestResultReady;
-    public static Action OnPanelInfoReady;
-    public static Action OnTriggered;
-    public static Action OnDeviceReady;
+    public Action OnTrackerInfoReady;
+    public Action OnDeviceStatusReady;
+    public Action OnRequestResultReady;
+    public Action OnPanelInfoReady;
+    public Action OnTriggered;
+    public Action OnDeviceReady;
 
-    /* Origins */
-    public Transform shootingClubOrigin;
-    public Transform tennisClubOrigin;
-    public Transform musicGameClubOrigin;
+    /* Roots */
+    public Transform arenaRoot;
+    public Transform shootingClubRoot;
+    public Transform tennisClubRoot;
+    public Transform musicGameClubRoot;
 
     /* Scene Managers */
     public GameObject arenaManager;
@@ -107,6 +108,7 @@ public class GameManager : MonoBehaviour
     /* Init and Exit Functions */
     private Dictionary<SceneState, Action> inits;
     private Dictionary<SceneState, Action> exits;
+    private Dictionary<SceneState, Transform> roots;
     
     // Start is called before the first frame update
     void Awake() {
@@ -136,24 +138,38 @@ public class GameManager : MonoBehaviour
             {SceneState.MUSICGAME_CLUB, () => ExitMusicGameClub() }
         };
 
+        roots = new Dictionary<SceneState, Transform>() {
+            {SceneState.ARENA, arenaRoot},
+            {SceneState.SHOOTING_CLUB, shootingClubRoot },
+            {SceneState.TENNIS_CLUB, tennisClubRoot },
+            {SceneState.MUSICGAME_CLUB, musicGameClubRoot }
+        };
+
         arenaManager = transform.GetChild(0).gameObject;
         shootingClubManager = transform.GetChild(1).gameObject;
         
+        arenaManager.SetActive(false);
+        shootingClubManager.SetActive(false);
+
         sceneState = SceneState.ARENA;
         InitArena();
     }
 
-    public void TeleportTo(Transform dest) {
+    private void TeleportTo(Transform dest) {
         // TODO: Add teleportation animation
-        Camera.main.transform.position = dest.position;
-        Camera.main.transform.rotation = dest.rotation;
+        Camera.main.transform.position = dest.GetChild(0).position;
+        Camera.main.transform.rotation = dest.GetChild(0).rotation;
+
+        // LookAt
+        // Height
     }
 
-    public void ToSceneState(SceneState to) {
+    public void ChangeSceneTo(SceneState dest) {
+        // TODO: Exit and inits during teleportation
+        TeleportTo(roots[dest]);
         exits[sceneState].Invoke();
-        inits[to].Invoke();
+        instance.inits[dest].Invoke();
     }
-
     public void InitArena() {
         arenaManager.SetActive(true);
     }
@@ -163,7 +179,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void InitShootingClub() {
-        TeleportTo(shootingClubOrigin);
+        TeleportTo(shootingClubRoot);
         shootingClubManager.SetActive(true);
     }
     public void ExitShootingClub() {
@@ -187,5 +203,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
     }
 }

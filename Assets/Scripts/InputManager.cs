@@ -42,41 +42,7 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R)) {
-            Camera.main.transform.LookAt(shootingClubEntry);
-            Debug.Log("Face to shooting club.");
-            faceTo = ClubEnum.ShootingClub;
-        }
-        else if(Input.GetKeyDown(KeyCode.G)) {
-            Camera.main.transform.LookAt(tennisClubEntry);
-            Debug.Log("Face to tennis club.");
-            faceTo = ClubEnum.TennisClub;
-        }
-        else if(Input.GetKeyDown(KeyCode.B)) {
-            Camera.main.transform.LookAt(musicGameClubEntry);
-            Debug.Log("Face to music game club.");
-            faceTo = ClubEnum.MusicGameClub;
-        }
-        else if(Input.GetKeyDown(KeyCode.Space)) {
-            currentScene = faceTo;
-            Debug.Log("Go to " + faceTo.ToString());
-            foreach(GameObject g in SceneManager.GetActiveScene().GetRootGameObjects()){
-                if(g.name != "InputManager") {
-                    g.SetActive (false);
-                }
-            }
-            SceneManager.LoadScene((int)faceTo, LoadSceneMode.Additive);
-        }
-        else if(Input.GetKeyDown(KeyCode.Backspace)) {
-            if(currentScene != ClubEnum.ClubExpo) {
-                SceneManager.UnloadSceneAsync((int)currentScene);
-                foreach(GameObject g in SceneManager.GetActiveScene().GetRootGameObjects()){
-                    g.SetActive (true);
-                }
-                faceTo = currentScene;
-                currentScene = ClubEnum.ClubExpo;
-                Camera.main.transform.LookAt(enumToEntry[(int)faceTo]);
-            }
-        }
+        
+        
     }
 }
