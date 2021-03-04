@@ -32,8 +32,6 @@ public class ShootingClubManager : MonoBehaviour
         cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         trajectory = GetComponent<LineRenderer>();
         timer = gunColdDownTime + 1;
-
-        ClientHandle.OnTriggered += TriggerGun;
     }
 
     // Update is called once per frame

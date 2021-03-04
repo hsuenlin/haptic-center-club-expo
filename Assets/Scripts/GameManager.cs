@@ -101,10 +101,10 @@ public class GameManager : MonoBehaviour
     public Transform musicGameClubOrigin;
 
     /* Scene Managers */
-    public ArenaManager arenaManager;
-    public ShootingClubManager shootingClubManager;
+    public GameObject arenaManager;
+    public GameObject shootingClubManager;
 
-    /* Init Functions and Exit Functions */
+    /* Init and Exit Functions */
     private Dictionary<SceneState, Action> inits;
     private Dictionary<SceneState, Action> exits;
     
@@ -136,13 +136,8 @@ public class GameManager : MonoBehaviour
             {SceneState.MUSICGAME_CLUB, () => ExitMusicGameClub() }
         };
 
-        arenaManager = GetComponent<ArenaManager>();
-        shootingClubManager = GetComponent<ShootingClubManager>();
-        
-        MonoBehaviour[] managers = GetComponents<MonoBehaviour>();
-        foreach(MonoBehaviour manager in managers) {
-            manager.enabled = false;
-        }
+        arenaManager = transform.GetChild(0).gameObject;
+        shootingClubManager = transform.GetChild(1).gameObject;
         
         sceneState = SceneState.ARENA;
         InitArena();
@@ -160,19 +155,19 @@ public class GameManager : MonoBehaviour
     }
 
     public void InitArena() {
-        arenaManager.enabled = true;
+        arenaManager.SetActive(true);
     }
 
     public void ExitArena() {
-        arenaManager.enabled = false;
+        arenaManager.SetActive(false);
     }
 
     public void InitShootingClub() {
         TeleportTo(shootingClubOrigin);
-        shootingClubManager.enabled = true;
+        shootingClubManager.SetActive(true);
     }
     public void ExitShootingClub() {
-        shootingClubManager.enabled = false;
+        shootingClubManager.SetActive(false);
     }
 
     public void InitTennisClub() {
