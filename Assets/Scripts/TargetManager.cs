@@ -57,7 +57,7 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    void ShootTarget(GameObject target) {
+    void TargetRise(GameObject target) {
         Sequence risingSequence = DOTween.Sequence();
         risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
             .SetEase(targetCurve)
@@ -144,8 +144,7 @@ public class TargetManager : MonoBehaviour
                     int colorIndex = (shootingIndex + i) % targetColors.Length;
                     renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
                     
-                    // Shoot target
-                    ShootTarget(target);
+                    TargetRise(target);
                 }
             }
             shootingIndex += targetGenerators.Length;

@@ -102,13 +102,16 @@ public class GameManager : MonoBehaviour
     public Transform musicGameClubRoot;
 
     /* Scene Managers */
-    public GameObject arenaManager;
-    public GameObject shootingClubManager;
+    public ArenaManager arenaManager;
+    public ShootingClubManager shootingClubManager;
 
     /* Init and Exit Functions */
     private Dictionary<SceneState, Action> inits;
     private Dictionary<SceneState, Action> exits;
     private Dictionary<SceneState, Transform> roots;
+
+    /* Prefabs */
+    public GameObject gunPrefab;
     
     // Start is called before the first frame update
     void Awake() {
@@ -145,11 +148,11 @@ public class GameManager : MonoBehaviour
             {SceneState.MUSICGAME_CLUB, musicGameClubRoot }
         };
 
-        arenaManager = transform.GetChild(0).gameObject;
-        shootingClubManager = transform.GetChild(1).gameObject;
+        arenaManager = transform.GetChild(0).GetComponent<ArenaManager>();
+        shootingClubManager = transform.GetChild(1).GetComponent<ShootingClubManager>();
         
-        arenaManager.SetActive(false);
-        shootingClubManager.SetActive(false);
+        arenaManager.gameObject.SetActive(false);
+        shootingClubManager.gameObject.SetActive(false);
 
         sceneState = SceneState.ARENA;
         InitArena();
@@ -171,19 +174,26 @@ public class GameManager : MonoBehaviour
         instance.inits[dest].Invoke();
     }
     public void InitArena() {
-        arenaManager.SetActive(true);
+        arenaManager.gameObject.SetActive(true);
     }
 
     public void ExitArena() {
-        arenaManager.SetActive(false);
+        arenaManager.gameObject.SetActive(false);
     }
 
     public void InitShootingClub() {
         TeleportTo(shootingClubRoot);
-        shootingClubManager.SetActive(true);
+        GameObject gun = Instantiate(gunPrefab, Vector3.one, Quaternion.identity);
+        gun.transform.parent = Camera.main.transform;
+        gun.transform.localPosition = new Vector3(0.2f, -0.9f, 0.7f);
+        shootingClubManager.gun = gun;
+        shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
+        shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+        shootingClubManager.gameObject.SetActive(true);
     }
     public void ExitShootingClub() {
-        shootingClubManager.SetActive(false);
+        shootingClubManager.gameObject.SetActive(false);
+        Destroy(ShootingClubManager.instance.gun);
     }
 
     public void InitTennisClub() {

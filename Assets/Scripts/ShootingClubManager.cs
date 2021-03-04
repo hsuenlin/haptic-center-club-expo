@@ -5,21 +5,38 @@ using UnityEngine;
 public class ShootingClubManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    public static ShootingClubManager instance;
+    public GameObject gun;
     public Transform muzzle;
+    public Vector3 cameraCenter;
     public float gunColdDownTime = 0.25f;
     public float shootingRange = 100f;
     private float timer = 0f;
     private LineRenderer trajectory;
-    private Vector3 cameraCenter;
+    
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists, destroying object!");
+            Destroy(this);
+        }
+    }
     
     public void TriggerGun() {
         if(timer >= gunColdDownTime) {
             StartCoroutine(ShotEffect());
             RaycastHit hit;
             if(Physics.Raycast(cameraCenter, Camera.main.transform.forward, out hit, shootingRange)) {
-                trajectory.SetPosition(0, muzzle.position);
-                trajectory.SetPosition(1, hit.point);
+                Debug.Log(hit.collider.gameObject);
+                //trajectory.SetPosition(0, muzzle.position);
+                //trajectory.SetPosition(1, hit.point);
                 if(hit.collider.gameObject.tag == "Target") {
                     Destroy(hit.collider.gameObject);
                 }
@@ -39,6 +56,10 @@ public class ShootingClubManager : MonoBehaviour
     {
         if(timer < gunColdDownTime) {
             timer += Time.deltaTime;
+        }
+
+        if(Input.GetKeyDown(KeyCode.X)) {
+            TriggerGun(); // 0.2105 0.717 0.5
         }
     }
     private IEnumerator ShotEffect()
