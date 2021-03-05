@@ -7,28 +7,32 @@ public class PlayerManager : MonoBehaviour
 {
     public Image healthBarImage;
     public Sprite[] healthBarSprites;
-    public float health = 50f;
-    public float damage = 5f;
-    public int cnt = 7;
+    public int health = 7;
+    public float damageAnimationTime = 0.5f;
+    public float timer = 0f;
+    public bool isDamaged = false;
+    public OldCinemaEffect damageAnimationScript;
 
     void Start() {
+        damageAnimationScript = Camera.main.GetComponent<OldCinemaEffect>();
     }
     void OnTriggerEnter(Collider collider) {
         if(collider.tag == "Target") {
-            health -= damage;
-            Debug.Log($"HP: {health}");
+            health -= (health > 0) ? 1 : 0;
+            damageAnimationScript.enabled = true;
+            isDamaged = true;
+            timer = 0f;
         }
     }
     void Update() {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            cnt += (cnt < 7) ? 1 : 0;
+        healthBarImage.sprite = healthBarSprites[health];
+        if(isDamaged) {
+            timer += Time.deltaTime;
+            if(timer > damageAnimationTime) {
+                damageAnimationScript.enabled = false;
+                isDamaged = false;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            cnt -= (cnt > 0) ? 1 : 0;
-        }
-        healthBarImage.sprite = healthBarSprites[cnt];
     }
     
 }

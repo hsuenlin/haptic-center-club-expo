@@ -150,7 +150,7 @@ Transform:
   m_GameObject: {fileID: 1874690}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 1.7, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 1, z: 0.3}
   m_Children: []
   m_Father: {fileID: 195890566}
   m_RootOrder: 0
@@ -190,9 +190,11 @@ MonoBehaviour:
   - {fileID: -7534699543166857517, guid: ce913a4fbda514a2f9f64e4387496d56, type: 3}
   - {fileID: -6674305845814634934, guid: ce913a4fbda514a2f9f64e4387496d56, type: 3}
   - {fileID: -9205036688274478542, guid: ce913a4fbda514a2f9f64e4387496d56, type: 3}
-  health: 50
-  damage: 5
-  cnt: 7
+  health: 7
+  damageAnimationTime: 1
+  timer: 0
+  isDamaged: 0
+  damageAnimationScript: {fileID: 0}
 --- !u!212 &1874694
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -629,7 +631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &139455928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1853,6 +1855,7 @@ GameObject:
   - component: {fileID: 698018363}
   - component: {fileID: 698018362}
   - component: {fileID: 698018365}
+  - component: {fileID: 698018366}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1934,6 +1937,21 @@ Skybox:
   m_GameObject: {fileID: 698018361}
   m_Enabled: 1
   m_CustomSkybox: {fileID: 2100000, guid: 4323fde32dbcebf4195ad58c05f28e84, type: 2}
+--- !u!114 &698018366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698018361}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66cf749fd2cf5f4a8b6b006ec72634f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GrainStrange: 0.24
+  VignetteStrange: 52
+  JitterStrange: 0.0051
 --- !u!1001 &716550159
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2250,7 +2268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &776247388
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3762,6 +3780,11 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 139455927}
+    - target: {fileID: 2015073080512242499, guid: af4d18b8d8c8246d2882e1ca0107e7d9,
+        type: 3}
+      propertyPath: healthBarImage
+      value: 
+      objectReference: {fileID: 776247389}
     - target: {fileID: 5177902029692371875, guid: af4d18b8d8c8246d2882e1ca0107e7d9,
         type: 3}
       propertyPath: m_RootOrder

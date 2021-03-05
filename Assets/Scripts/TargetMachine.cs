@@ -12,34 +12,20 @@ public class TargetMachine : MonoBehaviour
         1, 0, 0,
         0, 1, 0, 
         0, 0, 1,
-        1, 0, 1, 
+        0, 0, 1, 
         1, 0, 1,
         0, 1, 0,
-        1, 1, 0,
-        0, 0, 1,
-        0, 1, 1,
-        1, 0, 1,
-        1, 1, 1,
-        0, 1, 1,
-        0, 0, 1,
-        1, 1, 1,
-        1, 0, 1,
-        1, 1, 1,
-        0, 1, 1,
-        1, 1, 0,
-        1, 1, 1,
-        0, 0, 1,
         1, 0, 0,
+        0, 1, 1,
         0, 0, 1,
         1, 1, 0,
+        1, 0, 1,
         0, 1, 1,
-        1, 1, 1,
-        1, 1, 1,
-        1, 1, 1,
-        1, 1, 1,
-        1, 1, 1 };
+        1, 0, 0,
+        1, 1, 1
+        };
 
-    public float occurrenceFrequency = 2.0f;
+    public float occurrenceFrequency = 4.0f;
     public float risingTime = 1.0f;
     public float airTime = 0.5f;
     public float dashingTime = 5.0f;
@@ -91,7 +77,7 @@ public class TargetMachine : MonoBehaviour
             state = ShootingState.Ready;
         }
     }
-
+    private int cnt = 0;
     void TargetRise(GameObject target) {
         // TODO: Kill sequence when target hit.
         Sequence risingSequence = DOTween.Sequence();
@@ -210,6 +196,8 @@ public class TargetMachine : MonoBehaviour
                     TargetRise(target);
                 }
             }
+            Debug.Log(cnt + 1);
+            cnt++;
             shootingIndex += targetGenerators.Length;
             state = ShootingState.Shooting;
         }
