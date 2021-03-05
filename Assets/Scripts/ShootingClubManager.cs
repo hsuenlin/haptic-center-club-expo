@@ -35,11 +35,16 @@ public class ShootingClubManager : MonoBehaviour
             StartCoroutine(ShotEffect());
             RaycastHit hit;
             if(Physics.Raycast(cameraCenter, Camera.main.transform.forward, out hit, shootingRange)) {
-                Debug.Log(hit.collider.gameObject);
                 //trajectory.SetPosition(0, muzzle.position);
                 //trajectory.SetPosition(1, hit.point);
                 if(hit.collider.gameObject.tag == "Target") {
-                    Destroy(hit.collider.gameObject);
+                    if(hit.collider.gameObject.activeInHierarchy) {
+                        hit.collider.gameObject.SetActive(false);
+                        GameObject.Find("TargetMachine").GetComponent<TargetMachine>().nTarget--;
+                        int nTarget = GameObject.Find("TargetMachine").GetComponent<TargetMachine>().nTarget;
+                        Debug.Log($"Shoot: {nTarget}");
+                        //Destroy(hit.collider.gameObject);
+                    }
                 }
             }
         }
@@ -59,7 +64,7 @@ public class ShootingClubManager : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        if(Input.GetKeyDown(KeyCode.X)) {
+        if(Input.GetKeyDown(KeyCode.Space)) {
             TriggerGun();
         }
     }

@@ -46,7 +46,14 @@ public class TargetMachine : MonoBehaviour
     private GameObject targetDemo;
     private GameObject target;
     
-
+    private float timer = 0f;
+    private float readyTextTime = 1f;
+    private float startTextTime = 1.75f;
+    public Text readyText;
+    public Text startText;
+    public Text finishText;
+    public Image aim;
+        
     public enum ShootingState {
         Idle,
         Intro,
@@ -54,9 +61,12 @@ public class TargetMachine : MonoBehaviour
         Ready,
         OnShoot,
         Shooting,
+        Result
     };
 
     public ShootingState state = ShootingState.Idle;
+    private int cnt = 0;
+    public int nTarget = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +78,10 @@ public class TargetMachine : MonoBehaviour
             targetGeneratorsList.Add(child);
         }
         targetGenerators = targetGeneratorsList.ToArray();
+        foreach(int x in shootingOrder) {
+            nTarget += x;
+        }
+        nTarget++;
     }
 
     void OnRisingComplete(GameObject target) {
@@ -77,7 +91,7 @@ public class TargetMachine : MonoBehaviour
             state = ShootingState.Ready;
         }
     }
-    private int cnt = 0;
+
     void TargetRise(GameObject target) {
         // TODO: Kill sequence when target hit.
         Sequence risingSequence = DOTween.Sequence();
@@ -94,7 +108,18 @@ public class TargetMachine : MonoBehaviour
         Sequence dashingSequence = DOTween.Sequence();
         dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
             .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); })
-            .AppendCallback(() => { Destroy(target); });
+            .AppendCallback(() => { 
+                Destroy(target);
+                if (nTarget == 0 && state != ShootingState.Result)
+                {
+                    state = ShootingState.Result;
+                }
+                else if(target.gameObject.activeInHierarchy) {
+                    nTarget--;
+                    Debug.Log($"Damage: {nTarget}");
+                    
+                }
+            });
         dashingSequence.Play();
     }
 
@@ -142,6 +167,7 @@ public class TargetMachine : MonoBehaviour
                 GenerateTargetDemo();
             }
             else if(state == ShootingState.IntroEnd) {
+                timer = 0f;
                 state = ShootingState.Ready;
             }
         }
@@ -167,14 +193,25 @@ public class TargetMachine : MonoBehaviour
         }
         if (state == ShootingState.Ready)
         {
-            if(shootingIndex < shootingOrder.Length) {
-                healthBarImage.gameObject.SetActive(true);
-                state = ShootingState.OnShoot;
+            if(timer > startTextTime) {
+                if(shootingIndex < shootingOrder.Length) {
+                    startText.gameObject.SetActive(false);
+                    healthBarImage.gameObject.SetActive(true);
+                    aim.gameObject.SetActive(true);
+                    GameObject.Find("ShootingClubManager").GetComponent<SmoothMouseLook>().enabled = true;
+                    state = ShootingState.OnShoot;
+                }
+                else {
+                    shootingIndex %= shootingOrder.Length;
+                    state = ShootingState.IntroEnd;
+                }
+            } else if(timer > readyTextTime && timer < startTextTime){
+                readyText.gameObject.SetActive(false);
+                startText.gameObject.SetActive(true);
+            } else if(timer < readyTextTime){
+                readyText.gameObject.SetActive(true);
             }
-            else {
-                shootingIndex %= shootingOrder.Length;
-                state = ShootingState.IntroEnd;
-            }
+            timer += Time.deltaTime;
         }
         if(state == ShootingState.OnShoot) {
             
@@ -200,6 +237,14 @@ public class TargetMachine : MonoBehaviour
             cnt++;
             shootingIndex += targetGenerators.Length;
             state = ShootingState.Shooting;
+        }
+        if (state == ShootingState.Result) {
+            GameObject.Find("ShootingClubManager").GetComponent<SmoothMouseLook>().enabled = false;
+            Debug.Log("Finish!");
+            healthBarImage.gameObject.SetActive(false);
+            aim.gameObject.SetActive(false);
+            finishText.gameObject.SetActive(true);
+            state = ShootingState.IntroEnd;
         }
     }
 }

@@ -29,100 +29,94 @@ public class SmoothMouseLook : MonoBehaviour
     public float frameCounter = 20;
 
     Quaternion originalRotation;
-    
-    public float startingTime = 0.1f;
-    private float timer = 0f;
 
     void Update()
     {
-        timer += Time.deltaTime;
-        if(timer > startingTime) {
-            if (axes == RotationAxes.MouseXAndY)
+        if (axes == RotationAxes.MouseXAndY)
+        {
+            rotAverageY = 0f;
+            rotAverageX = 0f;
+
+            rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
+            rotationX += Input.GetAxis("Mouse X") * sensitivityX;
+
+            rotArrayY.Add(rotationY);
+            rotArrayX.Add(rotationX);
+
+            if (rotArrayY.Count >= frameCounter)
             {
-                rotAverageY = 0f;
-                rotAverageX = 0f;
-
-                rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-                rotationX += Input.GetAxis("Mouse X") * sensitivityX;
-
-                rotArrayY.Add(rotationY);
-                rotArrayX.Add(rotationX);
-
-                if (rotArrayY.Count >= frameCounter)
-                {
-                    rotArrayY.RemoveAt(0);
-                }
-                if (rotArrayX.Count >= frameCounter)
-                {
-                    rotArrayX.RemoveAt(0);
-                }
-
-                for (int j = 0; j < rotArrayY.Count; j++)
-                {
-                    rotAverageY += rotArrayY[j];
-                }
-                for (int i = 0; i < rotArrayX.Count; i++)
-                {
-                    rotAverageX += rotArrayX[i];
-                }
-
-                rotAverageY /= rotArrayY.Count;
-                rotAverageX /= rotArrayX.Count;
-
-                rotAverageY = ClampAngle(rotAverageY, minimumY, maximumY);
-                rotAverageX = ClampAngle(rotAverageX, minimumX, maximumX);
-
-                Quaternion yQuaternion = Quaternion.AngleAxis(rotAverageY, Vector3.left);
-                Quaternion xQuaternion = Quaternion.AngleAxis(rotAverageX, Vector3.up);
-
-                Camera.main.transform.localRotation = originalRotation * xQuaternion * yQuaternion;
+                rotArrayY.RemoveAt(0);
             }
-            else if (axes == RotationAxes.MouseX)
+            if (rotArrayX.Count >= frameCounter)
             {
-                rotAverageX = 0f;
-
-                rotationX += Input.GetAxis("Mouse X") * sensitivityX;
-
-                rotArrayX.Add(rotationX);
-
-                if (rotArrayX.Count >= frameCounter)
-                {
-                    rotArrayX.RemoveAt(0);
-                }
-                for (int i = 0; i < rotArrayX.Count; i++)
-                {
-                    rotAverageX += rotArrayX[i];
-                }
-                rotAverageX /= rotArrayX.Count;
-
-                rotAverageX = ClampAngle(rotAverageX, minimumX, maximumX);
-
-                Quaternion xQuaternion = Quaternion.AngleAxis(rotAverageX, Vector3.up);
-                Camera.main.transform.localRotation = originalRotation * xQuaternion;
+                rotArrayX.RemoveAt(0);
             }
-            else
+
+            for (int j = 0; j < rotArrayY.Count; j++)
             {
-                rotAverageY = 0f;
-
-                rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-
-                rotArrayY.Add(rotationY);
-
-                if (rotArrayY.Count >= frameCounter)
-                {
-                    rotArrayY.RemoveAt(0);
-                }
-                for (int j = 0; j < rotArrayY.Count; j++)
-                {
-                    rotAverageY += rotArrayY[j];
-                }
-                rotAverageY /= rotArrayY.Count;
-
-                rotAverageY = ClampAngle(rotAverageY, minimumY, maximumY);
-
-                Quaternion yQuaternion = Quaternion.AngleAxis(rotAverageY, Vector3.left);
-                Camera.main.transform.localRotation = originalRotation * yQuaternion;
+                rotAverageY += rotArrayY[j];
             }
+            for (int i = 0; i < rotArrayX.Count; i++)
+            {
+                rotAverageX += rotArrayX[i];
+            }
+
+            rotAverageY /= rotArrayY.Count;
+            rotAverageX /= rotArrayX.Count;
+
+            rotAverageY = ClampAngle(rotAverageY, minimumY, maximumY);
+            rotAverageX = ClampAngle(rotAverageX, minimumX, maximumX);
+
+            Quaternion yQuaternion = Quaternion.AngleAxis(rotAverageY, Vector3.left);
+            Quaternion xQuaternion = Quaternion.AngleAxis(rotAverageX, Vector3.up);
+
+            Camera.main.transform.localRotation = originalRotation * xQuaternion * yQuaternion;
+        }
+        else if (axes == RotationAxes.MouseX)
+        {
+            rotAverageX = 0f;
+
+            rotationX += Input.GetAxis("Mouse X") * sensitivityX;
+
+            rotArrayX.Add(rotationX);
+
+            if (rotArrayX.Count >= frameCounter)
+            {
+                rotArrayX.RemoveAt(0);
+            }
+            for (int i = 0; i < rotArrayX.Count; i++)
+            {
+                rotAverageX += rotArrayX[i];
+            }
+            rotAverageX /= rotArrayX.Count;
+
+            rotAverageX = ClampAngle(rotAverageX, minimumX, maximumX);
+
+            Quaternion xQuaternion = Quaternion.AngleAxis(rotAverageX, Vector3.up);
+            Camera.main.transform.localRotation = originalRotation * xQuaternion;
+        }
+        else
+        {
+            rotAverageY = 0f;
+
+            rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
+
+            rotArrayY.Add(rotationY);
+
+            if (rotArrayY.Count >= frameCounter)
+            {
+                rotArrayY.RemoveAt(0);
+            }
+            for (int j = 0; j < rotArrayY.Count; j++)
+            {
+                rotAverageY += rotArrayY[j];
+            }
+            rotAverageY /= rotArrayY.Count;
+
+            rotAverageY = ClampAngle(rotAverageY, minimumY, maximumY);
+
+            Quaternion yQuaternion = Quaternion.AngleAxis(rotAverageY, Vector3.left);
+            Camera.main.transform.localRotation = originalRotation * yQuaternion;
         }
     }
 
