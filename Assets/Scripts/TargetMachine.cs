@@ -54,6 +54,7 @@ public class TargetMachine : MonoBehaviour
     public Text finishText;
     public Image aim;
         
+    // TODO: Polish states
     public enum ShootingState {
         Idle,
         Intro,
@@ -93,7 +94,6 @@ public class TargetMachine : MonoBehaviour
     }
 
     void TargetRise(GameObject target) {
-        // TODO: Kill sequence when target hit.
         Sequence risingSequence = DOTween.Sequence();
         risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
             .SetEase(targetCurve)
@@ -104,7 +104,6 @@ public class TargetMachine : MonoBehaviour
     }
 
     void TargetDash(GameObject target) {
-        // TODO: Kill sequence when target hit.
         Sequence dashingSequence = DOTween.Sequence();
         dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
             .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); })
@@ -157,17 +156,54 @@ public class TargetMachine : MonoBehaviour
         }
     }
 
+    public void DestroyTargetDemos() {
+        if (targetDemo != null)
+        {
+            Destroy(targetDemo);
+            foreach (GameObject target in targetDemoList)
+            {
+                Destroy(target);
+            }
+        }
+    }
+
+    public void ShootTargets() {
+        for (int i = 0; i < targetGenerators.Length; i++)
+        {
+            if (shootingOrder[shootingIndex + i] == 1)
+            {
+                risingCount++;
+                // Instantiate target
+                target = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
+
+                // Set target position
+                target.transform.parent = targetGenerators[i];
+                target.transform.localPosition = new Vector3(0, minHeight, 0);
+
+                //Set target color
+                Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
+                int colorIndex = (shootingIndex + i) % targetColors.Length;
+                renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
+
+                TargetRise(target);
+            }
+        }
+        shootingIndex += targetGenerators.Length;
+    }
+
     // Update is called once per frame
     void Update()
     {   
         // TODO: Move this part to ShootingClubManager
         if(Input.GetKeyDown(KeyCode.DownArrow)) {
             if(state == ShootingState.Idle) {
+                // Change state
                 state = ShootingState.Intro;
                 GenerateTargetDemo();
             }
             else if(state == ShootingState.IntroEnd) {
                 timer = 0f;
+                // Change state
                 state = ShootingState.Ready;
             }
         }
@@ -181,24 +217,25 @@ public class TargetMachine : MonoBehaviour
                 GenerateTargetDemo();
             }
             else if(Input.GetKeyDown(KeyCode.Space)) {
-                if(targetDemo != null) {
-                    Destroy(targetDemo);
-                    foreach(GameObject target in targetDemoList) {
-                        Destroy(target);
-                    }
-                }
+                DestroyTargetDemos();
+                // InitIntroEnd()
                 targetColors = targetColorsList.ToArray();
+                // Change state
                 state = ShootingState.IntroEnd;
             }
         }
         if (state == ShootingState.Ready)
         {
+            // Rewrite timer (startTextTime, readyTextTime)
             if(timer > startTextTime) {
                 if(shootingIndex < shootingOrder.Length) {
+                    // InitOnShoot()
                     startText.gameObject.SetActive(false);
                     healthBarImage.gameObject.SetActive(true);
                     aim.gameObject.SetActive(true);
                     GameObject.Find("ShootingClubManager").GetComponent<SmoothMouseLook>().enabled = true;
+                    
+                    // Change state
                     state = ShootingState.OnShoot;
                 }
                 else {
@@ -214,28 +251,8 @@ public class TargetMachine : MonoBehaviour
             timer += Time.deltaTime;
         }
         if(state == ShootingState.OnShoot) {
-            
-            for(int i = 0; i < targetGenerators.Length; i++) {
-                if(shootingOrder[shootingIndex + i] == 1) {
-                    risingCount++;
-                    // Instantiate target
-                    target = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
-                    
-                    // Set target position
-                    target.transform.parent = targetGenerators[i];
-                    target.transform.localPosition = new Vector3(0, minHeight, 0);
-                    
-                    //Set target color
-                    Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
-                    int colorIndex = (shootingIndex + i) % targetColors.Length;
-                    renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
-                    
-                    TargetRise(target);
-                }
-            }
-            Debug.Log(cnt + 1);
-            cnt++;
-            shootingIndex += targetGenerators.Length;
+            ShootTargets();
+            // Change state
             state = ShootingState.Shooting;
         }
         if (state == ShootingState.Result) {
@@ -244,6 +261,8 @@ public class TargetMachine : MonoBehaviour
             healthBarImage.gameObject.SetActive(false);
             aim.gameObject.SetActive(false);
             finishText.gameObject.SetActive(true);
+
+            // Change state
             state = ShootingState.IntroEnd;
         }
     }
