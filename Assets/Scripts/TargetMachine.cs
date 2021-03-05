@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class TargetMachine : MonoBehaviour
 {
+    public Image healthBarImage;
     public int[] shootingOrder = { 
         1, 0, 0,
         1, 0, 0,
@@ -180,6 +182,7 @@ public class TargetMachine : MonoBehaviour
         if (state == ShootingState.Ready)
         {
             if(shootingIndex < shootingOrder.Length) {
+                healthBarImage.gameObject.SetActive(true);
                 state = ShootingState.OnShoot;
             }
             else {
