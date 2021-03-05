@@ -1118,7 +1118,7 @@ PrefabInstance:
     - target: {fileID: 4301458702390146718, guid: c97e63aa0ac084e879e3fc762eb68ebd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4301458702390146718, guid: c97e63aa0ac084e879e3fc762eb68ebd,
         type: 3}
@@ -2083,7 +2083,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2054030386}
-  - {fileID: 2049720515448979961}
   - {fileID: 2127055611}
   m_Father: {fileID: 757767891}
   m_RootOrder: 0
@@ -2542,7 +2541,7 @@ PrefabInstance:
     - target: {fileID: 6250878258688070191, guid: 68c46b4f8988d4330bb26ea698e30fea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6250878258688070191, guid: 68c46b4f8988d4330bb26ea698e30fea,
         type: 3}
@@ -4466,7 +4465,7 @@ Transform:
   - {fileID: 1865066071}
   - {fileID: 2138507823}
   m_Father: {fileID: 837341237}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2133777376
 PrefabInstance:
@@ -4569,7 +4568,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 837341237}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 148425539038356166, guid: c9eacd8f70139401490123eddc831b3d,
         type: 3}
@@ -4594,12 +4593,12 @@ PrefabInstance:
     - target: {fileID: 2049720514100024353, guid: c9eacd8f70139401490123eddc831b3d,
         type: 3}
       propertyPath: m_Name
-      value: Arena
+      value: ForestIsland
       objectReference: {fileID: 0}
     - target: {fileID: 2049720514100024354, guid: c9eacd8f70139401490123eddc831b3d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2049720514100024354, guid: c9eacd8f70139401490123eddc831b3d,
         type: 3}
@@ -4688,9 +4687,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9eacd8f70139401490123eddc831b3d, type: 3}
---- !u!4 &2049720515448979961 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2049720514100024354, guid: c9eacd8f70139401490123eddc831b3d,
-    type: 3}
-  m_PrefabInstance: {fileID: 2049720515448979960}
-  m_PrefabAsset: {fileID: 0}

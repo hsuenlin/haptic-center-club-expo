@@ -113,7 +113,7 @@ public class TargetManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        
+        // TODO: Move this part to ShootingClubManager
         if(Input.GetKeyDown(KeyCode.DownArrow)) {
             if(state == ShootingState.Idle) {
                 state = ShootingState.Intro;
@@ -135,6 +135,9 @@ public class TargetManager : MonoBehaviour
             else if(Input.GetKeyDown(KeyCode.Space)) {
                 if(targetDemo != null) {
                     Destroy(targetDemo);
+                    foreach(GameObject target in targetDemoList) {
+                        Destroy(target);
+                    }
                 }
                 targetColors = targetColorsList.ToArray();
                 state = ShootingState.IntroEnd;

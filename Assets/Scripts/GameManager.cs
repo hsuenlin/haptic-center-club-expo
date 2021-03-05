@@ -153,6 +153,9 @@ public class GameManager : MonoBehaviour
         
         arenaManager.gameObject.SetActive(false);
         shootingClubManager.gameObject.SetActive(false);
+        
+        arenaRoot.gameObject.SetActive(false);
+        shootingClubRoot.gameObject.SetActive(false);
 
         sceneState = SceneState.ARENA;
         InitArena();
@@ -175,10 +178,12 @@ public class GameManager : MonoBehaviour
     }
     public void InitArena() {
         arenaManager.gameObject.SetActive(true);
+        arenaRoot.gameObject.SetActive(true);
     }
 
     public void ExitArena() {
         arenaManager.gameObject.SetActive(false);
+        arenaRoot.gameObject.SetActive(false);
     }
 
     public void InitShootingClub() {
@@ -190,9 +195,11 @@ public class GameManager : MonoBehaviour
         shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
         shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         shootingClubManager.gameObject.SetActive(true);
+        shootingClubRoot.gameObject.SetActive(true);
     }
     public void ExitShootingClub() {
         shootingClubManager.gameObject.SetActive(false);
+        shootingClubRoot.gameObject.SetActive(false);
         Destroy(ShootingClubManager.instance.gun);
     }
 

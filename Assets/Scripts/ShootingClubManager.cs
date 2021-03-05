@@ -6,6 +6,7 @@ public class ShootingClubManager : MonoBehaviour
 {
     // Start is called before the first frame update
     public static ShootingClubManager instance;
+    public Transform root;
     public GameObject gun;
     public Transform muzzle;
     public Vector3 cameraCenter;
@@ -46,7 +47,7 @@ public class ShootingClubManager : MonoBehaviour
     
     void Start()
     {
-        cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+        
         trajectory = GetComponent<LineRenderer>();
         timer = gunColdDownTime + 1;
     }
@@ -59,7 +60,7 @@ public class ShootingClubManager : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.X)) {
-            TriggerGun(); // 0.2105 0.717 0.5
+            TriggerGun();
         }
     }
     private IEnumerator ShotEffect()
