@@ -18,6 +18,7 @@ public class TargetManager : MonoBehaviour
 
     public Transform[] targetGenerators;
     public List<float> targetColorsList;
+    public List<GameObject> targetDemoList;
     public float[] targetColors;
     
     private int shootingIndex = 0;
@@ -42,6 +43,7 @@ public class TargetManager : MonoBehaviour
     void Start()
     {
         targetColorsList = new List<float>();
+        targetDemoList = new List<GameObject>();
         List<Transform> targetGeneratorsList = new List<Transform>();
         foreach(Transform child in gameObject.transform) {
             targetGeneratorsList.Add(child);
@@ -79,12 +81,33 @@ public class TargetManager : MonoBehaviour
         targetDemo.transform.parent = Camera.main.transform;
         targetDemo.transform.localPosition = new Vector3(0, 0, 5);
         targetDemo.transform.LookAt(Camera.main.transform);
+        targetDemoList.Add(targetDemo);
 
         float hue = Random.Range(0f, 1f);
         targetColorsList.Add(hue);
 
         Renderer renderer = targetDemo.transform.GetChild(1).GetComponent<Renderer>();
         renderer.material.color = Color.HSVToRGB(hue, 0.6f, 1f);
+    }
+
+    void UpdateHandbook() {
+        GameObject[] targetDemos = targetDemoList.ToArray();
+        Vector3 upLeftCorner = new Vector3(-2f, -0.5f, 5f);
+        
+        int nCol = 11;
+        int nRow = targetDemos.Length % nCol + 1;
+        float scale = 0.3f;
+
+        float hSpacing = upLeftCorner.x * 2 / (nCol - 1);
+        float vSpacing = 0.25f;
+
+        for(int i = 0; i < targetDemos.Length; ++i) {
+            int col = i % nCol;
+            int row = i / nCol;
+            targetDemos[row * nCol + col].transform.localPosition 
+                = new Vector3(upLeftCorner.x - hSpacing * col, upLeftCorner.y - vSpacing * row, upLeftCorner.z);
+            targetDemos[row * nCol + col].transform.localScale = new Vector3(scale, scale, scale);
+        }
     }
 
     // Update is called once per frame
@@ -104,7 +127,8 @@ public class TargetManager : MonoBehaviour
             // Choose color
             if(Input.GetKeyDown(KeyCode.RightArrow)) {
                 if(targetDemo != null) {
-                    Destroy(targetDemo);
+                    //Destroy(targetDemo);
+                    UpdateHandbook();
                 }
                 GenerateTargetDemo();
             }
