@@ -3,9 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class TargetManager : MonoBehaviour
+public class TargetMachine : MonoBehaviour
 {
-    public int[] shootingOrder = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1 };
+    public int[] shootingOrder = { 
+        1, 0, 0,
+        1, 0, 0,
+        0, 1, 0, 
+        0, 0, 1,
+        1, 0, 1, 
+        1, 0, 1,
+        0, 1, 0,
+        1, 1, 0,
+        0, 0, 1,
+        0, 1, 1,
+        1, 0, 1,
+        1, 1, 1,
+        0, 1, 1,
+        0, 0, 1,
+        1, 1, 1,
+        1, 0, 1,
+        1, 1, 1,
+        0, 1, 1,
+        1, 1, 0,
+        1, 1, 1,
+        0, 0, 1,
+        1, 0, 0,
+        0, 0, 1,
+        1, 1, 0,
+        0, 1, 1,
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1 };
+
     public float occurrenceFrequency = 2.0f;
     public float risingTime = 1.0f;
     public float airTime = 0.5f;
@@ -60,6 +91,7 @@ public class TargetManager : MonoBehaviour
     }
 
     void TargetRise(GameObject target) {
+        // TODO: Kill sequence when target hit.
         Sequence risingSequence = DOTween.Sequence();
         risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
             .SetEase(targetCurve)
@@ -70,9 +102,11 @@ public class TargetManager : MonoBehaviour
     }
 
     void TargetDash(GameObject target) {
+        // TODO: Kill sequence when target hit.
         Sequence dashingSequence = DOTween.Sequence();
         dashingSequence.Append(target.transform.DOMove(Camera.main.transform.position, dashingTime))
-            .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); });
+            .OnUpdate(() => { target.transform.LookAt(Camera.main.transform); })
+            .AppendCallback(() => { Destroy(target); });
         dashingSequence.Play();
     }
 
@@ -156,7 +190,6 @@ public class TargetManager : MonoBehaviour
         if(state == ShootingState.OnShoot) {
             
             for(int i = 0; i < targetGenerators.Length; i++) {
-                Debug.Log(shootingIndex + i);
                 if(shootingOrder[shootingIndex + i] == 1) {
                     risingCount++;
                     // Instantiate target

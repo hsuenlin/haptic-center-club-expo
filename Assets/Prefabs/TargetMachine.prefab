@@ -387,7 +387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5177902029692371875}
-  - component: {fileID: 5177902029692371876}
+  - component: {fileID: 2015073080512242499}
   m_Layer: 0
   m_Name: TargetMachine
   m_TagString: Untagged
@@ -412,7 +412,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5177902029692371876
+--- !u!114 &2015073080512242499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -424,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ca3a32d16907456890653f79c15bff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootingOrder: 010000000000000000000000000000000100000000000000000000000000000001000000010000000100000001000000
+  shootingOrder: 010000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000000010000000000000001000000010000000000000001000000000000000100000000000000010000000100000000000000000000000000000001000000000000000100000001000000010000000000000001000000010000000100000001000000000000000100000001000000000000000000000001000000010000000100000001000000010000000000000001000000010000000100000001000000000000000100000001000000010000000100000000000000010000000100000001000000000000000000000001000000010000000000000000000000000000000000000001000000010000000100000000000000000000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
   occurrenceFrequency: 2
   risingTime: 1
   airTime: 0.5
@@ -439,45 +439,18 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2.5594442
-      outSlope: 2.5594442
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.16303584
-      value: 0.41728112
-      inSlope: 1.4105496
-      outSlope: 1.4105496
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.5073807
-      value: 0.5073807
-      inSlope: 0.3540752
-      outSlope: 0.3540752
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9292324
-      value: 0.6957355
-      inSlope: 2.3729923
-      outSlope: 2.3729923
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 4.2994895
-      outSlope: 4.2994895
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -486,6 +459,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   targetGenerators: []
   targetColorsList: []
+  targetDemoList: []
   targetColors: []
   state: 0
 --- !u!1001 &1163250970474590293
