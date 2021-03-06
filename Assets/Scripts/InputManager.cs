@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
-    public InputManager instance;
+    public static InputManager instance;
 
     // Start is called before the first frame update
     public Transform clubEnumEntry;
@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
 
     public GameObject hitObject;
 
-    public void isHit;
+    public bool isHit;
 
     void Awake() {
         if (instance == null)

@@ -9,7 +9,6 @@ public class TargetManager : MonoBehaviour
 
     public enum TargetMachineState
     {
-        ENTRY = -1,
         IDLE = 0,
         READY = 1,
         SHOOT = 2,
@@ -110,6 +109,10 @@ public class TargetManager : MonoBehaviour
         state = TargetMachineState.READY;
     }
 
+    public void Reset() {
+        state = TargetMachineState.IDLE;
+    }
+
     public void AddTargetDemo() {
         targetDemo = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
         targetDemo.transform.parent = Camera.main.transform;
@@ -208,7 +211,7 @@ public class TargetManager : MonoBehaviour
     private void OnDashingComplete(GameObject target) {
         if (target.gameObject.activeInHierarchy)
         {
-            KillTarget(target.GameObject);
+            KillTarget(target.gameObject);
         }
         Destroy(target);
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShootingClubManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class ShootingClubManager : MonoBehaviour
         RESULT = 3
     };
 
-    public ClubState clubState = ClubState.ENTRY;
+    public ClubState state = ClubState.ENTRY;
 
     public Transform root;
     public GameObject gun;
@@ -29,6 +30,7 @@ public class ShootingClubManager : MonoBehaviour
     private bool gameStart = false;
 
     /* UI */
+    public GameObject canvas;
     public Image healthBarImage;
     public Image aim;
     public Text welcomeText;
@@ -37,11 +39,11 @@ public class ShootingClubManager : MonoBehaviour
     public Text finishText;
     private float readyTextTime = 1f;
     private float startTextTime = 1.75f;
-    private float welcomTextTime = 3f;
+    private float welcomeTextTime = 3f;
     private float minToArenaTime = 1f;
-    public GameObject toGameBtn;
-    public GameObject toArenaBtn;
-    public GameObject addTargetDemoBtn;
+    public Button toGameBtn;
+    public Button toArenaBtn;
+    public Button addTargetDemoBtn;
 
     /* Timer */
     private float timer = 0f;
@@ -74,11 +76,16 @@ public class ShootingClubManager : MonoBehaviour
     }
 
     private void InitWaiting() {
-        GameManager.instance.OnDeviceReady += () => { toGameBtn.SetActive(true); };
+        GameManager.instance.OnDeviceReady += () => { toGameBtn.gameObject.SetActive(true); };
+        addTargetDemoBtn.gameObject.SetActive(true);
+        canvas.GetComponent<GraphicRaycaster>().enabled = true;
     }
 
     private void ExitWaiting() {
-        isGunIndicatorHit = false;
+        addTargetDemoBtn.gameObject.SetActive(false);
+        toGameBtn.gameObject.SetActive(false);
+        TargetManager.instance.DestroyTargetDemos();
+        canvas.GetComponent<GraphicRaycaster>().enabled = false;
     }
 
     private void InitGame() {
@@ -94,7 +101,6 @@ public class ShootingClubManager : MonoBehaviour
 
     private void InitResult() {
         timer = 0f;
-        isGunIndicatorHit = false;
     }
 
     // Update is called once per frame
@@ -105,7 +111,6 @@ public class ShootingClubManager : MonoBehaviour
             state = ClubState.IDLE;
         }
         if(state == ClubState.IDLE) {
-            // TODO: Add welcome text to scene
             if(timer > welcomeTextTime) {
                 ExitIdle();
                 InitWaiting();
@@ -115,11 +120,11 @@ public class ShootingClubManager : MonoBehaviour
         } else if(state == ClubState.WAITING) {
             if(InputManager.instance.isHit) {
                 GameObject hit = InputManager.instance.hitObject;
-                if(hit == toGameBtn) {
+                if(hit == toGameBtn.gameObject) {
                     ExitWaiting();
                     InitGame();
                     state = ClubState.GAME;
-                } else if(hit == addTargetDemoBtn) {
+                } else if(hit == addTargetDemoBtn.gameObject) {
                     TargetManager.instance.AddTargetDemo();
                     TargetManager.instance.UpdateHandbook();
                 }
@@ -134,7 +139,7 @@ public class ShootingClubManager : MonoBehaviour
                     InitResult();
                     state = ClubState.RESULT;
                 }
-                if(TargerManager.instance.AllRisingComplete()) {
+                if(TargetManager.instance.AllRisingComplete()) {
                     TargetManager.instance.GetReady();
                 }
             } else {
@@ -155,15 +160,14 @@ public class ShootingClubManager : MonoBehaviour
             }
             timer += Time.deltaTime;
         } else if(state == ClubState.RESULT) {
-            // TODO:
-            // Show the shooting result.
             if(timer >= minToArenaTime) {
-                toArenaBtn.SetActive(true);
+                toArenaBtn.gameObject.SetActive(true);
+                canvas.GetComponent<GraphicRaycaster>().enabled = true;
             }
             if(InputManager.instance.isHit) {
                 GameObject hit = InputManager.instance.hitObject;
-                if(hit == toArenaBtn) {
-                    GameManager.ChangeSceneTo(SceneState.ARENA);
+                if(hit == toArenaBtn.gameObject) {
+                    GameManager.instance.ChangeSceneTo(SceneState.ARENA);
                 }
             }
             timer += Time.deltaTime;
