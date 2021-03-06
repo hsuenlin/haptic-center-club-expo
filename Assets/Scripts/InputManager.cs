@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
+    public InputManager instance;
+
     // Start is called before the first frame update
     public Transform clubEnumEntry;
     public Transform shootingClubEntry;
@@ -28,6 +30,22 @@ public class InputManager : MonoBehaviour
 
     public Transform[] enumToEntry;
 
+    public GameObject hitObject;
+
+    public void isHit;
+
+    void Awake() {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists, destroying object!");
+            Destroy(this);
+        }
+    }
+
     void Start()
     {
         enumToEntry = new Transform[] {
@@ -42,7 +60,8 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
+        // TODO: 
+        // Pinch raycast
+        // Update isHit and Hit
     }
 }

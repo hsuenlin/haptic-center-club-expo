@@ -421,7 +421,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5177902029692371877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ca3a32d16907456890653f79c15bff1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fae17fda9fad4e3db39bf217c5eddfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarImage: {fileID: 0}
@@ -432,29 +432,10 @@ MonoBehaviour:
   dashingTime: 5
   maxHeight: 1.5
   minHeight: -0.1
-  targetPrefab: {fileID: 1919012471076396, guid: 55776efecb0cd134ea5f418c2f97a705,
-    type: 3}
+  targetPrefab: {fileID: 0}
   targetCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -464,7 +445,10 @@ MonoBehaviour:
   targetColors: []
   readyText: {fileID: 0}
   startText: {fileID: 0}
+  finishText: {fileID: 0}
+  aim: {fileID: 0}
   state: 0
+  nTarget: 0
 --- !u!1001 &1163250970474590293
 PrefabInstance:
   m_ObjectHideFlags: 0
