@@ -12,7 +12,6 @@ public class InputManager : MonoBehaviour
     public Transform shootingClubEntry;
     public Transform tennisClubEntry;
     public Transform musicGameClubEntry;
-    
 
     public Scene shootingClubScene;
     public Scene tennisClubScene;
