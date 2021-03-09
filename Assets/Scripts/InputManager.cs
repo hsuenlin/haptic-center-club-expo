@@ -6,33 +6,12 @@ using UnityEngine.SceneManagement;
 public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
-
-    // Start is called before the first frame update
-    public Transform clubEnumEntry;
-    public Transform shootingClubEntry;
-    public Transform tennisClubEntry;
-    public Transform musicGameClubEntry;
-
-    public Scene shootingClubScene;
-    public Scene tennisClubScene;
-    public Scene musicGameClubScene;
-
-    public enum ClubEnum {
-        ClubExpo,
-        ShootingClub,
-        TennisClub,
-        MusicGameClub
-    }
     
-    public ClubEnum faceTo = ClubEnum.ShootingClub;
-    public ClubEnum currentScene = ClubEnum.ClubExpo;
-
-    public Transform[] enumToEntry;
-
+    public bool isHit;
     public GameObject hitObject;
 
-    public bool isHit;
-
+    public Transform handPose;
+    
     void Awake() {
         if (instance == null)
         {
@@ -47,13 +26,6 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
-        enumToEntry = new Transform[] {
-            clubEnumEntry,
-            shootingClubEntry,
-            tennisClubEntry,
-            musicGameClubEntry
-        };
-        //DontDestroyOnLoad(this.gameObject);
     }
 
     // Update is called once per frame
@@ -62,5 +34,9 @@ public class InputManager : MonoBehaviour
         // TODO: 
         // Pinch raycast
         // Update isHit and Hit
+        
+        
+        
+        
     }
 }

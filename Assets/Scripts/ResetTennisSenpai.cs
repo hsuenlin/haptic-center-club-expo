@@ -14,11 +14,11 @@ public class ResetTennisSenpai : StateMachineBehaviour
     {
         animator.applyRootMotion = false;
         if(isFirst) {
-            startingPosition = animator.gameObject.transform.position;
-            startingRotation = animator.gameObject.transform.rotation;
+            startingPosition = animator.gameObject.transform.localPosition;
+            startingRotation = animator.gameObject.transform.localRotation;
         } else {
-            animator.gameObject.transform.position = startingPosition;
-            animator.gameObject.transform.rotation = startingRotation;
+            animator.gameObject.transform.localPosition = startingPosition;
+            animator.gameObject.transform.localRotation = startingRotation;
         }
         isFirst = false;
     }

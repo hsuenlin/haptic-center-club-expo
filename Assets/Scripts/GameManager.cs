@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
     public Action OnDeviceReady;
 
     /* Roots */
+    public Transform forestIslandRoot;
     public Transform arenaRoot;
     public Transform shootingClubRoot;
     public Transform tennisClubRoot;
@@ -148,8 +149,8 @@ public class GameManager : MonoBehaviour
             {SceneState.MUSICGAME_CLUB, musicGameClubRoot }
         };
 
-        arenaManager = transform.GetChild(0).GetComponent<ArenaManager>();
-        shootingClubManager = transform.GetChild(1).GetComponent<ShootingClubManager>();
+        //arenaManager = transform.GetChild(0).GetComponent<ArenaManager>();
+        //shootingClubManager = transform.GetChild(1).GetComponent<ShootingClubManager>();
         
         arenaManager.gameObject.SetActive(false);
         shootingClubManager.gameObject.SetActive(false);
@@ -174,11 +175,12 @@ public class GameManager : MonoBehaviour
         // TODO: Exit and inits during teleportation
         TeleportTo(roots[dest]);
         exits[sceneState].Invoke();
-        instance.inits[dest].Invoke();
+        inits[dest].Invoke();
     }
     public void InitArena() {
         arenaManager.gameObject.SetActive(true);
         arenaRoot.gameObject.SetActive(true);
+        
     }
 
     public void ExitArena() {

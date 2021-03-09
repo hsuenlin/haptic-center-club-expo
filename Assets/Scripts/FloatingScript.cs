@@ -15,8 +15,8 @@ public class FloatingScript : MonoBehaviour
     {
         DOTween.SetTweensCapacity(2000, 100);
         Sequence upAndDown = DOTween.Sequence();
-        upAndDown.Append(transform.DOLocalMoveY(transform.position.y + bouncingRange, 1.25f).SetEase(Ease.InOutSine))
-            .Append(transform.DOLocalMoveY(transform.position.y, 1.25f).SetEase(Ease.InOutSine))
+        upAndDown.Append(transform.DOLocalMoveY(transform.localPosition.y + bouncingRange, 1.25f).SetEase(Ease.InOutSine))
+            .Append(transform.DOLocalMoveY(transform.localPosition.y, 1.25f).SetEase(Ease.InOutSine))
             .SetLoops(-1);
         upAndDown.Play();
         Sequence infRotation = DOTween.Sequence();
