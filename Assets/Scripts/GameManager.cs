@@ -190,11 +190,11 @@ public class GameManager : MonoBehaviour
 
     public void InitShootingClub() {
         TeleportTo(shootingClubRoot);
-        GameObject gun = Instantiate(gunPrefab, Vector3.one, Quaternion.identity);
-        gun.transform.parent = Camera.main.transform;
-        gun.transform.localPosition = new Vector3(0.2f, -0.9f, 0.7f);
-        shootingClubManager.gun = gun;
-        shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
+        //GameObject gun = Instantiate(gunPrefab, Vector3.one, Quaternion.identity);
+        //gun.transform.parent = Camera.main.transform;
+        //gun.transform.localPosition = new Vector3(0.2f, -0.9f, 0.7f);
+        //shootingClubManager.gun = gun;
+        //shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
         shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         shootingClubManager.gameObject.SetActive(true);
         shootingClubRoot.gameObject.SetActive(true);

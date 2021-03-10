@@ -79,6 +79,8 @@ public class ShootingClubManager : MonoBehaviour
         GameManager.instance.OnDeviceReady += () => { toGameBtn.gameObject.SetActive(true); };
         addTargetDemoBtn.gameObject.SetActive(true);
         canvas.GetComponent<GraphicRaycaster>().enabled = true;
+        TargetManager.instance.AddTargetDemo();
+        TargetManager.instance.UpdateHandbook();
     }
 
     private void ExitWaiting() {
@@ -109,15 +111,16 @@ public class ShootingClubManager : MonoBehaviour
         if(state == ClubState.ENTRY) {
             InitIdle();
             state = ClubState.IDLE;
-        }
-        if(state == ClubState.IDLE) {
+        } 
+        else if(state == ClubState.IDLE) {
             if(timer > welcomeTextTime) {
                 ExitIdle();
                 InitWaiting();
                 state = ClubState.WAITING;
             }
             timer += Time.deltaTime;
-        } else if(state == ClubState.WAITING) {
+        } 
+        else if(state == ClubState.WAITING) {
             if(InputManager.instance.isHit) {
                 GameObject hit = InputManager.instance.hitObject;
                 if(hit == toGameBtn.gameObject) {
