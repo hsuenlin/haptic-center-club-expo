@@ -42,6 +42,7 @@ public class TargetManager : MonoBehaviour
     public float minHeight = -0.1f;
     public GameObject targetPrefab;
     public AnimationCurve targetCurve;
+    public Transform handbookCenter;
 
     
     /* Initialized in Start() */
@@ -115,9 +116,10 @@ public class TargetManager : MonoBehaviour
 
     public void AddTargetDemo() {
         targetDemo = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
-        targetDemo.transform.parent = Camera.main.transform;
-        targetDemo.transform.localPosition = new Vector3(0, 0, 5);
-        targetDemo.transform.LookAt(Camera.main.transform);
+        targetDemo.transform.parent = handbookCenter;
+        targetDemo.transform.localPosition = Vector3.zero;
+        targetDemo.transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -1f), Vector3.up);
+        //targetDemo.transform.LookAt(Camera.main.transform);
         targetDemoList.Add(targetDemo);
 
         float hue = Random.Range(0f, 1f);
@@ -129,7 +131,7 @@ public class TargetManager : MonoBehaviour
 
     public void UpdateHandbook() {
         targetDemos = targetDemoList.ToArray();
-        Vector3 upLeftCorner = new Vector3(-2f, -0.5f, 5f);
+        Vector3 upLeftCorner = new Vector3(2f, -0.5f, 0f);
         
         int nCol = 11;
         int nRow = targetDemos.Length % nCol + 1;

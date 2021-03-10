@@ -95,12 +95,14 @@ public class GameManager : MonoBehaviour
     public Action OnTriggered;
     public Action OnDeviceReady;
 
-    /* Roots */
+    /* Root */
     public Transform forestIslandRoot;
-    public Transform arenaRoot;
-    public Transform shootingClubRoot;
-    public Transform tennisClubRoot;
-    public Transform musicGameClubRoot;
+
+    /* Scene Transforms */
+    public Transform arenaTransform;
+    public Transform shootingClubTransform;
+    public Transform tennisClubTransform;
+    public Transform musicGameClubTransform;
 
     /* Scene Managers */
     public ArenaManager arenaManager;
@@ -109,7 +111,7 @@ public class GameManager : MonoBehaviour
     /* Init and Exit Functions */
     private Dictionary<SceneState, Action> inits;
     private Dictionary<SceneState, Action> exits;
-    private Dictionary<SceneState, Transform> roots;
+    private Dictionary<SceneState, Transform> transforms;
 
     /* Prefabs */
     public GameObject gunPrefab;
@@ -142,11 +144,11 @@ public class GameManager : MonoBehaviour
             {SceneState.MUSICGAME_CLUB, () => ExitMusicGameClub() }
         };
 
-        roots = new Dictionary<SceneState, Transform>() {
-            {SceneState.ARENA, arenaRoot},
-            {SceneState.SHOOTING_CLUB, shootingClubRoot },
-            {SceneState.TENNIS_CLUB, tennisClubRoot },
-            {SceneState.MUSICGAME_CLUB, musicGameClubRoot }
+        transforms = new Dictionary<SceneState, Transform>() {
+            {SceneState.ARENA, arenaTransform},
+            {SceneState.SHOOTING_CLUB, shootingClubTransform },
+            {SceneState.TENNIS_CLUB, tennisClubTransform },
+            {SceneState.MUSICGAME_CLUB, musicGameClubTransform }
         };
 
         //arenaManager = transform.GetChild(0).GetComponent<ArenaManager>();
@@ -154,54 +156,42 @@ public class GameManager : MonoBehaviour
         
         arenaManager.gameObject.SetActive(false);
         shootingClubManager.gameObject.SetActive(false);
-        
-        arenaRoot.gameObject.SetActive(false);
-        shootingClubRoot.gameObject.SetActive(false);
 
         sceneState = SceneState.ARENA;
         InitArena();
     }
 
-    private void TeleportTo(Transform dest) {
-        // TODO: Add teleportation animation
-        Camera.main.transform.position = dest.GetChild(0).position;
-        Camera.main.transform.rotation = dest.GetChild(0).rotation;
-
-        // LookAt
-        // Height
+    private void ApplyTransformToIsland(Transform toDestTransform) {        
+        forestIslandRoot.position = toDestTransform.position;
+        forestIslandRoot.eulerAngles = toDestTransform.eulerAngles;
     }
 
     public void ChangeSceneTo(SceneState dest) {
-        // TODO: Exit and inits during teleportation
-        TeleportTo(roots[dest]);
+        ApplyTransformToIsland(transforms[dest]);
         exits[sceneState].Invoke();
         inits[dest].Invoke();
     }
     public void InitArena() {
         arenaManager.gameObject.SetActive(true);
-        arenaRoot.gameObject.SetActive(true);
         
     }
 
     public void ExitArena() {
         arenaManager.gameObject.SetActive(false);
-        arenaRoot.gameObject.SetActive(false);
     }
 
     public void InitShootingClub() {
-        TeleportTo(shootingClubRoot);
+        //ApplyTransformToIsland(shootingClubTransform);
         //GameObject gun = Instantiate(gunPrefab, Vector3.one, Quaternion.identity);
         //gun.transform.parent = Camera.main.transform;
         //gun.transform.localPosition = new Vector3(0.2f, -0.9f, 0.7f);
         //shootingClubManager.gun = gun;
         //shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
-        shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+        //shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         shootingClubManager.gameObject.SetActive(true);
-        shootingClubRoot.gameObject.SetActive(true);
     }
     public void ExitShootingClub() {
         shootingClubManager.gameObject.SetActive(false);
-        shootingClubRoot.gameObject.SetActive(false);
         Destroy(ShootingClubManager.instance.gun);
     }
 

@@ -43,7 +43,7 @@ public class ShootingClubManager : MonoBehaviour
     private float minToArenaTime = 1f;
     public Button toGameBtn;
     public Button toArenaBtn;
-    public Button addTargetDemoBtn;
+    public GameObject addTargetDemoBtn;
 
     /* Timer */
     private float timer = 0f;
@@ -77,10 +77,10 @@ public class ShootingClubManager : MonoBehaviour
 
     private void InitWaiting() {
         GameManager.instance.OnDeviceReady += () => { toGameBtn.gameObject.SetActive(true); };
-        addTargetDemoBtn.gameObject.SetActive(true);
-        canvas.GetComponent<GraphicRaycaster>().enabled = true;
+        addTargetDemoBtn.SetActive(true);
+        //canvas.GetComponent<GraphicRaycaster>().enabled = true;
         TargetManager.instance.AddTargetDemo();
-        TargetManager.instance.UpdateHandbook();
+        //TargetManager.instance.UpdateHandbook();
     }
 
     private void ExitWaiting() {
