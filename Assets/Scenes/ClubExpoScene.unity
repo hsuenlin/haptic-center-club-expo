@@ -1166,7 +1166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 261991490}
   m_Layer: 0
-  m_Name: HangerPosition
+  m_Name: Hanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1182,7 +1182,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1144172646}
   m_Father: {fileID: 2046411554}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2962,7 +2963,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1139874272}
+  - {fileID: 1118732360}
   - {fileID: 2063252459}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -3594,6 +3595,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6751314cb92ff49980ac423b66ecfa, type: 3}
+--- !u!1 &1118732359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1118732360}
+  m_Layer: 0
+  m_Name: HapticCenterZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1118732360
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118732359}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.33, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1139874272}
+  - {fileID: 2046411554}
+  m_Father: {fileID: 757767891}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1120262481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3739,12 +3772,12 @@ GameObject:
   - component: {fileID: 1139874274}
   - component: {fileID: 1139874273}
   m_Layer: 0
-  m_Name: HapticCenter
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1139874272
 Transform:
   m_ObjectHideFlags: 0
@@ -3753,10 +3786,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139874271}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.18, z: 0}
-  m_LocalScale: {x: 0.78, y: 3, z: 0.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 0, z: 2}
   m_Children: []
-  m_Father: {fileID: 757767891}
+  m_Father: {fileID: 1118732360}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1139874273
@@ -3849,6 +3882,12 @@ Transform:
   m_Father: {fileID: 383349353}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!4 &1144172646 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5329331547639348685}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1145143913 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4121957669690104, guid: 1617cfd7d856042459cec623d111378d,
@@ -6078,14 +6117,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2046411553}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.35, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.61, y: -0.01999998, z: 1.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1632449748}
   - {fileID: 261991490}
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_Father: {fileID: 1118732360}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2054030385
 PrefabInstance:
@@ -6629,7 +6668,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 261991490}
     m_Modifications:
     - target: {fileID: 5324570371983322321, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
@@ -6644,7 +6683,7 @@ PrefabInstance:
     - target: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
@@ -6654,12 +6693,12 @@ PrefabInstance:
     - target: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.028
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5329331546633653675, guid: 8dc7171826e314ad997dde38c591f8a1,
         type: 3}
