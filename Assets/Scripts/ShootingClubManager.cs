@@ -76,6 +76,7 @@ public class ShootingClubManager : MonoBehaviour
     }
 
     private void InitWaiting() {
+        timer = 0f;
         GameManager.instance.OnDeviceReady += () => { toGameBtn.gameObject.SetActive(true); };
         addTargetDemoBtn.SetActive(true);
         //canvas.GetComponent<GraphicRaycaster>().enabled = true;
@@ -84,10 +85,10 @@ public class ShootingClubManager : MonoBehaviour
     }
 
     private void ExitWaiting() {
-        addTargetDemoBtn.gameObject.SetActive(false);
-        toGameBtn.gameObject.SetActive(false);
+        addTargetDemoBtn.SetActive(false);
+        //toGameBtn.gameObject.SetActive(false);
         TargetManager.instance.DestroyTargetDemos();
-        canvas.GetComponent<GraphicRaycaster>().enabled = false;
+        //canvas.GetComponent<GraphicRaycaster>().enabled = false;
     }
 
     private void InitGame() {
@@ -121,6 +122,13 @@ public class ShootingClubManager : MonoBehaviour
             timer += Time.deltaTime;
         } 
         else if(state == ClubState.WAITING) {
+            // TODO: Change this part to get server data
+            if(timer > 5f) {
+                
+            }
+            timer += Time.deltaTime;
+            
+            /*
             if(InputManager.instance.isHit) {
                 GameObject hit = InputManager.instance.hitObject;
                 if(hit == toGameBtn.gameObject) {
@@ -132,6 +140,7 @@ public class ShootingClubManager : MonoBehaviour
                     TargetManager.instance.UpdateHandbook();
                 }
             }
+            */
             
             // Change to GAME state when player pinches on the Gun indicator. 
             // InitGame(): Activate TargetMachine

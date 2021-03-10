@@ -125,9 +125,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets:
-  - {fileID: -8196854396901781169, guid: 1a4c68ca72a83449f938d669337cb305, type: 2}
-  - {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -426,6 +424,11 @@ PlayerSettings:
     m_Devices:
     - Oculus
     - OpenVR
+  - m_BuildTarget: Android
+    m_Enabled: 0
+    m_Devices:
+    - Oculus
+    - OpenVR
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
@@ -668,7 +671,8 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    7: VIU_OCULUSVR;VIU_OCULUSVR_1_37_0_OR_NEWER;VIU_OCULUSVR_16_0_OR_NEWER;VIU_OCULUSVR_19_0_OR_NEWER;VIU_XR_GENERAL_SETTINGS;VIU_XR_PACKAGE_METADATA_STORE;VIU_PLUGIN;VIU_OCULUSVR_ANDROID_SUPPORT
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
