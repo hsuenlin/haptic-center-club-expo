@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿// TODO: 
+// 1. Refactor
+// 2. PropState
+// ...
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
