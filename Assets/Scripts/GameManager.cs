@@ -49,6 +49,7 @@ public enum ServerStageState
 }
 
 public enum SceneState {
+    CALIBRATION = -1,
     ARENA = 0,
     SHOOTING_CLUB = 1,
     TENNIS_CLUB = 2,
@@ -74,144 +75,106 @@ public enum ClientCommand
     RequestDevicesStatus = 4,
     RequestDevice = 5
 }
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton
 {
 
-    /* Singleton */
-    public static GameManager instance;
-
-    /* Client State */
-    public SceneState sceneState;
-
-    /* Server States */
-    public ServerGameState serverGameState;
-    public ServerStageState serverStageState;
+    public SceneState currentScene;
     
-    /* Actions */
-    public Action OnTrackerInfoReady;
-    public Action OnDeviceStatusReady;
-    public Action OnRequestResultReady;
-    public Action OnPanelInfoReady;
-    public Action OnTriggered;
-    public Action OnDeviceReady;
-
-    /* Root */
     public Transform forestIslandRoot;
 
-    /* Scene Transforms */
-    public Transform arenaTransform;
-    public Transform shootingClubTransform;
-    public Transform tennisClubTransform;
-    public Transform musicGameClubTransform;
-
     /* Scene Managers */
+    public CalibrationManager CalibrationManager;
     public ArenaManager arenaManager;
     public ShootingClubManager shootingClubManager;
+    public TennisClubManager tennisClubManager;
+    public MusicGameClubManager musicGameClubManager;
 
-    /* Init and Exit Functions */
-    private Dictionary<SceneState, Action> inits;
-    private Dictionary<SceneState, Action> exits;
-    private Dictionary<SceneState, Transform> transforms;
+    // Updated by each club's End()
+    public bool isShootingClubPlayed;
+    public bool isTennisClubPlayed;
+    public bool isMusicGameClubPlayed;
 
-    /* Prefabs */
-    public GameObject gunPrefab;
+    public Dictionary<SceneState, Action> isClubPlayedDict;
+
+    private Dictionary<SceneState, Component> sceneManagerDict;
     
     // Start is called before the first frame update
-    void Awake() {
-        if (instance == null)
-        {
-            instance = this;
+    protected override void Awake() {
+        Assert.IsNotNull(forestIslandRoot);
+
+        Assert.IsNotNull(cabibrationManager);
+        Assert.IsNotNull(arenaManager);
+        Assert.IsNotNull(shootingClubManager);
+        Assert.IsNotNull(tennisClubManager);
+        Assert.IsNotNull(musicGameClubManager);
+        
+        isShootingClubPlayed = false;
+        isTennisClubPlayed = false;
+        isMusicGameClubPlayed = false;
+
+        sceneManagerDict = new Dictionary<SceneState, Component>() {
+            {SceneState.CALIBRATION, cabibrationManager},
+            {SceneState.ARENA, arenaManager},
+            {SceneState.SHOOTING_CLUB, shootingClubManager},
+            {SceneState.TENNIS_CLUB, tennisClubManager},
+            {SceneState.MUSICGAME_CLUB, musicGameClubManager}
         }
-        else if (instance != this)
+
+        isClubPlayedDict = new Dictionary<SceneState, Action>() {
+            {SceneState.SHOOTING_CLUB, ()=>{ return isShootingClubPlayed; } },
+            {SceneState.TENNIS_CLUB, ()=>{ return isTennisClubPlayed; } },
+            {SceneState.MUSICGAME_CLUB, ()=>{ return isMusicGameClubPlayed; }}
+        }
+
+        sceneManagerDict[currentScene].gameObject.SetActive(true);
+
+        // TODO: 
+        // Make connection with server. 
+        // -> Server will keep sending haptic center tracker data and player tracker data.
+    }
+
+
+    void Update() {
+        switch(currentScene) 
         {
-            Debug.Log("Instance already exists, destroying object!");
-            Destroy(this);
+            case SceneState.CALIBRATION:
+                if(calibrationManager.isCalibrated) {
+                    ChangeSceneTo(SceneState.ARENA);
+                }
+                break;
+            case SceneState.ARENA:
+                if(arenaManager.isShootingClubReady) {
+                    ChangeSceneTo(SceneState.SHOOTING_CLUB);
+                }
+                else if(arenaManager.isTennisClubReady) {
+                    ChangeSceneTo(SceneState.TENNIS_CLUB);
+                }
+                else if(arenaManager.isMusicGameClubReady) {
+                    ChangeSceneTo(SceneState.MUSICGAME_CLUB);
+                }
+                break;
+            case SceneState.SHOOTING_CLUB:
+                if(isShootingClubPlayed) {
+                    ChangeSceneTo(SceneState.ARENA);
+                }
+                break;
+            case SceneState.TENNIS_CLUB:
+                if(isTennisClubPlayed) {
+                    ChangeSceneTo(SceneState.ARENA);
+                }
+                break;
+            case SceneState.MUSICGAME_CLUB:
+                if(isMusicGameClubPlayed) {
+                    ChangeSceneTo(SceneState.ARENA);
+                }
+                break;
+            default:
+                break;
         }
     }
-    void Start()
-    {
-        inits = new Dictionary<SceneState, Action>() {
-            {SceneState.ARENA, () => InitArena() },
-            {SceneState.SHOOTING_CLUB, () => InitShootingClub() },
-            {SceneState.TENNIS_CLUB, () => InitTennisClub() },
-            {SceneState.MUSICGAME_CLUB, () => InitMusicGameClub() }
-        };
-        
-        exits = new Dictionary<SceneState, Action>() {
-            {SceneState.ARENA, () => ExitArena() },
-            {SceneState.SHOOTING_CLUB, () => ExitShootingClub() },
-            {SceneState.TENNIS_CLUB, () => ExitTennisClub() },
-            {SceneState.MUSICGAME_CLUB, () => ExitMusicGameClub() }
-        };
 
-        transforms = new Dictionary<SceneState, Transform>() {
-            {SceneState.ARENA, arenaTransform},
-            {SceneState.SHOOTING_CLUB, shootingClubTransform },
-            {SceneState.TENNIS_CLUB, tennisClubTransform },
-            {SceneState.MUSICGAME_CLUB, musicGameClubTransform }
-        };
-
-        //arenaManager = transform.GetChild(0).GetComponent<ArenaManager>();
-        //shootingClubManager = transform.GetChild(1).GetComponent<ShootingClubManager>();
-        
-        arenaManager.gameObject.SetActive(false);
-        shootingClubManager.gameObject.SetActive(false);
-
-        sceneState = SceneState.ARENA;
-        InitArena();
-    }
-
-    private void ApplyTransformToIsland(Transform toDestTransform) {        
-        forestIslandRoot.position = toDestTransform.position;
-        forestIslandRoot.eulerAngles = toDestTransform.eulerAngles;
-    }
-
-    public void ChangeSceneTo(SceneState dest) {
-        ApplyTransformToIsland(transforms[dest]);
-        exits[sceneState].Invoke();
-        inits[dest].Invoke();
-    }
-    public void InitArena() {
-        arenaManager.gameObject.SetActive(true);
-        
-    }
-
-    public void ExitArena() {
-        arenaManager.gameObject.SetActive(false);
-    }
-
-    public void InitShootingClub() {
-        //ApplyTransformToIsland(shootingClubTransform);
-        //GameObject gun = Instantiate(gunPrefab, Vector3.one, Quaternion.identity);
-        //gun.transform.parent = Camera.main.transform;
-        //gun.transform.localPosition = new Vector3(0.2f, -0.9f, 0.7f);
-        //shootingClubManager.gun = gun;
-        //shootingClubManager.muzzle = gun.transform.GetChild(1).transform;
-        //shootingClubManager.cameraCenter = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
-        shootingClubManager.gameObject.SetActive(true);
-    }
-    public void ExitShootingClub() {
-        shootingClubManager.gameObject.SetActive(false);
-        Destroy(ShootingClubManager.instance.gun);
-    }
-
-    public void InitTennisClub() {
-        
-    }
-    public void ExitTennisClub() {
-
-    }
-
-    public void InitMusicGameClub() {
-
-    }
-    public void ExitMusicGameClub() {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+    public void ChangeSceneTo(SceneState nextScene) {
+        sceneManagerDict[currentScene].gameObject.SetActive(false);
+        sceneManagerDict[nextScene].gameObject.SetActive(true);
     }
 }

@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShootingClubManager : MonoBehaviour
-{
-    // Start is called before the first frame update
-    public static ShootingClubManager instance;
-    public enum ClubState
+public enum ClubState
     {
         ENTRY = -1,
         IDLE = 0,
         WAITING = 1,
         GAME = 2,
         RESULT = 3
-    };
+    }
+
+public class ShootingClubManager : MonoBehaviour
+{
+    // Start is called before the first frame update
+    public static ShootingClubManager instance;
+    
 
     public ClubState state = ClubState.ENTRY;
 
@@ -44,6 +46,7 @@ public class ShootingClubManager : MonoBehaviour
     public Button toGameBtn;
     public Button toArenaBtn;
     public GameObject addTargetDemoBtn;
+    public GameObject propStand;
 
     /* Timer */
     private float timer = 0f;
@@ -66,16 +69,16 @@ public class ShootingClubManager : MonoBehaviour
         trajectory = GetComponent<LineRenderer>();
     }
 
-    private void InitIdle() {
+    public void InitIdle() {
         timer = 0f;
         welcomeText.gameObject.SetActive(true);
     }
 
-    private void ExitIdle() {
+    public void ExitIdle() {
         welcomeText.gameObject.SetActive(false);
     }
 
-    private void InitWaiting() {
+    public void InitWaiting() {
         timer = 0f;
         GameManager.instance.OnDeviceReady += () => { toGameBtn.gameObject.SetActive(true); };
         addTargetDemoBtn.SetActive(true);
@@ -84,25 +87,25 @@ public class ShootingClubManager : MonoBehaviour
         //TargetManager.instance.UpdateHandbook();
     }
 
-    private void ExitWaiting() {
+    public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
         //toGameBtn.gameObject.SetActive(false);
         TargetManager.instance.DestroyTargetDemos();
         //canvas.GetComponent<GraphicRaycaster>().enabled = false;
     }
 
-    private void InitGame() {
+    public void InitGame() {
         timer = 0f;
         readyText.gameObject.SetActive(true);
     }
 
-    private void ExitGame() {
+    public void ExitGame() {
         healthBarImage.gameObject.SetActive(false);
         aim.gameObject.SetActive(false);
         GameManager.instance.OnTriggered -= TriggerGun;
     }
 
-    private void InitResult() {
+    public void InitResult() {
         timer = 0f;
     }
 
@@ -123,8 +126,10 @@ public class ShootingClubManager : MonoBehaviour
         } 
         else if(state == ClubState.WAITING) {
             // TODO: Change this part to get server data
+            // Substate
+            HapticCenterManager.instance.
             if(timer > 5f) {
-                
+                propStand.SetActive(true);
             }
             timer += Time.deltaTime;
             

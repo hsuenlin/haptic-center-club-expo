@@ -5,11 +5,14 @@ using UnityEngine.Assertions;
 
 namespace OculusSampleFramework
 {
-    public class FloatingGunManager: HandsInteractable
+    public class SceneEntry: HandsInteractable
     {
         public SelectionCylinder selectionCylinder;
+        public SceneState signifiedScene;
+        
         void Awake() {
             Assert.IsNotNull(selectionCylinder);
+            Assert.IsNotNull(signifiedScene);
         }
 
         public override void OnNoInput() {
@@ -26,7 +29,12 @@ namespace OculusSampleFramework
 
         public override void OnPrimaryInputUp() {
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
-            GameManager.instance.ChangeSceneTo(SceneState.SHOOTING_CLUB);
+            // Pinched && DeviceReady
+            if (ArenaManager.instance.isDeviceReadyDict[signifiedScene]
+                && !GameManager.instance.isClubPlayedDict[signifiedScene])
+            {
+                ArenaManager.instance.SetIsClubReady(signifiedScene, true);
+            }
         }
     }
 }
