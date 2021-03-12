@@ -6,57 +6,47 @@ public class ArenaManager : StateSingleton
 {
     public Transform toArenaTransform;
 
-    // Updated by ClientHandler
-    public bool isShootingClubDeviceReady;
-    public bool isTennisClubDeviceReady;
-    public bool isMusicGameClubDeviceReady;
+    public GameObject floatingGun;
+    public GameObject floatingRacket;
+    public GameObject floatingSpeaker;
 
-    public bool isShootingClubReady;
-    public bool isTennisClubReady;
-    public bool isMusicGameClubReady;
+    public GameObject shootingClubSign;
+    public GameObject tennisClubSign;
+    public GameObject musicGameClubSign;
 
-    public Dictionary<SceneState, Action> isDeviceReadyDict;
-    
     protected override void OnAwake() {
         Assert.IsNotNull(toArenaTransform);
+
+        Assert.IsNotNull(floatingGun);
+        Assert.IsNotNull(floatingRacket);
+        Assert.IsNotNull(floatingSpeaker);
 
         Assert.IsNotNull(shootingClubSign);
         Assert.IsNotNull(tennisClubSign);
         Assert.IsNotNull(musicGameClubSign);
-
-        isDeviceReadyDict = new Dictionary<SceneState, Action>() {
-            {SceneState.SHOOTING_CLUB, ()=>{ return isShootingClubDeviceReady; }},
-            {SceneState.TENNIS_CLUB, ()=>{ return isTennisDeviceReady; }},
-            {SceneState.MUSICGAME_CLUB, ()=>{ return isMusicGameClubDeviceReady; }},
-        }
     }
 
     protected override void Init() {
         GameObject.instance.forestIslandRoot.position = toArenaTransform.position;
         GameObject.instance.forestIslandRoot.eulerAngles = toArenaTransform.eulerAngles;
-        
-        isShootingClubReady = false;
-        isTennisClubReady = false;
-        isMusicGameClubReady = false;
+
+        floatingGun.SetActive(true);
+        floatingRacket.SetActive(true);
+        floatingSpeaker.SetActive(true);
+
+        shootingClubSign.SetActive(true);
+        tennisClubSign.SetActive(true);
+        musicGameClubSign.SetActive(true);
     }
 
-    public void SetIsClubReady(SceneState state, bool value) {
-        switch(state) {
-            case SceneState.SHOOTING:
-                isShootingClubReady = value;
-                break;
-            case SceneState.TENNIS_CLUB:
-                isTennisClubReady = value;
-                break;
-            case SceneState.MUSICGAME_CLUB:
-                isMusicGameClubReady = value;
-                break;
-            default:
-                break;
-        }
+    protected override void Exit() {
+        floatingGun.SetActive(false);
+        floatingRacket.SetActive(false);
+        floatingSpeaker.SetActive(false);
+
+        shootingClubSign.SetActive(false);
+        tennisClubSign.SetActive(false);
+        musicGameClubSign.SetActive(false);
     }
 
-    protected override void End() {
-        
-    }
 }

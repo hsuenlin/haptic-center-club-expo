@@ -23,7 +23,7 @@ public abstract class StateSingleton<T> : MonoBehaviour where T : Component
 
     // Start is called before the first frame update
     protected virtual void Init() {}
-    protected virtual void End() {}
+    protected virtual void Exit() {}
 
     protected virtual void OnEnabled()
     {
@@ -31,6 +31,6 @@ public abstract class StateSingleton<T> : MonoBehaviour where T : Component
     }
     protected virtual void OnDisable()
     {
-        End();
+        Exit();
     }
 }

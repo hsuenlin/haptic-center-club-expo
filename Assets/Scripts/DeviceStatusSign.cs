@@ -19,7 +19,7 @@ public virtual class DeviceStatusSign: MonoBehaviour
 
     void Update() {
         // Fetching device status
-        if(ArenaManager.instance.isDeviceReadyDict[signifiedScene]) {
+        if(DataManager.instance.isDeviceReady[(int)signifiedScene]) {
             renderer.material = freeMaterial;
         }
         else {
