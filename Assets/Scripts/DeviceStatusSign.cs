@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public virtual class DeviceStatusSign: MonoBehaviour
+public class DeviceStatusSign: MonoBehaviour
 {
     public Material busyMaterial;
     public Material freeMaterial;

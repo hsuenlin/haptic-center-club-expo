@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public enum GameMode {
+    QUEST = 0
+    HAPTIC_CENTER = 1,
+}
+
 public class GameManager : Singleton
 {
 
-    public SceneState currentScene;
+    public SceneState currentSceneState;
+    public SceneState nextSceneState;
+
+    public GameMode gameMode;
 
     /* Scene Managers */
     public CalibrationManager calibrationManager;
@@ -19,8 +27,12 @@ public class GameManager : Singleton
 
     // Start is called before the first frame update
     void Awake() {
+        Assert.IsNotNull(currentSceneState);
+        Assert.IsNotNull(nextSceneState);
 
-        Assert.IsNotNull(cabibrationManager);
+        Assert.IsNotNull(gameMode);
+
+        Assert.IsNotNull(calibrationManager);
         Assert.IsNotNull(arenaManager);
         Assert.IsNotNull(shootingClubManager);
         Assert.IsNotNull(tennisClubManager);
@@ -32,9 +44,9 @@ public class GameManager : Singleton
             {SceneState.SHOOTING_CLUB, shootingClubManager},
             {SceneState.TENNIS_CLUB, tennisClubManager},
             {SceneState.MUSICGAME_CLUB, musicGameClubManager}
-        }
+        };
 
-        sceneManagerDict[currentScene].gameObject.SetActive(true);
+        sceneManagerDict[currentSceneState].gameObject.SetActive(true);
 
         // TODO: 
         // Make connection with server. 
@@ -42,34 +54,29 @@ public class GameManager : Singleton
     }
 
     void Update() {
-        switch(currentScene) 
+        if(currentSceneState != nextSceneState) {
+            ChangeSceneState();
+        }
+        switch(currentSceneState) 
         {
             case SceneState.CALIBRATION:
                 if(calibrationManager.isCalibrated) {
-                    ChangeSceneTo(SceneState.ARENA);
+                    nextSceneState = SceneState.ARENA;
                 }
                 break;
             case SceneState.ARENA:
-                for(int i = 0; i < 3; ++i) {
-                    if(DataManager.instance.isClubReady[i]) {
-                        ChangeSceneTo((SceneState)i))
+                for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
+                    if(DataManager.instance.isClubReady[sceneIdx]) {
+                        nextSceneState = (SceneState) sceneIdx;
                         break;
                     }
                 }
                 break;
             case SceneState.SHOOTING_CLUB:
-                if(DataManager.instance.isClubPlayed[(int)SceneState.SHOOTING_CLUB]) {
-                    ChangeSceneTo(SceneState.ARENA);
-                }
-                break;
             case SceneState.TENNIS_CLUB:
-                if(DataManager.instance.isClubPlayed[(int)SceneState.TENNIS_CLUB]) {
-                    ChangeSceneTo(SceneState.ARENA);
-                }
-                break;
             case SceneState.MUSICGAME_CLUB:
-                if(DataManager.instance.isClubPlayed[(int)SceneState.MUSICGAME_CLUB]) {
-                    ChangeSceneTo(SceneState.ARENA);
+                if(DataManager.instance.isClubPlayed[(int)currentSceneState]) {
+                    nextSceneState = SceneState.ARENA;
                 }
                 break;
             default:
@@ -77,8 +84,9 @@ public class GameManager : Singleton
         }
     }
 
-    public void ChangeSceneTo(SceneState nextScene) {
-        sceneManagerDict[currentScene].gameObject.SetActive(false);
-        sceneManagerDict[nextScene].gameObject.SetActive(true);
+    public void ChangeSceneState() {
+        sceneManagerDict[currentSceneState].gameObject.SetActive(false);
+        sceneManagerDict[nextSceneState].gameObject.SetActive(true);
+        currentSceneState = nextSceneState;
     }
 }

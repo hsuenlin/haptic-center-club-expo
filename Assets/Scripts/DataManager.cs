@@ -51,27 +51,28 @@ public enum SceneState
     TENNIS_CLUB = 1,
     MUSICGAME_CLUB = 2
 }
-public enum ClubState
-{
-    IDLE = 0,
-    WAITING = 1,
-    GAME = 2,
-    RESULT = 3
-}
-public enum PropState
-{
-    DELIVERING = 0,
-    FETCHING = 1,
-    RETURNING = 2,
-    READY = 3
-}
-
 public enum Device
 {
     GUN = 0,
     RACKET = 1,
     PANEL = 2
 }
+public enum ClubState
+{
+    IDLE = 0,
+    WAITING = 1,
+    READY = 2,
+    GAME = 3,
+    RESULT = 4
+}
+public enum PropState
+{
+    DELIVERING = 0,
+    FETCHING = 1,
+    RETURNING = 2,
+}
+
+
 
 public enum ServerCommand
 {
@@ -107,8 +108,11 @@ public class DataManager : Singleton {
     public GameObject panel;
     public bool[] isDeviceFree;
     public bool[] isDeviceReady;
+    public bool[] isDeviceFetched;
     public bool[] isClubReady;
     public bool[] isClubPlayed;
+    
+    
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
 
@@ -122,6 +126,7 @@ public class DataManager : Singleton {
 
         isDeviceFree = new bool[3];
         isDeviceReady = new bool[3];
+        isDeviceFetched = new bool[3];
         isClubReady = new bool[3];
         isClubPlayed = new bool[3];
     }

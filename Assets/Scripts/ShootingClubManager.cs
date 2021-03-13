@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class ShootingClubManager : StateSingleton
 {
+    
+    public SceneState currentClub;
     public Device requiredDevice;
     
     public ClubState currentClubState;
@@ -20,6 +22,23 @@ public class ShootingClubManager : StateSingleton
 
     private Dictionary<ClubState, Action> propStateInits;
     private Dictionary<ClubState, Action> propStateExits;
+
+    public GameObject propStand;
+    public float propStandMinHeight;
+    public float propStandMaxHeight;
+    public float propStandAnimationTime;
+    public AnimationCurve propStandAnimationCurve;
+    
+    public GameObject fetchTrigger;
+    public Text fetchText;
+
+    public Text returnText;
+    public GameObject readyPositionIndicator;
+
+    /* Variables for Quest mode */
+    public float deliveringTime;
+    
+
 
     public Transform root;
     public GameObject gun;
@@ -54,36 +73,54 @@ public class ShootingClubManager : StateSingleton
 
     void OnAwake()
     {
+        Assert.IsNotNull(currentClub);
+        Assert.IsNotNull(requiredDevice);
+
         Assert.IsNotNull(currentClubState);
         Assert.IsNotNull(currentPropState);
         
         Assert.IsNotNull(nextClubState);
         Assert.IsNotNull(nextPropState);
+
+        Assert.IsNotNull(propStand);
+        Assert.IsNotNull(propStandMinHeight);
+        Assert.IsNotNull(propStandMaxHeight);
+        Assert.IsNotNull(propStandAnimationTime);
+        Assert.IsNotNull(propStandAnimationCurve);
+        Assert.IsNotNull(fetchTrigger);
+        Assert.IsNotNull(fetchText);
+    
+        Assert.IsNotNull(returnText);
+        Assert.IsNotNull(readyPositionIndicator);
+
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            Assert.IsNotNull(deliveringTime);
+        }
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
             {ClubState.WAITING, ()=>{ InitWaiting(); }},
             {ClubState.GAME, ()=>{ InitGame(); }},
             {ClubState.RESULT, ()=>{ InitResult(); }}
-        }
+        };
         clubStateExits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ ExitIdle(); }},
             {ClubState.WAITING, ()=>{ ExitWaiting(); }},
             {ClubState.GAME, ()=>{ ExitGame(); }},
             {ClubState.RESULT, ()=>{ ExitResult(); }}
-        }
+        };
         propStateInits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ InitDelivering(); }},
             {PropState.FETCHING, ()=>{ InitFetching(); }},
             {PropState.RETURNING, ()=>{ InitReturning(); }},
             {PropState.READY, ()=>{ InitReady(); }}
-        }
+        };
         propStateExits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ ExitDelivering(); }},
             {PropState.FETCHING, ()=>{ ExitFetching(); }},
             {PropState.RETURNING, ()=>{ ExitReturning(); }},
             {PropState.READY, ()=>{ ExitReady(); }}
-        }
+        };
     }
 
     void Start()
@@ -97,15 +134,10 @@ public class ShootingClubManager : StateSingleton
     public void InitIdle() {
         timer = 0f;
         welcomeText.gameObject.SetActive(true);
+        StartCoroutine(StartTimer(welcomTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
     public void OnIdle() {
-        if(timer > welcomeTextTime) {
-            ExitIdle();
-            InitWaiting();
-            clubState = ClubState.WAITING;
-        }
-        timer += Time.deltaTime;
     }
 
     public void ExitIdle() {
@@ -115,6 +147,7 @@ public class ShootingClubManager : StateSingleton
     public void InitWaiting() {
         
         timer = 0f;
+        
         addTargetDemoBtn.SetActive(true);
         TargetManager.instance.AddTargetDemo();
         //canvas.GetComponent<GraphicRaycaster>().enabled = true;
@@ -125,10 +158,6 @@ public class ShootingClubManager : StateSingleton
     public void OnWaiting() {
             // TODO:
             // SubclubState
-            if(timer > 5f) {
-                propStand.SetActive(true);
-            }
-            timer += Time.deltaTime;
             UpdatePropState();
             /*
             if(InputManager.instance.isHit) {
@@ -150,9 +179,21 @@ public class ShootingClubManager : StateSingleton
 
     public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
-        //toGameBtn.gameObject.SetActive(false);
         TargetManager.instance.DestroyTargetDemos();
-        //canvas.GetComponent<GraphicRaycaster>().enabled = false;
+    }
+    
+    public void InitReady() {
+        // Activate ready text
+        // Activate aim at head center
+        // Activate 
+    }
+
+    public void OnReady() {
+
+    }
+
+    public void ExitReady() {
+
     }
 
     public void InitGame() {
@@ -220,52 +261,83 @@ public class ShootingClubManager : StateSingleton
     /* Prop States */
 
     public void InitDelivering() {
-        
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            StartCoroutine(StartTimer(deliveringTime, () => {
+                DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
+            }));
+        }
     }
 
     public void OnDelivering() {
-        
+        if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
+            propStand.SetActive(true);
+            DOTween propStandRisingSequence = new DOTween.Sequence();
+            propStandRisingSequence.Append(propStand.transform.DOMoveY(propStandMaxHeight, propStandAnimationTime))
+                .SetEase(propStandAnimationCurve)
+                .AppendCallback(() => { nextPropState = PropState.FETCHING; });
+            propStandRisingSequence.Play();
+        }
     }
 
     public void ExitDelivering() {
-
+        
     }
 
     public void InitFetching() {
-        
+        // TODO:
+        // Setup trigger to detect whether the prop is fetched.
+        // Show hint "Come and fetch me."
+        fetchTrigger.SetActive(true);
+        fetchText.SetActive(true);
     }
 
     public void OnFetching() {
-
+        // TODO:
+        // Whether the prop is fetched
+        if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
+            nextPropState = PropState.RETURNING;
+        }
+        fetchText.transform.LookAt(DataManager.instance.playerCamera);
     }
 
     public void ExitFetching() {
-
+        // TODO:
+        // Deactivate trigger
+        // Decativate hint
+        fetchTrigger.SetActive(false);
+        fetchText.SetActive(false);
+        DOTween propStandDropingSequence = new DOTween.Sequence();
+        propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
+                .SetEase(propStandAnimationCurve));
+        propStandDropingSequence.Play();
     }
 
     public void InitReturning() {
-
+        // TODO:
+        // Activate hint "Please go back to the ready position"
+        // Activate hint on ready position
+        // Setup trigger on ready position 
+        returnText.SetActive(true);
+        readyPositionIndicator.SetActive(true);
     }
 
     public void OnReturning() {
-
+        if(DataManager.instance.isPlayerReady[(int)currentClub]) {
+            ExitReturning();
+            nextClubState = ClubState.GAME;
+        }
     }
 
     public void ExitReturning() {
+        returnText.SetActive(false);
+        readyPositionIndicator.SetActive(false);
+        // Deactivate hint text
+        // Deactivate hint on floor
+        // Deactivate trigger
 
     }
 
-    public void InitReady() {
-        
-    }
 
-    public void OnReady() {
-
-    }
-
-    public void ExitReady() {
-
-    }
 
     /* Change State Functions */
 
@@ -284,7 +356,10 @@ public class ShootingClubManager : StateSingleton
     /* Update State Functions */
 
     private void UpdateClubState() {
-        if(currentClubState != nextClubState) {
+        if(nextClubState == null) {
+            clubStateExits[currentClubState]();
+        }
+        else if(currentClubState != nextClubState) {
             ChangeClubState();
         }
         switch(currentClubState) {
