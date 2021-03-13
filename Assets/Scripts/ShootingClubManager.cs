@@ -1,7 +1,4 @@
-﻿// TODO: 
-// 1. Refactor
-// 2. PropState
-// ...
+﻿
 
 using System.Collections;
 using System.Collections.Generic;
@@ -10,13 +7,19 @@ using UnityEngine.UI;
 
 public class ShootingClubManager : StateSingleton
 {
-    // Start is called before the first frame update
-    public static ShootingClubManager instance;
-
     public Device requiredDevice;
     
-    public ClubState clubState = ClubState.ENTRY;
-    public PropState propState = PropState.DELIVERING;
+    public ClubState currentClubState;
+    public PropState currentPropState;
+
+    public ClubState nextClubState;
+    public PropState nextPropState;
+
+    private Dictionary<ClubState, Action> clubStateInits;
+    private Dictionary<ClubState, Action> clubStateExits;
+
+    private Dictionary<ClubState, Action> propStateInits;
+    private Dictionary<ClubState, Action> propStateExits;
 
     public Transform root;
     public GameObject gun;
@@ -51,13 +54,45 @@ public class ShootingClubManager : StateSingleton
 
     void OnAwake()
     {
-        Assert.IsNotNull(requiredDevice);
+        Assert.IsNotNull(currentClubState);
+        Assert.IsNotNull(currentPropState);
+        
+        Assert.IsNotNull(nextClubState);
+        Assert.IsNotNull(nextPropState);
+        
+        clubStateInits = new Dictionary<ClubState, Action>() {
+            {ClubState.IDLE, ()=>{ InitIdle(); }},
+            {ClubState.WAITING, ()=>{ InitWaiting(); }},
+            {ClubState.GAME, ()=>{ InitGame(); }},
+            {ClubState.RESULT, ()=>{ InitResult(); }}
+        }
+        clubStateExits = new Dictionary<ClubState, Action>() {
+            {ClubState.IDLE, ()=>{ ExitIdle(); }},
+            {ClubState.WAITING, ()=>{ ExitWaiting(); }},
+            {ClubState.GAME, ()=>{ ExitGame(); }},
+            {ClubState.RESULT, ()=>{ ExitResult(); }}
+        }
+        propStateInits = new Dictionary<PropState, Action>() {
+            {PropState.DELIVERING, ()=>{ InitDelivering(); }},
+            {PropState.FETCHING, ()=>{ InitFetching(); }},
+            {PropState.RETURNING, ()=>{ InitReturning(); }},
+            {PropState.READY, ()=>{ InitReady(); }}
+        }
+        propStateExits = new Dictionary<PropState, Action>() {
+            {PropState.DELIVERING, ()=>{ ExitDelivering(); }},
+            {PropState.FETCHING, ()=>{ ExitFetching(); }},
+            {PropState.RETURNING, ()=>{ ExitReturning(); }},
+            {PropState.READY, ()=>{ ExitReady(); }}
+        }
     }
 
     void Start()
     {
         trajectory = GetComponent<LineRenderer>();
     }
+
+
+    /* Club States */
 
     public void InitIdle() {
         timer = 0f;
@@ -87,54 +122,6 @@ public class ShootingClubManager : StateSingleton
         //TargetManager.instance.UpdateHandbook();
     }
 
-    public void InitDelivering() {
-        
-    }
-
-    public void OnDelivering() {
-        
-    }
-
-    public void ExitDelivering() {
-
-    }
-
-    public void InitFetching() {
-        
-    }
-
-    public void OnFetching() {
-
-    }
-
-    public void ExitFetching() {
-
-    }
-
-    public void InitReturning() {
-
-    }
-
-    public void OnReturning() {
-
-    }
-
-    public void ExitReturning() {
-
-    }
-
-    public void InitReady() {
-        
-    }
-
-    public void OnReady() {
-
-    }
-
-    public void ExitReady() {
-
-    }
-
     public void OnWaiting() {
             // TODO:
             // SubclubState
@@ -142,31 +129,7 @@ public class ShootingClubManager : StateSingleton
                 propStand.SetActive(true);
             }
             timer += Time.deltaTime;
-            switch(propState) {
-                case PropState.DELIVERING:
-                    if(DataManager.instance.isDeviceReady[(int)sceneState]) {
-                        propState = PropState.FETCHING;
-                    } 
-                    else { 
-                        OnDelivering();
-                    }
-                    break;
-                case PropState.FETCHING:
-                    if(DataManager.instance.isPropFetched) {
-                        
-                    }
-                    OnFetching();
-                    break;
-                case PropState.RETURNING:
-                    OnReturning();
-                    break;
-                case PropState.READY:
-                    OnReady();
-                    break;
-                default:
-                    break;
-            }
-            
+            UpdatePropState();
             /*
             if(InputManager.instance.isHit) {
                 GameObject hit = InputManager.instance.hitObject;
@@ -250,18 +213,81 @@ public class ShootingClubManager : StateSingleton
         timer += Time.deltaTime;
     }
 
-    public void ChangeClubState(SceneState nextState) {
+    public void ExitResult() {
+
+    }
+
+    /* Prop States */
+
+    public void InitDelivering() {
         
     }
 
-    public void ChangePropState(SceneState nextState) {
+    public void OnDelivering() {
+        
+    }
+
+    public void ExitDelivering() {
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        switch(clubState) {
+    public void InitFetching() {
+        
+    }
+
+    public void OnFetching() {
+
+    }
+
+    public void ExitFetching() {
+
+    }
+
+    public void InitReturning() {
+
+    }
+
+    public void OnReturning() {
+
+    }
+
+    public void ExitReturning() {
+
+    }
+
+    public void InitReady() {
+        
+    }
+
+    public void OnReady() {
+
+    }
+
+    public void ExitReady() {
+
+    }
+
+    /* Change State Functions */
+
+    private void ChangeClubState() {
+        clubStateExits[currentClubState]();
+        clubStateInits[nextClubState]();
+        currentClubState = nextClubState;
+    }
+    
+    private void ChangePropState() {
+        propStateExits[currentPropState]();
+        propStateInits[nextPropState]();
+        currentPropState = nextPropState;
+    }
+
+    /* Update State Functions */
+
+    private void UpdateClubState() {
+        if(currentClubState != nextClubState) {
+            ChangeClubState();
+        }
+        switch(currentClubState) {
             case ClubState.IDLE:
                 OnIdle();
                 break;
@@ -277,6 +303,34 @@ public class ShootingClubManager : StateSingleton
             default:
                 break;
         }
+    }
+
+    private void UpdatePropState() {
+        if(currentPropState != nextPropState) {
+            ChangePropState();
+        }
+        switch(currentPropState) {
+            case PropState.DELIVERING:
+                OnDelivering();
+                break;
+            case PropState.FETCHING:
+                OnFetching();
+                break;
+            case PropState.RETURNING:
+                OnReturning();
+                break;
+            case PropState.READY:
+                OnReady();
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+ 
     }
 
     public void TriggerGun()
