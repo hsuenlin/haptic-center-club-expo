@@ -111,7 +111,9 @@ public class DataManager : Singleton {
     public bool[] isDeviceFetched;
     public bool[] isClubReady;
     public bool[] isClubPlayed;
-    
+    public bool[] isInReadyZone;
+    public bool[] isReadyTextShowed;
+    public bool[] isStartTextShowed;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -129,5 +131,8 @@ public class DataManager : Singleton {
         isDeviceFetched = new bool[3];
         isClubReady = new bool[3];
         isClubPlayed = new bool[3];
+        isInReadyZone = new bool[3];
+        isReadyTextShowed = new bool[3];
+        isStartTextShowed = new bool[3];
     }
 }

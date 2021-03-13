@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 
 public class FetchTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
     private void OnTriggerEnter(Collider other) {
         switch(other.name) {
             case "Gun":

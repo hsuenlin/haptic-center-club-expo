@@ -1,6 +1,4 @@
-﻿
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,50 +21,35 @@ public class ShootingClubManager : StateSingleton
     private Dictionary<ClubState, Action> propStateInits;
     private Dictionary<ClubState, Action> propStateExits;
 
+    public Text welcomeText;
+    public float welcomeTextTime; //3f
+
+    public GameObject addTargetDemoBtn;
+
     public GameObject propStand;
     public float propStandMinHeight;
     public float propStandMaxHeight;
     public float propStandAnimationTime;
     public AnimationCurve propStandAnimationCurve;
-    
     public GameObject fetchTrigger;
     public Text fetchText;
 
     public Text returnText;
     public GameObject readyPositionIndicator;
 
-    /* Variables for Quest mode */
-    public float deliveringTime;
-    
-
-
-    public Transform root;
-    public GameObject gun;
-    public Transform muzzle;
-    public Vector3 cameraCenter;
-    public float gunColdDownTime = 0.25f;
-    public float shootingRange = 100f;
-    private LineRenderer trajectory;
-    private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
-
-    private bool gameStart = false;
-
-    /* UI */
-    public GameObject canvas;
-    public Image healthBarImage;
-    public Image aim;
-    public Text welcomeText;
     public Text readyText;
     public Text startText;
+    public float readyTextTime; // 1f
+    public float startTextTime; // 1.75f
+    public Image progressBar;
+
+    public Image healthBarImage;
+
     public Text finishText;
-    private float readyTextTime = 1f;
-    private float startTextTime = 1.75f;
-    private float welcomeTextTime = 3f;
-    private float minToArenaTime = 1f;
-    public Button toGameBtn;
-    public Button toArenaBtn;
-    public GameObject addTargetDemoBtn;
-    public GameObject propStand;
+    public Text finishTextTime; // 2f
+
+    /* Variables for Quest mode */
+    public float deliveringTime;
 
     /* Timer */
     private float timer = 0f;
@@ -82,6 +65,9 @@ public class ShootingClubManager : StateSingleton
         Assert.IsNotNull(nextClubState);
         Assert.IsNotNull(nextPropState);
 
+        Assert.IsNotNull(welcomeText);
+        Assert.IsNotNull(welcomeTextTime);
+
         Assert.IsNotNull(propStand);
         Assert.IsNotNull(propStandMinHeight);
         Assert.IsNotNull(propStandMaxHeight);
@@ -92,6 +78,17 @@ public class ShootingClubManager : StateSingleton
     
         Assert.IsNotNull(returnText);
         Assert.IsNotNull(readyPositionIndicator);
+
+        Assert.IsNotNull(readyText);
+        Assert.IsNotNull(startText);
+        Assert.IsNotNull(readyTextTime);
+        Assert.IsNotNull(startTextTime);
+        Assert.IsNotNull(progressBar);
+
+        Assert.IsNotNull(healthBarImage);
+
+        Assert.IsNotNull(finishText);
+        Assert.IsNotNull(finishTextTime);
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             Assert.IsNotNull(deliveringTime);
@@ -123,13 +120,7 @@ public class ShootingClubManager : StateSingleton
         };
     }
 
-    void Start()
-    {
-        trajectory = GetComponent<LineRenderer>();
-    }
-
-
-    /* Club States */
+    /* Club States Methods */
 
     public void InitIdle() {
         timer = 0f;
@@ -145,36 +136,13 @@ public class ShootingClubManager : StateSingleton
     }
 
     public void InitWaiting() {
-        
         timer = 0f;
-        
         addTargetDemoBtn.SetActive(true);
         TargetManager.instance.AddTargetDemo();
-        //canvas.GetComponent<GraphicRaycaster>().enabled = true;
-        
-        //TargetManager.instance.UpdateHandbook();
     }
 
     public void OnWaiting() {
-            // TODO:
-            // SubclubState
-            UpdatePropState();
-            /*
-            if(InputManager.instance.isHit) {
-                GameObject hit = InputManager.instance.hitObject;
-                if(hit == toGameBtn.gameObject) {
-                    ExitWaiting();
-                    InitGame();
-                    clubState = ClubState.GAME;
-                } else if(hit == addTargetDemoBtn.gameObject) {
-                    TargetManager.instance.AddTargetDemo();
-                    TargetManager.instance.UpdateHandbook();
-                }
-            }
-            */
-            
-            // Change to GAME clubState when player pinches on the Gun indicator. 
-            // InitGame(): Activate TargetMachine
+        UpdatePropState();
     }
 
     public void ExitWaiting() {
@@ -183,57 +151,55 @@ public class ShootingClubManager : StateSingleton
     }
     
     public void InitReady() {
-        // Activate ready text
-        // Activate aim at head center
-        // Activate 
+        readyText.SetActive();
+        progressBar.fillAmount = 0f;
     }
 
     public void OnReady() {
+        Ray ray = DataManager.instance.playerCamera.ViewportPortToRay(new Vector3(0.5f, 0.5f, 0f));
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit)) {
+            if(hit.transform.gameObject.name == "GazeTrigger") {
+                progressBar.fillAmount += 1f / readyTextTime * Time.deltaTime;
+            } else {
+                progressBar.fillAmount = 0f;
+            }
+        }
+        if(progressBar.fillAmount >= 1f) {
+            DataManager.instance.isReadyTextShowed[(int)currentClub] = true;
+        }
 
+        if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
+            readyText.SetActive(false);
+            startText.SetActive(true);
+        }
+        if(startText.IsActive() && DataManager.instance.isStartTextShowed[(int)currentClub]) {
+            nextClubState = ClubState.GAME;
+        }
     }
 
     public void ExitReady() {
-
+        startText.SetActive(false);
     }
 
     public void InitGame() {
-        timer = 0f;
-        readyText.gameObject.SetActive(true);
+        healthBarImage.gameObject.SetActive(true);
     }
 
     public void OnGame() {
-        if(gameStart) {          
-            if(TargetManager.instance.AllTargetsDie()) {
-                ExitGame();
-                InitResult();
-                clubState = ClubState.RESULT;
-            }
-            if(TargetManager.instance.AllRisingComplete()) {
-                TargetManager.instance.GetReady();
-            }
-        } else {
-            if (timer >= readyTextTime && timer < startTextTime)
-            {
-                readyText.gameObject.SetActive(false);
-                startText.gameObject.SetActive(true);
-                
-            }
-            else if (timer >= startTextTime)
-            {
-                startText.gameObject.SetActive(false);
-                healthBarImage.gameObject.SetActive(true);
-                //aim.gameObject.SetActive(true);
-                GameManager.instance.OnTriggered += TriggerGun;
-                gameStart = true;
-            }
+        // TODO:
+        // 1. Shoot with pinch
+        // 2. Shoot with gun
+        if(TargetManager.instance.AllTargetsDie()) {
+            nextClubState = ClubState.RESULT;
         }
-        timer += Time.deltaTime;
+        if(TargetManager.instance.AllRisingComplete()) {
+            TargetManager.instance.GetReady();
+        }
     }
 
     public void ExitGame() {
         healthBarImage.gameObject.SetActive(false);
-        aim.gameObject.SetActive(false);
-        GameManager.instance.OnTriggered -= TriggerGun;
     }
 
     public void InitResult() {
@@ -241,24 +207,18 @@ public class ShootingClubManager : StateSingleton
     }
 
     public void OnResult() {
-        if(timer >= minToArenaTime) {
-            toArenaBtn.gameObject.SetActive(true);
-            canvas.GetComponent<GraphicRaycaster>().enabled = true;
-        }
-        if(InputManager.instance.isHit) {
-            GameObject hit = InputManager.instance.hitObject;
-            if(hit == toArenaBtn.gameObject) {
-                GameManager.instance.ChangeSceneTo(SceneState.ARENA);
-            }
+        if(timer >= finishTextTime) {
+            ExitResult();
+            DataManager.instance.isClubPlayed[(int)currentClub] = true;
         }
         timer += Time.deltaTime;
     }
 
     public void ExitResult() {
-
+        finishText.gameObject.SetActive(false);
     }
 
-    /* Prop States */
+    /* Prop States Methods */
 
     public void InitDelivering() {
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -285,15 +245,14 @@ public class ShootingClubManager : StateSingleton
 
     public void InitFetching() {
         // TODO:
-        // Setup trigger to detect whether the prop is fetched.
-        // Show hint "Come and fetch me."
+        // 1. Gun switch
+        // 2. Gun follows hand
+        // 3. Using real hand to grab (no need to do)
         fetchTrigger.SetActive(true);
         fetchText.SetActive(true);
     }
 
     public void OnFetching() {
-        // TODO:
-        // Whether the prop is fetched
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
@@ -301,9 +260,6 @@ public class ShootingClubManager : StateSingleton
     }
 
     public void ExitFetching() {
-        // TODO:
-        // Deactivate trigger
-        // Decativate hint
         fetchTrigger.SetActive(false);
         fetchText.SetActive(false);
         DOTween propStandDropingSequence = new DOTween.Sequence();
@@ -313,10 +269,6 @@ public class ShootingClubManager : StateSingleton
     }
 
     public void InitReturning() {
-        // TODO:
-        // Activate hint "Please go back to the ready position"
-        // Activate hint on ready position
-        // Setup trigger on ready position 
         returnText.SetActive(true);
         readyPositionIndicator.SetActive(true);
     }
@@ -324,20 +276,14 @@ public class ShootingClubManager : StateSingleton
     public void OnReturning() {
         if(DataManager.instance.isPlayerReady[(int)currentClub]) {
             ExitReturning();
-            nextClubState = ClubState.GAME;
+            nextClubState = ClubState.READY;
         }
     }
 
     public void ExitReturning() {
         returnText.SetActive(false);
         readyPositionIndicator.SetActive(false);
-        // Deactivate hint text
-        // Deactivate hint on floor
-        // Deactivate trigger
-
     }
-
-
 
     /* Change State Functions */
 
@@ -369,6 +315,9 @@ public class ShootingClubManager : StateSingleton
             case ClubState.WAITING:
                 OnWaiting();
                 break;
+            case ClubState.READY:
+                OnReady();
+                break;
             case ClubState.GAME:
                 OnGame();
                 break;
@@ -394,49 +343,13 @@ public class ShootingClubManager : StateSingleton
             case PropState.RETURNING:
                 OnReturning();
                 break;
-            case PropState.READY:
-                OnReady();
-                break;
             default:
                 break;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
- 
-    }
-
-    public void TriggerGun()
-    {
-        // TODO: PC -> Quest
-        //StartCoroutine(ShotEffect());
-        RaycastHit hit;
-        if (Physics.Raycast(cameraCenter, Camera.main.transform.forward, out hit, shootingRange))
-        {
-            //trajectory.SetPosition(0, muzzle.position);
-            //trajectory.SetPosition(1, hit.point);
-            if (hit.collider.gameObject.tag == "Target")
-            {
-                if (hit.collider.gameObject.activeInHierarchy)
-                {
-                    TargetManager.instance.KillTarget(hit.collider.gameObject);
-                    //Destroy(hit.collider.gameObject);
-                }
-            }
-        }
-    }
-    private IEnumerator ShotEffect()
-    {
-
-        // Turn on our line renderer
-        trajectory.enabled = true;
-
-        //Wait for .07 seconds
-        yield return shotDuration;
-
-        // Deactivate our line renderer after waiting
-        trajectory.enabled = false;
+        UpdateClubState();
     }
 }
