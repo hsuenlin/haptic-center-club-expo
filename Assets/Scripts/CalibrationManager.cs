@@ -1,23 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Assertions;
 
-public class CalibrationManager : StateSingleton
+public class CalibrationManager : StateSingleton<CalibrationManager>
 {
     //public Transform toCalibrationTransform;
 
     public Text calibrationText;
     public float calibrationTime;
     public bool isCalibrated;
-    protected override OnAwake() {
+    protected override void OnAwake() {
         Assert.IsNotNull(calibrationText);
-        Assert.IsNotNull(calibrationTime);
         isCalibrated = false;
     }
 
-    protected override Init() {
-        calibrationText.SetActive(true);
-        StartCoroutine(CalibrationCountDown);
+    protected override void Init() {
+        calibrationText.gameObject.SetActive(true);
+        StartCoroutine(CalibrationCountDown());
     }
 
     private IEnumerator CalibrationCountDown()
@@ -31,7 +32,7 @@ public class CalibrationManager : StateSingleton
         isCalibrated = true;
     }
 
-    protected override End() {
-        calibrationText.SetActive(false);
+    protected override void Exit() {
+        calibrationText.gameObject.SetActive(false);
     }
 }

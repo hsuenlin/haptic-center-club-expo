@@ -1,14 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using UnityEngine.Assertions;
 
 public enum GameMode {
-    QUEST = 0
-    HAPTIC_CENTER = 1,
+    QUEST = 0,
+    HAPTIC_CENTER = 1
 }
 
-public class GameManager : Singleton
+public class GameManager : Singleton<GameManager>
 {
 
     public SceneState currentSceneState;
@@ -26,11 +27,7 @@ public class GameManager : Singleton
     private Dictionary<SceneState, Component> sceneManagers;
 
     // Start is called before the first frame update
-    void Awake() {
-        Assert.IsNotNull(currentSceneState);
-        Assert.IsNotNull(nextSceneState);
-
-        Assert.IsNotNull(gameMode);
+    protected override void OnAwake() {
 
         Assert.IsNotNull(calibrationManager);
         Assert.IsNotNull(arenaManager);
@@ -38,15 +35,15 @@ public class GameManager : Singleton
         Assert.IsNotNull(tennisClubManager);
         Assert.IsNotNull(musicGameClubManager);
 
-        sceneManagerDict = new Dictionary<SceneState, Component>() {
-            {SceneState.CALIBRATION, cabibrationManager},
+        sceneManagers = new Dictionary<SceneState, Component>() {
+            {SceneState.CALIBRATION, calibrationManager},
             {SceneState.ARENA, arenaManager},
             {SceneState.SHOOTING_CLUB, shootingClubManager},
             {SceneState.TENNIS_CLUB, tennisClubManager},
             {SceneState.MUSICGAME_CLUB, musicGameClubManager}
         };
 
-        sceneManagerDict[currentSceneState].gameObject.SetActive(true);
+        sceneManagers[currentSceneState].gameObject.SetActive(true);
 
         // TODO: 
         // Make connection with server. 
@@ -85,8 +82,8 @@ public class GameManager : Singleton
     }
 
     public void ChangeSceneState() {
-        sceneManagerDict[currentSceneState].gameObject.SetActive(false);
-        sceneManagerDict[nextSceneState].gameObject.SetActive(true);
+        sceneManagers[currentSceneState].gameObject.SetActive(false);
+        sceneManagers[nextSceneState].gameObject.SetActive(true);
         currentSceneState = nextSceneState;
     }
 }

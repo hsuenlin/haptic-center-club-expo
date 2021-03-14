@@ -10,29 +10,29 @@ namespace OculusSampleFramework
         public Material defaultMaterial;
         public Material hoverMaterial;
         public Material downMaterial;
-        public MeshRenderer renderer;
+        public Renderer meshRenderer;
         void Awake()
         {
         }
 
         public override void OnNoInput()
         {
-            renderer.material = defaultMaterial;
+            meshRenderer.material = defaultMaterial;
         }
 
         public override void OnPrimaryInputDown()
         {
-            renderer.material = hoverMaterial;
+            meshRenderer.material = hoverMaterial;
         }
 
         public override void OnPrimaryInputDownStay()
         {
-            renderer.material = downMaterial;
+            meshRenderer.material = downMaterial;
         }
 
         public override void OnPrimaryInputUp()
         {
-            renderer.material = defaultMaterial;
+            meshRenderer.material = defaultMaterial;
             TargetManager.instance.UpdateHandbook();
             TargetManager.instance.AddTargetDemo();
         }

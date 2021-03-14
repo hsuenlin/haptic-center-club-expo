@@ -12,7 +12,6 @@ namespace OculusSampleFramework
         
         void Awake() {
             Assert.IsNotNull(selectionCylinder);
-            Assert.IsNotNull(signifiedScene);
         }
 
         public override void OnNoInput() {

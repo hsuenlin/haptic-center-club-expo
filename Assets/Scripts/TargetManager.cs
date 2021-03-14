@@ -61,7 +61,7 @@ public class TargetManager : MonoBehaviour
 
     private GameObject targetDemo;
     private GameObject target;
-    private TargetMachineState state = TargetMachineState.IDLE;
+    //private TargetMachineState state = TargetMachineState.IDLE;
      void Awake()
     {
         if (instance == null)
@@ -107,11 +107,11 @@ public class TargetManager : MonoBehaviour
     }
 
     public void GetReady() {
-        state = TargetMachineState.READY;
+        //state = TargetMachineState.READY;
     }
 
     public void Reset() {
-        state = TargetMachineState.IDLE;
+        //state = TargetMachineState.IDLE;
     }
 
     public void AddTargetDemo() {

@@ -9,11 +9,14 @@ public class FetchTrigger : MonoBehaviour
         switch(other.name) {
             case "Gun":
                 DataManager.instance.isDeviceFetched[(int)SceneState.SHOOTING_CLUB] = true;
+                break;
             case "Racket":
                 DataManager.instance.isDeviceFetched[(int)SceneState.TENNIS_CLUB] = true;
-            case "LeftHandAnchor" || "RightHandAnchor":
+                break;
+            case "LeftHandAnchor":
+            case "RightHandAnchor":
                 DataManager.instance.isDeviceFetched[(int)SceneState.MUSICGAME_CLUB] = true;
-                
+                break;
         }       
     }
 }

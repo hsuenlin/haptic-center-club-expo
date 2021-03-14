@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class ArenaManager : StateSingleton
+public class ArenaManager : StateSingleton<ArenaManager>
 {
     public Transform toArenaTransform;
 
@@ -27,8 +28,8 @@ public class ArenaManager : StateSingleton
     }
 
     protected override void Init() {
-        GameObject.instance.forestIslandRoot.position = toArenaTransform.position;
-        GameObject.instance.forestIslandRoot.eulerAngles = toArenaTransform.eulerAngles;
+        DataManager.instance.forestIslandRoot.position = toArenaTransform.position;
+        DataManager.instance.forestIslandRoot.eulerAngles = toArenaTransform.eulerAngles;
 
         floatingGun.SetActive(true);
         floatingRacket.SetActive(true);

@@ -129,7 +129,7 @@ public class ClientHandle : MonoBehaviour
             }
             */
         }
-        GameManager.instance.OnTrackerInfoReady();
+        //GameManager.instance.OnTrackerInfoReady();
     }
     public void DeviceStatusHandle(Packet _packet) {
         // Shifty, Shiled, Gun, Controller, Panel
@@ -137,23 +137,23 @@ public class ClientHandle : MonoBehaviour
         for(int i = 0; i < 5; ++i) {
             deviceStatusArray[i] = (_packet.ReadInt() == 1);
         }
-        GameManager.instance.OnDeviceStatusReady();
+        //GameManager.instance.OnDeviceStatusReady();
     }
 
     public void RequestResultHandle(Packet _packet) {
         requestResult = (_packet.ReadInt() == 1);
-        GameManager.instance.OnRequestResultReady();
+        //GameManager.instance.OnRequestResultReady();
     }
 
     public void DeviceReadyHandle(Packet _packet) {
         deviceReady = true;
-        GameManager.instance.OnDeviceReady();
+        //GameManager.instance.OnDeviceReady();
     }
 
     public void TriggerHandle(Packet _packet)
     {
         // TODO: Notify gun
-        GameManager.instance.OnTriggered();
+        //GameManager.instance.OnTriggered();
     }
     public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
@@ -166,7 +166,7 @@ public class ClientHandle : MonoBehaviour
         panel.x = _packet.ReadInt();
         panel.y = _packet.ReadInt();
         panel.deg = _packet.ReadInt();
-        GameManager.instance.OnPanelInfoReady();
+        //GameManager.instance.OnPanelInfoReady();
     }
     public void PlayerDisconnected(Packet _packet)
     {

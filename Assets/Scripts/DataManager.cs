@@ -1,3 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Assertions;
+
 public enum TrackerType
 {
     HC_Origin = 0,
@@ -95,12 +101,14 @@ public enum ClientCommand
     RequestDevice = 5
 }
 
-public class DataManager : Singleton {
+public class DataManager : Singleton<DataManager> {
     /* Updated by server */
     public Transform forestIslandRoot;
+
+    public GameObject player;
+    public Camera playerCamera;
     
     public GameObject hapticCenter;
-    public Camera playerCamera;
     public GameObject gun;
     public GameObject gunSupport;
     public GameObject racket;
@@ -118,7 +126,8 @@ public class DataManager : Singleton {
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
 
-        Assert.IsNotNull(hapticCenterOrigin);
+        Assert.IsNotNull(hapticCenter);
+        Assert.IsNotNull(player);
         Assert.IsNotNull(playerCamera);
         Assert.IsNotNull(gun);
         Assert.IsNotNull(gunSupport);

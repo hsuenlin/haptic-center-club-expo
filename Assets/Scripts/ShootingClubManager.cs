@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
+using DG.Tweening;
 
-public class ShootingClubManager : StateSingleton
+public class ShootingClubManager : StateSingleton<ShootingClubManager>
 {
     
     public SceneState currentClub;
@@ -18,8 +21,8 @@ public class ShootingClubManager : StateSingleton
     private Dictionary<ClubState, Action> clubStateInits;
     private Dictionary<ClubState, Action> clubStateExits;
 
-    private Dictionary<ClubState, Action> propStateInits;
-    private Dictionary<ClubState, Action> propStateExits;
+    private Dictionary<PropState, Action> propStateInits;
+    private Dictionary<PropState, Action> propStateExits;
 
     public Text welcomeText;
     public float welcomeTextTime; //3f
@@ -46,7 +49,7 @@ public class ShootingClubManager : StateSingleton
     public Image healthBarImage;
 
     public Text finishText;
-    public Text finishTextTime; // 2f
+    public float finishTextTime; // 2f
 
     /* Variables for Quest mode */
     public float deliveringTime;
@@ -54,24 +57,14 @@ public class ShootingClubManager : StateSingleton
     /* Timer */
     private float timer = 0f;
 
-    void OnAwake()
+    protected override void OnAwake()
     {
-        Assert.IsNotNull(currentClub);
-        Assert.IsNotNull(requiredDevice);
-
-        Assert.IsNotNull(currentClubState);
-        Assert.IsNotNull(currentPropState);
-        
-        Assert.IsNotNull(nextClubState);
-        Assert.IsNotNull(nextPropState);
 
         Assert.IsNotNull(welcomeText);
-        Assert.IsNotNull(welcomeTextTime);
+        Assert.AreNotApproximatelyEqual(0f, welcomeTextTime);
 
         Assert.IsNotNull(propStand);
-        Assert.IsNotNull(propStandMinHeight);
-        Assert.IsNotNull(propStandMaxHeight);
-        Assert.IsNotNull(propStandAnimationTime);
+        Assert.AreNotApproximatelyEqual(0f, propStandAnimationTime);
         Assert.IsNotNull(propStandAnimationCurve);
         Assert.IsNotNull(fetchTrigger);
         Assert.IsNotNull(fetchText);
@@ -81,42 +74,38 @@ public class ShootingClubManager : StateSingleton
 
         Assert.IsNotNull(readyText);
         Assert.IsNotNull(startText);
-        Assert.IsNotNull(readyTextTime);
-        Assert.IsNotNull(startTextTime);
+        Assert.AreNotApproximatelyEqual(0f, readyTextTime);
+        Assert.AreNotApproximatelyEqual(0f, startTextTime);
         Assert.IsNotNull(progressBar);
 
         Assert.IsNotNull(healthBarImage);
 
         Assert.IsNotNull(finishText);
-        Assert.IsNotNull(finishTextTime);
-
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            Assert.IsNotNull(deliveringTime);
-        }
+        Assert.AreNotApproximatelyEqual(0f, finishTextTime);
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
             {ClubState.WAITING, ()=>{ InitWaiting(); }},
+            {ClubState.READY, ()=>{ InitReady(); }},
             {ClubState.GAME, ()=>{ InitGame(); }},
             {ClubState.RESULT, ()=>{ InitResult(); }}
         };
         clubStateExits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ ExitIdle(); }},
             {ClubState.WAITING, ()=>{ ExitWaiting(); }},
+            {ClubState.READY, ()=>{ ExitReady(); }},
             {ClubState.GAME, ()=>{ ExitGame(); }},
             {ClubState.RESULT, ()=>{ ExitResult(); }}
         };
         propStateInits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ InitDelivering(); }},
             {PropState.FETCHING, ()=>{ InitFetching(); }},
-            {PropState.RETURNING, ()=>{ InitReturning(); }},
-            {PropState.READY, ()=>{ InitReady(); }}
+            {PropState.RETURNING, ()=>{ InitReturning(); }}
         };
         propStateExits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ ExitDelivering(); }},
             {PropState.FETCHING, ()=>{ ExitFetching(); }},
-            {PropState.RETURNING, ()=>{ ExitReturning(); }},
-            {PropState.READY, ()=>{ ExitReady(); }}
+            {PropState.RETURNING, ()=>{ ExitReturning(); }}
         };
     }
 
@@ -125,7 +114,7 @@ public class ShootingClubManager : StateSingleton
     public void InitIdle() {
         timer = 0f;
         welcomeText.gameObject.SetActive(true);
-        StartCoroutine(StartTimer(welcomTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
+        StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
     public void OnIdle() {
@@ -151,12 +140,12 @@ public class ShootingClubManager : StateSingleton
     }
     
     public void InitReady() {
-        readyText.SetActive();
+        readyText.gameObject.SetActive(true);
         progressBar.fillAmount = 0f;
     }
 
     public void OnReady() {
-        Ray ray = DataManager.instance.playerCamera.ViewportPortToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray ray = DataManager.instance.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit)) {
             if(hit.transform.gameObject.name == "GazeTrigger") {
@@ -170,8 +159,8 @@ public class ShootingClubManager : StateSingleton
         }
 
         if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
-            readyText.SetActive(false);
-            startText.SetActive(true);
+            readyText.gameObject.SetActive(false);
+            startText.gameObject.SetActive(true);
         }
         if(startText.IsActive() && DataManager.instance.isStartTextShowed[(int)currentClub]) {
             nextClubState = ClubState.GAME;
@@ -179,11 +168,11 @@ public class ShootingClubManager : StateSingleton
     }
 
     public void ExitReady() {
-        startText.SetActive(false);
+        startText.gameObject.SetActive(false);
     }
 
     public void InitGame() {
-        healthBarImage.gameObject.SetActive(true);
+        DataManager.instance.player.SetActive(true);
     }
 
     public void OnGame() {
@@ -222,7 +211,7 @@ public class ShootingClubManager : StateSingleton
 
     public void InitDelivering() {
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            StartCoroutine(StartTimer(deliveringTime, () => {
+            StartCoroutine(Timer.StartTimer(deliveringTime, () => {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
             }));
         }
@@ -231,7 +220,7 @@ public class ShootingClubManager : StateSingleton
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
             propStand.SetActive(true);
-            DOTween propStandRisingSequence = new DOTween.Sequence();
+            Sequence propStandRisingSequence = DOTween.Sequence();
             propStandRisingSequence.Append(propStand.transform.DOMoveY(propStandMaxHeight, propStandAnimationTime))
                 .SetEase(propStandAnimationCurve)
                 .AppendCallback(() => { nextPropState = PropState.FETCHING; });
@@ -249,39 +238,39 @@ public class ShootingClubManager : StateSingleton
         // 2. Gun follows hand
         // 3. Using real hand to grab (no need to do)
         fetchTrigger.SetActive(true);
-        fetchText.SetActive(true);
+        fetchText.gameObject.SetActive(true);
     }
 
     public void OnFetching() {
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        fetchText.transform.LookAt(DataManager.instance.playerCamera);
+        fetchText.transform.LookAt(DataManager.instance.playerCamera.transform);
     }
 
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
-        fetchText.SetActive(false);
-        DOTween propStandDropingSequence = new DOTween.Sequence();
+        fetchText.gameObject.SetActive(false);
+        Sequence propStandDropingSequence = DOTween.Sequence();
         propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve));
+                .SetEase(propStandAnimationCurve);
         propStandDropingSequence.Play();
     }
 
     public void InitReturning() {
-        returnText.SetActive(true);
+        returnText.gameObject.SetActive(true);
         readyPositionIndicator.SetActive(true);
     }
 
     public void OnReturning() {
-        if(DataManager.instance.isPlayerReady[(int)currentClub]) {
+        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
             ExitReturning();
             nextClubState = ClubState.READY;
         }
     }
 
     public void ExitReturning() {
-        returnText.SetActive(false);
+        returnText.gameObject.SetActive(false);
         readyPositionIndicator.SetActive(false);
     }
 
@@ -302,10 +291,7 @@ public class ShootingClubManager : StateSingleton
     /* Update State Functions */
 
     private void UpdateClubState() {
-        if(nextClubState == null) {
-            clubStateExits[currentClubState]();
-        }
-        else if(currentClubState != nextClubState) {
+        if(currentClubState != nextClubState) {
             ChangeClubState();
         }
         switch(currentClubState) {
