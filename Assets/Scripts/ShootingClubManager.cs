@@ -127,7 +127,7 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
     public void InitWaiting() {
         timer = 0f;
         addTargetDemoBtn.SetActive(true);
-        TargetManager.instance.AddTargetDemo();
+        TargetMachineScript.instance.AddTargetDemo();
     }
 
     public void OnWaiting() {
@@ -136,7 +136,7 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
 
     public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
-        TargetManager.instance.DestroyTargetDemos();
+        TargetMachineScript.instance.DestroyTargetDemos();
     }
     
     public void InitReady() {
@@ -173,22 +173,24 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
 
     public void InitGame() {
         DataManager.instance.player.SetActive(true);
+        StartCoroutine(TargetMachineScript.instance.StartShooting());
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
+        }
     }
 
     public void OnGame() {
-        // TODO:
-        // 1. Shoot with pinch
-        // 2. Shoot with gun
-        if(TargetManager.instance.AllTargetsDie()) {
+        if(TargetMachineScript.instance.AllTargetsDie()) {
             nextClubState = ClubState.RESULT;
         }
-        if(TargetManager.instance.AllRisingComplete()) {
-            TargetManager.instance.GetReady();
-        }
+        
     }
 
     public void ExitGame() {
         healthBarImage.gameObject.SetActive(false);
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
+        }
     }
 
     public void InitResult() {

@@ -1729,6 +1729,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Landscape
       objectReference: {fileID: 0}
+    - target: {fileID: 2098761519609271171, guid: 8b344760f644f48bdb6abf839a86789f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116183364813765762, guid: 8b344760f644f48bdb6abf839a86789f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b344760f644f48bdb6abf839a86789f, type: 3}
 --- !u!4 &441027783 stripped
@@ -3430,7 +3440,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 974050358}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.349301, y: 4.233993, z: -5.1242547}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2063252459}
@@ -4099,6 +4109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1144172646}
+  - component: {fileID: 1144172647}
   - component: {fileID: 5329331547639348688}
   - component: {fileID: 5329331547639348687}
   m_Layer: 0
@@ -4124,6 +4135,23 @@ Transform:
   m_Father: {fileID: 261991490}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1144172647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144172645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683368c4395804de18f2b81ff98ba278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coldDownTime: 0
+  shotDuration: 0
+  autoShootingTime: 0
+  muzzle: {fileID: 0}
+  lineRenderer: {fileID: 0}
 --- !u!1 &1144788350
 GameObject:
   m_ObjectHideFlags: 0
@@ -8684,7 +8712,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5177902029013575133}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fae17fda9fad4e3db39bf217c5eddfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 20f718e1ac1f8421d89b2db794aa0d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shootingOrder: 010000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000000000000000000000001000000010000000000000001000000000000000100000000000000010000000000000000000000000000000100000001000000000000000000000001000000010000000100000000000000010000000000000001000000000000000100000001000000010000000000000000000000010000000100000001000000

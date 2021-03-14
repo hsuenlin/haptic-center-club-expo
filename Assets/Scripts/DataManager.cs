@@ -123,6 +123,7 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isInReadyZone;
     public bool[] isReadyTextShowed;
     public bool[] isStartTextShowed;
+    public bool canShoot;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -145,5 +146,6 @@ public class DataManager : Singleton<DataManager> {
         isInReadyZone = new bool[3];
         isReadyTextShowed = new bool[3];
         isStartTextShowed = new bool[3];
+        canShoot = true;
     }
 }

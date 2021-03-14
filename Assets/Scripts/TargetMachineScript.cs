@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class TargetManager : MonoBehaviour
+public class TargetMachineScript : MonoBehaviour
 {
 
     public enum TargetMachineState
@@ -15,7 +15,7 @@ public class TargetManager : MonoBehaviour
         RISING = 3
     }
 
-    public static TargetManager instance;
+    public static TargetMachineScript instance;
     public int[] shootingOrder = { 
         1, 0, 0,
         1, 0, 0,
@@ -90,10 +90,19 @@ public class TargetManager : MonoBehaviour
         nAliveTarget++;
     }
 
+    public IEnumerator StartShooting() {
+        for(int i = 0; i < shootingOrder.Length / 3; ++i) {
+            ShootTargets();
+            yield return occurrenceFrequency;
+        }
+    }
+
     public void KillTarget(GameObject _target)
     {
-        _target.SetActive(false);
-        nAliveTarget--;
+        if(_target.activeInHierarchy) {
+            _target.SetActive(false);
+            nAliveTarget--;
+        }
     }
 
     public bool AllTargetsDie()
