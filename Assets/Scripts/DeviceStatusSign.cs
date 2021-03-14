@@ -8,7 +8,7 @@ public class DeviceStatusSign: MonoBehaviour
     public Material busyMaterial;
     public Material freeMaterial;
     public Renderer meshRenderer;
-    public SceneState signifiedScene;
+    public Device signifiedDevice;
     
     void Awake() {
         Assert.IsNotNull(busyMaterial);
@@ -18,7 +18,7 @@ public class DeviceStatusSign: MonoBehaviour
 
     void Update() {
         // Fetching device status
-        if(DataManager.instance.isDeviceReady[(int)signifiedScene]) {
+        if(DataManager.instance.isDeviceReady[(int)signifiedDevice]) {
             meshRenderer.material = freeMaterial;
         }
         else {

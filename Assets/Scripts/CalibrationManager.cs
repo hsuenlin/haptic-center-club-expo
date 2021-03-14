@@ -10,10 +10,8 @@ public class CalibrationManager : StateSingleton<CalibrationManager>
 
     public Text calibrationText;
     public float calibrationTime;
-    public bool isCalibrated;
     protected override void OnAwake() {
         Assert.IsNotNull(calibrationText);
-        isCalibrated = false;
     }
 
     protected override void Init() {
@@ -29,7 +27,7 @@ public class CalibrationManager : StateSingleton<CalibrationManager>
             timer += Time.deltaTime;
             yield return null;
         }
-        isCalibrated = true;
+        DataManager.instance.isCalibrated = true;
     }
 
     protected override void Exit() {

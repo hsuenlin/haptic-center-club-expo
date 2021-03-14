@@ -57,7 +57,7 @@ public class GameManager : Singleton<GameManager>
         switch(currentSceneState) 
         {
             case SceneState.CALIBRATION:
-                if(calibrationManager.isCalibrated) {
+                if(DataManager.instance.isCalibrated) {
                     nextSceneState = SceneState.ARENA;
                 }
                 break;

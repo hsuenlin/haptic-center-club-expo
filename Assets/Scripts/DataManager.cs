@@ -114,6 +114,7 @@ public class DataManager : Singleton<DataManager> {
     public GameObject racket;
     public GameObject racketSupport;
     public GameObject panel;
+    public bool isCalibrated;
     public bool[] isDeviceFree;
     public bool[] isDeviceReady;
     public bool[] isDeviceFetched;
@@ -135,6 +136,7 @@ public class DataManager : Singleton<DataManager> {
         Assert.IsNotNull(racketSupport);
         Assert.IsNotNull(panel);
 
+        isCalibrated = false;
         isDeviceFree = new bool[3];
         isDeviceReady = new bool[3];
         isDeviceFetched = new bool[3];

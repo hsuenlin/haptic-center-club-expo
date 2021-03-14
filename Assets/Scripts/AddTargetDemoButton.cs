@@ -5,7 +5,7 @@ using UnityEngine.Assertions;
 
 namespace OculusSampleFramework
 {
-    public class AddTargetButtonManager : HandsInteractable
+    public class AddTargetDemoButton : HandsInteractable
     {
         public Material defaultMaterial;
         public Material hoverMaterial;
