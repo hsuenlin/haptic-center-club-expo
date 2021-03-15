@@ -154,6 +154,7 @@ public class DataManager : Singleton<DataManager> {
         isReadyTextShowed = new bool[3];
         isStartTextShowed = new bool[3];
         canShoot = true;
+        gunAppearance = DeviceAppearance.REAL;
         isDeviceFollowHand = false;
     }
 }

@@ -37,7 +37,6 @@ public class GunScript : MonoBehaviour {
         Assert.IsNotNull(lineRenderer);
         lineRenderer.enabled = false;
         appearance = DeviceAppearance.REAL;
-        isCollideHand = false;
     }
 
     private IEnumerator StartColdDown() {
