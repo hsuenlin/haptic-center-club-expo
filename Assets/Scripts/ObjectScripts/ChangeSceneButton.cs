@@ -5,7 +5,7 @@ using UnityEngine.Assertions;
 
 namespace OculusSampleFramework
 {
-    public class SceneEntry: HandsInteractable
+    public class ChangeSceneButton: HandsInteractable
     {
         public SelectionCylinder selectionCylinder;
         public SceneState signifiedScene;

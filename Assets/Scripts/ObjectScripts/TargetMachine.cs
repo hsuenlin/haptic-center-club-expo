@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class TargetMachineScript : MonoBehaviour
+public class TargetMachine : MonoBehaviour
 {
 
     public enum TargetMachineState
@@ -15,7 +15,7 @@ public class TargetMachineScript : MonoBehaviour
         RISING = 3
     }
 
-    public static TargetMachineScript instance;
+    public static TargetMachine instance;
     public int[] shootingOrder = { 
         1, 0, 0,
         1, 0, 0,

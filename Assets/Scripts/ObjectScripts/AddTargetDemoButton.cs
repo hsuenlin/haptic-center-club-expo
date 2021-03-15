@@ -33,8 +33,8 @@ namespace OculusSampleFramework
         public override void OnPrimaryInputUp()
         {
             meshRenderer.material = defaultMaterial;
-            TargetMachineScript.instance.UpdateHandbook();
-            TargetMachineScript.instance.AddTargetDemo();
+            TargetMachine.instance.UpdateHandbook();
+            TargetMachine.instance.AddTargetDemo();
         }
     }
 }

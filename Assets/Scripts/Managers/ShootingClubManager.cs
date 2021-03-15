@@ -127,7 +127,7 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
     public void InitWaiting() {
         timer = 0f;
         addTargetDemoBtn.SetActive(true);
-        TargetMachineScript.instance.AddTargetDemo();
+        TargetMachine.instance.AddTargetDemo();
     }
 
     public void OnWaiting() {
@@ -136,7 +136,7 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
 
     public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
-        TargetMachineScript.instance.DestroyTargetDemos();
+        TargetMachine.instance.DestroyTargetDemos();
     }
     
     public void InitReady() {
@@ -173,14 +173,14 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
 
     public void InitGame() {
         DataManager.instance.player.SetActive(true);
-        StartCoroutine(TargetMachineScript.instance.StartShooting());
+        StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
         }
     }
 
     public void OnGame() {
-        if(TargetMachineScript.instance.AllTargetsDie()) {
+        if(TargetMachine.instance.AllTargetsDie()) {
             nextClubState = ClubState.RESULT;
         }
         
