@@ -8,13 +8,16 @@ public class CalibrationManager : StateSingleton<CalibrationManager>
 {
     //public Transform toCalibrationTransform;
 
+    public Image transparentBlack;
     public Text calibrationText;
     public float calibrationTime;
     protected override void OnAwake() {
+        Assert.IsNotNull(transparentBlack);
         Assert.IsNotNull(calibrationText);
     }
 
     protected override void Init() {
+        transparentBlack.gameObject.SetActive(true);
         calibrationText.gameObject.SetActive(true);
         StartCoroutine(CalibrationCountDown());
     }
@@ -31,6 +34,7 @@ public class CalibrationManager : StateSingleton<CalibrationManager>
     }
 
     protected override void Exit() {
+        transparentBlack.gameObject.SetActive(false);
         calibrationText.gameObject.SetActive(false);
     }
 }
