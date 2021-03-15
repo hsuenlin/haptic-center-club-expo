@@ -101,6 +101,11 @@ public enum ClientCommand
     RequestDevice = 5
 }
 
+public enum DeviceAppearance {
+    REAL = 0,
+    VIRTUAL = 1
+}
+
 public class DataManager : Singleton<DataManager> {
     /* Updated by server */
     public Transform forestIslandRoot;
@@ -124,6 +129,8 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isReadyTextShowed;
     public bool[] isStartTextShowed;
     public bool canShoot;
+    public DeviceAppearance gunAppearance;
+    public bool isDeviceFollowHand;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -147,5 +154,6 @@ public class DataManager : Singleton<DataManager> {
         isReadyTextShowed = new bool[3];
         isStartTextShowed = new bool[3];
         canShoot = true;
+        isDeviceFollowHand = false;
     }
 }

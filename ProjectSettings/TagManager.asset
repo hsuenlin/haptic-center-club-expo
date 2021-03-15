@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SceneCamera
   - Target
+  - Hand
   layers:
   - Default
   - TransparentFX

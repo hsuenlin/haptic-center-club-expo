@@ -11,10 +11,33 @@ public class GunScript : MonoBehaviour {
     public Transform muzzle; // Forward vector align with gun body
     public LineRenderer lineRenderer;
 
+    public DeviceAppearance appearance {
+        get {
+            return appearance;
+        }
+        set {
+            appearance = value;
+            switch(appearance) {
+                case DeviceAppearance.REAL:
+                    viveModel.SetActive(true);
+                    gunModel.SetActive(false);
+                    break;
+                case DeviceAppearance.VIRTUAL:
+                    viveModel.SetActive(false);
+                    gunModel.SetActive(true);
+                    break;
+            }
+        }
+    }
+    public GameObject viveModel;
+    public GameObject gunModel;
+
     void Awake() {
         Assert.IsNotNull(muzzle);
         Assert.IsNotNull(lineRenderer);
         lineRenderer.enabled = false;
+        appearance = DeviceAppearance.REAL;
+        isCollideHand = false;
     }
 
     private IEnumerator StartColdDown() {
@@ -36,6 +59,17 @@ public class GunScript : MonoBehaviour {
             yield return autoShootingTime;
         }
     }
+
+    public IEnumerator StartListenToFetchTrigger()
+    {
+        while (true)
+        {
+            if (DataManager.instance.isDeviceFetched[(int)SceneState.SHOOTING_CLUB])
+            {
+                appearance = DeviceAppearance.VIRTUAL;
+            }
+        }
+    }
     public void Shoot() {
         if(DataManager.instance.canShoot) {
             lineRenderer.SetPosition(0, muzzle.position);
@@ -52,6 +86,13 @@ public class GunScript : MonoBehaviour {
             }
             StartCoroutine(StartColdDown());
             StartCoroutine(StartShotEffect());
+        }
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if(other.tag == "Hand" && DataManager.instance.isDeviceFollowHand) {
+            transform.position = other.gameObject.transform.position;
+            transform.rotation = other.gameObject.transform.rotation;
         }
     }
 }

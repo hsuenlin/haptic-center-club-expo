@@ -241,6 +241,10 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
         // 3. Using real hand to grab (no need to do)
         fetchTrigger.SetActive(true);
         fetchText.gameObject.SetActive(true);
+        StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            DataManager.instance.isDeviceFollowHand = true;
+        }
     }
 
     public void OnFetching() {
@@ -257,6 +261,10 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
         propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
                 .SetEase(propStandAnimationCurve);
         propStandDropingSequence.Play();
+        StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            DataManager.instance.isDeviceFollowHand = false;
+        }
     }
 
     public void InitReturning() {
