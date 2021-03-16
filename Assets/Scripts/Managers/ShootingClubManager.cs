@@ -61,6 +61,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         Assert.IsNotNull(welcomeText);
         Assert.AreNotApproximatelyEqual(0f, welcomeTextTime);
+        
+        Assert.IsNotNull(addTargetDemoBtn);
 
         Assert.IsNotNull(propStand);
         Assert.AreNotApproximatelyEqual(0f, propStandAnimationTime);
@@ -83,6 +85,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         Assert.AreNotApproximatelyEqual(0f, finishTextTime);
 
         welcomeText.gameObject.SetActive(false);
+        addTargetDemoBtn.SetActive(false);
         propStand.SetActive(false);
         fetchTrigger.SetActive(false);
         fetchText.SetActive(false);
