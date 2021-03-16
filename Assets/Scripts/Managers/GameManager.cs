@@ -24,7 +24,7 @@ public class GameManager : Singleton<GameManager>
     public TennisClubManager tennisClubManager;
     public MusicGameClubManager musicGameClubManager;
 
-    private Dictionary<SceneState, Component> sceneManagers;
+    private Dictionary<SceneState, IState> sceneManagers;
 
     // Start is called before the first frame update
     protected override void OnAwake() {
@@ -35,7 +35,13 @@ public class GameManager : Singleton<GameManager>
         Assert.IsNotNull(tennisClubManager);
         Assert.IsNotNull(musicGameClubManager);
 
-        sceneManagers = new Dictionary<SceneState, Component>() {
+        calibrationManager.gameObject.SetActive(true);
+        arenaManager.gameObject.SetActive(true);
+        shootingClubManager.gameObject.SetActive(true);
+        tennisClubManager.gameObject.SetActive(true);
+        musicGameClubManager.gameObject.SetActive(true);
+
+        sceneManagers = new Dictionary<SceneState, IState>() {
             {SceneState.CALIBRATION, calibrationManager},
             {SceneState.ARENA, arenaManager},
             {SceneState.SHOOTING_CLUB, shootingClubManager},
@@ -43,7 +49,9 @@ public class GameManager : Singleton<GameManager>
             {SceneState.MUSICGAME_CLUB, musicGameClubManager}
         };
 
-        sceneManagers[currentSceneState].gameObject.SetActive(true);
+        //sceneManagers[currentSceneState]().gameObject.SetActive(true);
+        
+        sceneManagers[currentSceneState].Init();
 
         // TODO: 
         // Make connection with server. 
@@ -82,8 +90,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     public void ChangeSceneState() {
-        sceneManagers[currentSceneState].gameObject.SetActive(false);
-        sceneManagers[nextSceneState].gameObject.SetActive(true);
+        //sceneManagers[currentSceneState]().gameObject.SetActive(false);
+        sceneManagers[currentSceneState].Exit();
+        //sceneManagers[nextSceneState]().gameObject.SetActive(true);
+        sceneManagers[nextSceneState].Init();
         currentSceneState = nextSceneState;
     }
 }

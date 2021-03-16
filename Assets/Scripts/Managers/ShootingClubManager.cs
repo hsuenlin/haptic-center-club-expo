@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Assertions;
 using DG.Tweening;
 
-public class ShootingClubManager : StateSingleton<ShootingClubManager>
+public class ShootingClubManager : SceneManager<ShootingClubManager>
 {
     
     public SceneState currentClub;
@@ -108,6 +108,9 @@ public class ShootingClubManager : StateSingleton<ShootingClubManager>
             {PropState.RETURNING, ()=>{ ExitReturning(); }}
         };
     }
+
+    public override void Init() {}
+    public override void Exit() {}
 
     /* Club States Methods */
 

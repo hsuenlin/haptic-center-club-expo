@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
 
-public class CalibrationManager : StateSingleton<CalibrationManager>
+public class CalibrationManager : SceneManager<CalibrationManager>
 {
     //public Transform toCalibrationTransform;
 
     public Image transparentBlack;
     public Text calibrationText;
     public float calibrationTime;
+    
     protected override void OnAwake() {
         Assert.IsNotNull(transparentBlack);
         Assert.IsNotNull(calibrationText);
         Debug.Log("Yo");
     }
 
-    protected override void Init() {
+    public override void Init() {
         transparentBlack.gameObject.SetActive(true);
         calibrationText.gameObject.SetActive(true);
         StartCoroutine(CalibrationCountDown());
@@ -34,7 +35,7 @@ public class CalibrationManager : StateSingleton<CalibrationManager>
         DataManager.instance.isCalibrated = true;
     }
 
-    protected override void Exit() {
+    public override void Exit() {
         transparentBlack.gameObject.SetActive(false);
         calibrationText.gameObject.SetActive(false);
     }

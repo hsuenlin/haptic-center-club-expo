@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class ArenaManager : StateSingleton<ArenaManager>
+public class ArenaManager : SceneManager<ArenaManager>
 {
     public Transform toArenaTransform;
 
@@ -27,7 +27,7 @@ public class ArenaManager : StateSingleton<ArenaManager>
         Assert.IsNotNull(musicGameClubSign);
     }
 
-    protected override void Init() {
+    public override void Init() {
         DataManager.instance.forestIslandRoot.position = toArenaTransform.position;
         DataManager.instance.forestIslandRoot.eulerAngles = toArenaTransform.eulerAngles;
 
@@ -46,7 +46,7 @@ public class ArenaManager : StateSingleton<ArenaManager>
         }
     }
 
-    protected override void Exit() {
+    public override void Exit() {
         floatingGun.SetActive(false);
         floatingRacket.SetActive(false);
         floatingSpeaker.SetActive(false);
