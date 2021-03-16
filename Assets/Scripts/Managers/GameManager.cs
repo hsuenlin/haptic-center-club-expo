@@ -90,7 +90,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             case SceneState.ARENA:
                 for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
-                    if(DataManager.instance.isClubReady[sceneIdx]) {
+                    if(DataManager.instance.isClubReady[sceneIdx] && !DataManager.instance.isClubPlayed[sceneIdx]) {
                         nextSceneState = (SceneState) sceneIdx;
                         break;
                     }
@@ -109,7 +109,12 @@ public class GameManager : Singleton<GameManager>
     }
 
     public void ChangeSceneState() {
+        Component currentSceneManager = (Component)sceneManagers[currentSceneState];
+        Component nextSceneManager = (Component)sceneManagers[nextSceneState];
+
         sceneManagers[currentSceneState].Exit();
+        currentSceneManager.gameObject.SetActive(false);
+        nextSceneManager.gameObject.SetActive(true);
         sceneManagers[nextSceneState].Init();
         DataManager.instance.forestIslandRoot.position = sceneTransforms[nextSceneState].position;
         DataManager.instance.forestIslandRoot.rotation = sceneTransforms[nextSceneState].rotation;

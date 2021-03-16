@@ -137,6 +137,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
     public override void Exit() {
         StopCoroutine(UpdateClubState());
+        Debug.Log("Shooting Club End");
     }
 
     /* Club States Methods */
@@ -223,6 +224,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitGame() {
         DataManager.instance.player.SetActive(true);
+        healthBarImage.gameObject.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
@@ -233,17 +235,19 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(TargetMachine.instance.AllTargetsDie()) {
             nextClubState = ClubState.RESULT;
         }
-        
     }
 
     public void ExitGame() {
+        DataManager.instance.player.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
         }
+        StopCoroutine(TargetMachine.instance.StartShooting());
     }
 
     public void InitResult() {
+        finishText.gameObject.SetActive(true);
         timer = 0f;
     }
 
@@ -366,7 +370,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
                     OnWaiting();
                     break;
                 case ClubState.READY:
-                    
                     OnReady();
                     break;
                 case ClubState.GAME:

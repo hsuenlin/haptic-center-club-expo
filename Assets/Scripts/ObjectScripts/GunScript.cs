@@ -78,8 +78,6 @@ public class GunScript : MonoBehaviour {
             transform.parent = other.transform;
             transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
             transform.localEulerAngles = new Vector3(0f, -65f, 90f);
-            //transform.position = other.gameObject.transform.position;
-            //transform.rotation = other.gameObject.transform.rotation;
         }
     }
 

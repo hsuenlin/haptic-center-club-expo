@@ -22,7 +22,6 @@ public class PlayerManager : MonoBehaviour
         Assert.IsNotNull(damageAnimationScript);
         Assert.AreNotApproximatelyEqual(0f, damageAnimationTime);
 
-        healthBarImage.gameObject.SetActive(false);
         damageAnimationScript.enabled = false;
     }
 
