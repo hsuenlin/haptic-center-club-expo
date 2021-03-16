@@ -24,7 +24,14 @@ public class GameManager : Singleton<GameManager>
     public TennisClubManager tennisClubManager;
     public MusicGameClubManager musicGameClubManager;
 
+    public Transform calibrationSceneTransform;
+    public Transform arenaSceneTransform;
+    public Transform shootingClubSceneTransform;
+    public Transform tennisClubSceneTransform;
+    public Transform musicGameClubSceneTransform;
+
     private Dictionary<SceneState, IState> sceneManagers;
+    private Dictionary<SceneState, Transform> sceneTransforms;
 
     // Start is called before the first frame update
     protected override void OnAwake() {
@@ -34,6 +41,12 @@ public class GameManager : Singleton<GameManager>
         Assert.IsNotNull(shootingClubManager);
         Assert.IsNotNull(tennisClubManager);
         Assert.IsNotNull(musicGameClubManager);
+
+        Assert.IsNotNull(calibrationSceneTransform);
+        Assert.IsNotNull(arenaSceneTransform);
+        Assert.IsNotNull(shootingClubSceneTransform);
+        Assert.IsNotNull(tennisClubSceneTransform);
+        Assert.IsNotNull(musicGameClubSceneTransform);
 
         calibrationManager.gameObject.SetActive(true);
         arenaManager.gameObject.SetActive(true);
@@ -49,7 +62,13 @@ public class GameManager : Singleton<GameManager>
             {SceneState.MUSICGAME_CLUB, musicGameClubManager}
         };
 
-        //sceneManagers[currentSceneState]().gameObject.SetActive(true);
+        sceneTransforms = new Dictionary<SceneState, Transform>() {
+            {SceneState.CALIBRATION, calibrationSceneTransform},
+            {SceneState.ARENA, arenaSceneTransform},
+            {SceneState.SHOOTING_CLUB, shootingClubSceneTransform},
+            {SceneState.TENNIS_CLUB, tennisClubSceneTransform},
+            {SceneState.MUSICGAME_CLUB, musicGameClubSceneTransform}
+        };
         
         sceneManagers[currentSceneState].Init();
 
@@ -90,10 +109,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     public void ChangeSceneState() {
-        //sceneManagers[currentSceneState]().gameObject.SetActive(false);
         sceneManagers[currentSceneState].Exit();
-        //sceneManagers[nextSceneState]().gameObject.SetActive(true);
         sceneManagers[nextSceneState].Init();
+        DataManager.instance.forestIslandRoot.position = sceneTransforms[nextSceneState].position;
+        DataManager.instance.forestIslandRoot.rotation = sceneTransforms[nextSceneState].rotation;
         currentSceneState = nextSceneState;
     }
 }

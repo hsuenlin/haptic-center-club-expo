@@ -28,13 +28,13 @@ namespace OculusSampleFramework
 
         public override void OnPrimaryInputUp() {
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
+            
             // Pinched && DeviceReady
             int sceneIndex = (int)signifiedScene;
             if (DataManager.instance.isDeviceFree[sceneIndex]
                 && !DataManager.instance.isClubPlayed[sceneIndex])
             {
                 DataManager.instance.isClubReady[sceneIndex] = true;
-                Debug.Log("hi");
             }
         }
     }

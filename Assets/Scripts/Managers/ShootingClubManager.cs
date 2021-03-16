@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +13,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public Device requiredDevice;
     
     public ClubState currentClubState;
-    public PropState currentPropState;
-
     public ClubState nextClubState;
+    public PropState currentPropState;
     public PropState nextPropState;
 
     private Dictionary<ClubState, Action> clubStateInits;
@@ -82,6 +81,17 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         Assert.IsNotNull(finishText);
         Assert.AreNotApproximatelyEqual(0f, finishTextTime);
+
+        welcomeText.gameObject.SetActive(false);
+        propStand.SetActive(false);
+        fetchTrigger.SetActive(false);
+        fetchText.SetActive(false);
+        returnText.SetActive(false);
+        readyText.gameObject.SetActive(false);
+        startText.gameObject.SetActive(false);
+        progressBar.gameObject.SetActive(false);
+        healthBarImage.gameObject.SetActive(false);
+        finishText.gameObject.SetActive(false);
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
@@ -109,8 +119,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         };
     }
 
-    public override void Init() {}
-    public override void Exit() {}
+    public override void Init() {
+        InitIdle();
+        StartCoroutine(UpdateClubState());
+    }
+    public override void Exit() {
+        StopCoroutine(UpdateClubState());
+    }
 
     /* Club States Methods */
 
@@ -131,15 +146,17 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         timer = 0f;
         addTargetDemoBtn.SetActive(true);
         TargetMachine.instance.AddTargetDemo();
+        InitDelivering();
+        StartCoroutine(UpdatePropState());
     }
 
     public void OnWaiting() {
-        UpdatePropState();
     }
 
     public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
         TargetMachine.instance.DestroyTargetDemos();
+        StopCoroutine(UpdatePropState());
     }
     
     public void InitReady() {
@@ -218,12 +235,14 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(deliveringTime, () => {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
+                Debug.Log("A");
             }));
         }
     }
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
+            Debug.Log("B");
             propStand.SetActive(true);
             Sequence propStandRisingSequence = DOTween.Sequence();
             propStandRisingSequence.Append(propStand.transform.DOMoveY(propStandMaxHeight, propStandAnimationTime))
@@ -254,7 +273,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        fetchText.transform.LookAt(DataManager.instance.playerCamera.transform);
+        Debug.Log("LookAT");
+        fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
+        Vector3 tmp = fetchText.transform.eulerAngles;
+        tmp.y += 180f;
+        fetchText.transform.eulerAngles = tmp;
     }
 
     public void ExitFetching() {
@@ -303,52 +326,58 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     /* Update State Functions */
 
-    private void UpdateClubState() {
-        if(currentClubState != nextClubState) {
-            ChangeClubState();
-        }
-        switch(currentClubState) {
-            case ClubState.IDLE:
-                OnIdle();
-                break;
-            case ClubState.WAITING:
-                OnWaiting();
-                break;
-            case ClubState.READY:
-                OnReady();
-                break;
-            case ClubState.GAME:
-                OnGame();
-                break;
-            case ClubState.RESULT:
-                OnResult();
-                break;
-            default:
-                break;
+    private IEnumerator UpdateClubState() {
+        while(true) {
+            if(currentClubState != nextClubState) {
+                ChangeClubState();
+            }
+            switch(currentClubState) {
+                case ClubState.IDLE:
+                    OnIdle();
+                    break;
+                case ClubState.WAITING:
+                    OnWaiting();
+                    break;
+                case ClubState.READY:
+                    OnReady();
+                    break;
+                case ClubState.GAME:
+                    OnGame();
+                    break;
+                case ClubState.RESULT:
+                    OnResult();
+                    break;
+                default:
+                    break;
+            }
+            yield return null;
         }
     }
 
-    private void UpdatePropState() {
-        if(currentPropState != nextPropState) {
-            ChangePropState();
-        }
-        switch(currentPropState) {
-            case PropState.DELIVERING:
-                OnDelivering();
-                break;
-            case PropState.FETCHING:
-                OnFetching();
-                break;
-            case PropState.RETURNING:
-                OnReturning();
-                break;
-            default:
-                break;
+    private IEnumerator UpdatePropState() {
+        while(true) {
+            if(currentPropState != nextPropState) {
+                ChangePropState();
+            }
+            switch(currentPropState) {
+                case PropState.DELIVERING:
+                    OnDelivering();
+                    break;
+                case PropState.FETCHING:
+                    OnFetching();
+                    break;
+                case PropState.RETURNING:
+                    OnReturning();
+                    break;
+                default:
+                    break;
+            }
+            yield return null;
         }
     }
 
     void Update()
     {
-        UpdateClubState();
+        //UpdateClubState();
     }
 }

@@ -12,23 +12,7 @@ public class GunScript : MonoBehaviour {
     public LineRenderer lineRenderer;
 
     public DeviceAppearance appearance;
-        /*
-        set {
-            appearance = value;
-            /*
-            switch(value) {
-                case DeviceAppearance.REAL:
-                    viveModel.SetActive(true);
-                    gunModel.SetActive(false);
-                    break;
-                case DeviceAppearance.VIRTUAL:
-                    viveModel.SetActive(false);
-                    gunModel.SetActive(true);
-                    break;
-            }
-            
-        }
-        */
+
     public GameObject viveModel;
     public GameObject gunModel;
 
@@ -67,6 +51,7 @@ public class GunScript : MonoBehaviour {
             {
                 appearance = DeviceAppearance.VIRTUAL;
             }
+            yield return null;
         }
     }
     public void Shoot() {

@@ -15,7 +15,6 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     protected override void OnAwake() {
         Assert.IsNotNull(transparentBlack);
         Assert.IsNotNull(calibrationText);
-        Debug.Log("Yo");
     }
 
     public override void Init() {
