@@ -25,21 +25,21 @@ public class GunScript : MonoBehaviour {
 
     private IEnumerator StartColdDown() {
         DataManager.instance.canShoot = false;
-        yield return coldDownTime;
+        yield return new WaitForSeconds(coldDownTime);
         DataManager.instance.canShoot = true;
     }
 
     public IEnumerator StartShotEffect() {
         //gunAudio.Play();
         lineRenderer.enabled = true;
-        yield return shotDuration;
+        yield return new WaitForSeconds(shotDuration);
         lineRenderer.enabled = false;
     }
 
     public IEnumerator StartAutoShooting() {
         while(true) {
             Shoot();
-            yield return autoShootingTime;
+            yield return new WaitForSeconds(autoShootingTime);
         }
     }
 
@@ -76,6 +76,8 @@ public class GunScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Hand" && DataManager.instance.isDeviceFollowHand) {
             transform.parent = other.transform;
+            transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
+            transform.localEulerAngles = new Vector3(0f, -65f, 90f);
             //transform.position = other.gameObject.transform.position;
             //transform.rotation = other.gameObject.transform.rotation;
         }
@@ -84,9 +86,11 @@ public class GunScript : MonoBehaviour {
     void Update() {
         switch(appearance) {
             case DeviceAppearance.REAL:
-                viveModel.SetActive(false);
+                viveModel.SetActive(true);
+                gunModel.SetActive(false);
                 break;
             case DeviceAppearance.VIRTUAL:
+                viveModel.SetActive(false);
                 gunModel.SetActive(true);
                 break;
         }

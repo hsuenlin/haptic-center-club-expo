@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 using DG.Tweening;
 
-public class TargetMachine : MonoBehaviour
+public class TargetMachine : Singleton<TargetMachine>
 {
 
     public enum TargetMachineState
@@ -15,7 +16,6 @@ public class TargetMachine : MonoBehaviour
         RISING = 3
     }
 
-    public static TargetMachine instance;
     public int[] shootingOrder = { 
         1, 0, 0,
         1, 0, 0,
@@ -62,28 +62,11 @@ public class TargetMachine : MonoBehaviour
     private GameObject targetDemo;
     private GameObject target;
     //private TargetMachineState state = TargetMachineState.IDLE;
-     void Awake()
+    protected override void OnAwake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Debug.Log("Instance already exists, destroying object!");
-            Destroy(this);
-        }
-    }
-
-    void Start()
-    {
+        Assert.IsNotNull(targetGenerators);
         targetColorsList = new List<float>();
         targetDemoList = new List<GameObject>();
-        List<Transform> targetGeneratorsList = new List<Transform>();
-        foreach(Transform child in gameObject.transform) {
-            targetGeneratorsList.Add(child);
-        }
-        targetGenerators = targetGeneratorsList.ToArray();
         foreach(int x in shootingOrder) {
             nAliveTarget += x;
         }
@@ -91,9 +74,31 @@ public class TargetMachine : MonoBehaviour
     }
 
     public IEnumerator StartShooting() {
-        for(int i = 0; i < shootingOrder.Length / 3; ++i) {
-            ShootTargets();
-            yield return occurrenceFrequency;
+        targetColors = targetColorsList.ToArray();
+        for(int round = 0; round < shootingOrder.Length / 3; ++round) {
+            for (int i = 0; i < targetGenerators.Length; ++i)
+            {
+                if (shootingOrder[shootingIndex + i] == 1)
+                {
+                    Debug.Log("Shoot");
+                    risingCount++;
+                    // Instantiate target
+                    target = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity);
+
+                    // Set target position
+                    target.transform.parent = targetGenerators[i];
+                    target.transform.localPosition = new Vector3(0, minHeight, 0);
+
+                    //Set target color
+                    Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
+                    int colorIndex = (shootingIndex + i) % targetColors.Length;
+                    renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
+
+                    TargetRise(target);
+                }
+            }
+            shootingIndex += targetGenerators.Length;
+            yield return new WaitForSeconds(occurrenceFrequency);
         }
     }
 
@@ -169,32 +174,9 @@ public class TargetMachine : MonoBehaviour
         }
     }
 
-    public void ShootTargets() {
-        for (int i = 0; i < targetGenerators.Length; i++)
-        {
-            if (shootingOrder[shootingIndex + i] == 1)
-            {
-                risingCount++;
-                // Instantiate target
-                target = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
-
-                // Set target position
-                target.transform.parent = targetGenerators[i];
-                target.transform.localPosition = new Vector3(0, minHeight, 0);
-
-                //Set target color
-                Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
-                int colorIndex = (shootingIndex + i) % targetColors.Length;
-                renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
-
-                TargetRise(target);
-            }
-        }
-        shootingIndex += targetGenerators.Length;
-    }
-
     private void TargetRise(GameObject target)
     {
+        Debug.Log("Rise");
         Sequence risingSequence = DOTween.Sequence();
         risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
             .SetEase(targetCurve)

@@ -75,7 +75,7 @@ public enum PropState
 {
     DELIVERING = 0,
     FETCHING = 1,
-    RETURNING = 2,
+    RETURNING = 2
 }
 
 

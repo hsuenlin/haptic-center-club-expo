@@ -20,12 +20,7 @@ public static class Timer
         }
 
         float timer = 0f;
-        while (timer < maxTime) {
-            tick(timer);
-            yield return null;
-            timer = timer + Time.deltaTime;
-        }
-        tick(maxTime);
+        yield return new WaitForSeconds(maxTime);
 
         end();
     }

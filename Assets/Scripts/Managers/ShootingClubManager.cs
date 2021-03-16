@@ -163,6 +163,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnWaiting() {
+        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
+            nextClubState = ClubState.READY;
+        }
     }
 
     public void ExitWaiting() {
@@ -176,9 +179,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         progressBar.gameObject.SetActive(true);
         
         if(propStand.activeInHierarchy) {
-            Debug.Log("PS Animation");
             Sequence propStandDropingSequence = DOTween.Sequence();
-            Debug.Log($"{propStandMinHeight}, {propStandAnimationTime}");
             propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
                     .SetEase(propStandAnimationCurve);
             propStandDropingSequence.Play();
@@ -188,6 +189,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnReady() {
+        if(DataManager.instance.isStartTextShowed[(int)currentClub]) {
+            nextClubState = ClubState.GAME;
+        }
+        else {
         Ray ray = DataManager.instance.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit)) {
@@ -203,13 +208,12 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
             readyText.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
             startText.gameObject.SetActive(true);
             StartCoroutine(Timer.StartTimer(startTextTime, ()=>{
                 DataManager.instance.isStartTextShowed[(int)currentClub] = true;
             }));
         }
-        if(startText.IsActive() && DataManager.instance.isStartTextShowed[(int)currentClub]) {
-            nextClubState = ClubState.GAME;
         }
     }
 
@@ -218,7 +222,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitGame() {
-        Debug.Log("GAME");
         DataManager.instance.player.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -282,10 +285,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitFetching() {
-        // TODO:
-        // 1. Gun switch
-        // 2. Gun follows hand
-        // 3. Using real hand to grab (no need to do)
         fetchTrigger.SetActive(true);
         fetchText.gameObject.SetActive(true);
         StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
@@ -329,7 +328,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void OnReturning() {
         if(DataManager.instance.isInReadyZone[(int)currentClub]) {
             ExitReturning();
-            nextClubState = ClubState.READY;
+            //nextClubState = ClubState.READY;
         }
     }
 
@@ -357,7 +356,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     private IEnumerator UpdateClubState() {
         while(true) {
             if(currentClubState != nextClubState) {
-                Debug.Log($"CS C to {nextClubState}");
                 ChangeClubState();
             }
             switch(currentClubState) {
@@ -368,6 +366,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
                     OnWaiting();
                     break;
                 case ClubState.READY:
+                    
                     OnReady();
                     break;
                 case ClubState.GAME:
@@ -386,7 +385,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     private IEnumerator UpdatePropState() {
         while(true) {
             if(currentPropState != nextPropState) {
-                Debug.Log($"CS C to {nextPropState}");
                 ChangePropState();
             }
             switch(currentPropState) {

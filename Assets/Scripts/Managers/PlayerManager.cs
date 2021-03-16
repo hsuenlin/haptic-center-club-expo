@@ -15,8 +15,6 @@ public class PlayerManager : MonoBehaviour
     
 
     void Awake() {
-        gameObject.SetActive(true);
-        
         Assert.AreNotEqual(0, health);
         Assert.IsNotNull(healthBarImage);
         
