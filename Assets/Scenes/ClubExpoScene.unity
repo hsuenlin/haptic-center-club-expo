@@ -2101,7 +2101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfa6f0b13a3b4df8af9351b6c652462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 3
 --- !u!65 &494148944
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9167,7 +9166,7 @@ MonoBehaviour:
   propStand: {fileID: 2046411553}
   propStandMinHeight: -1.5
   propStandMaxHeight: 0
-  propStandAnimationTime: 1
+  propStandAnimationTime: 2
   propStandAnimationCurve:
     serializedVersion: 2
     m_Curve:
@@ -9198,13 +9197,14 @@ MonoBehaviour:
   readyTrigger: {fileID: 494148941}
   readyText: {fileID: 1447398272}
   startText: {fileID: 1525780808}
-  readyTextTime: 2
-  startTextTime: 1.75
+  readyTextTime: 1
+  startTextTime: 1.5
   progressBar: {fileID: 1699510608250735595}
   healthBarImage: {fileID: 546432287}
   finishText: {fileID: 131891222}
   finishTextTime: 2
   deliveringTime: 3
+  returningTime: 3
 --- !u!65 &5084863503506244723
 BoxCollider:
   m_ObjectHideFlags: 0

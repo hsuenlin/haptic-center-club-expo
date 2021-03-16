@@ -52,6 +52,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     /* Variables for Quest mode */
     public float deliveringTime;
+    public float returningTime;
 
     /* Timer */
     private float timer = 0f;
@@ -124,6 +125,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             propStand.transform.position = new Vector3(-0.15f, -1.5f, 0.15f);
+            Assert.AreNotApproximatelyEqual(0f, deliveringTime);
+            Assert.AreNotApproximatelyEqual(0f, returningTime);
+            returningTime = 2f;
         }
     }
 
@@ -168,11 +172,18 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
     
     public void InitReady() {
-        Sequence propStandDropingSequence = DOTween.Sequence();
-        propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve);
-        propStandDropingSequence.Play();
         readyText.gameObject.SetActive(true);
+        progressBar.gameObject.SetActive(true);
+        
+        if(propStand.activeInHierarchy) {
+            Debug.Log("PS Animation");
+            Sequence propStandDropingSequence = DOTween.Sequence();
+            Debug.Log($"{propStandMinHeight}, {propStandAnimationTime}");
+            propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
+                    .SetEase(propStandAnimationCurve);
+            propStandDropingSequence.Play();
+        }
+
         progressBar.fillAmount = 0f;
     }
 
@@ -186,13 +197,16 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
                 progressBar.fillAmount = 0f;
             }
         }
-        if(progressBar.fillAmount >= 1f) {
+        if(Mathf.Approximately(1f, progressBar.fillAmount)) {
             DataManager.instance.isReadyTextShowed[(int)currentClub] = true;
         }
 
         if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
             readyText.gameObject.SetActive(false);
             startText.gameObject.SetActive(true);
+            StartCoroutine(Timer.StartTimer(startTextTime, ()=>{
+                DataManager.instance.isStartTextShowed[(int)currentClub] = true;
+            }));
         }
         if(startText.IsActive() && DataManager.instance.isStartTextShowed[(int)currentClub]) {
             nextClubState = ClubState.GAME;
@@ -204,6 +218,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitGame() {
+        Debug.Log("GAME");
         DataManager.instance.player.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -304,6 +319,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitReturning() {
         returnText.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            StartCoroutine(Timer.StartTimer(returningTime, ()=>{
+                DataManager.instance.isInReadyZone[(int)currentClub] = true;
+            }));
+        }
     }
 
     public void OnReturning() {
@@ -337,6 +357,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     private IEnumerator UpdateClubState() {
         while(true) {
             if(currentClubState != nextClubState) {
+                Debug.Log($"CS C to {nextClubState}");
                 ChangeClubState();
             }
             switch(currentClubState) {
@@ -365,6 +386,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     private IEnumerator UpdatePropState() {
         while(true) {
             if(currentPropState != nextPropState) {
+                Debug.Log($"CS C to {nextPropState}");
                 ChangePropState();
             }
             switch(currentPropState) {
