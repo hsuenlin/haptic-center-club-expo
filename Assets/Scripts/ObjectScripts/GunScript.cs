@@ -75,8 +75,20 @@ public class GunScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Hand" && DataManager.instance.isDeviceFollowHand) {
-            transform.position = other.gameObject.transform.position;
-            transform.rotation = other.gameObject.transform.rotation;
+            transform.parent = other.transform;
+            //transform.position = other.gameObject.transform.position;
+            //transform.rotation = other.gameObject.transform.rotation;
+        }
+    }
+
+    void Update() {
+        switch(appearance) {
+            case DeviceAppearance.REAL:
+                viveModel.SetActive(false);
+                break;
+            case DeviceAppearance.VIRTUAL:
+                gunModel.SetActive(true);
+                break;
         }
     }
 }

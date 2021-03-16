@@ -37,7 +37,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public GameObject fetchText;
 
     public GameObject returnText;
-    public GameObject readyPositionIndicator;
+    public GameObject readyTrigger;
 
     public Text readyText;
     public Text startText;
@@ -66,12 +66,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         Assert.IsNotNull(propStand);
         Assert.AreNotApproximatelyEqual(0f, propStandAnimationTime);
+        
         Assert.IsNotNull(propStandAnimationCurve);
         Assert.IsNotNull(fetchTrigger);
         Assert.IsNotNull(fetchText);
     
         Assert.IsNotNull(returnText);
-        Assert.IsNotNull(readyPositionIndicator);
+        Assert.IsNotNull(readyTrigger);
 
         Assert.IsNotNull(readyText);
         Assert.IsNotNull(startText);
@@ -120,6 +121,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             {PropState.FETCHING, ()=>{ ExitFetching(); }},
             {PropState.RETURNING, ()=>{ ExitReturning(); }}
         };
+
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            propStand.transform.position = new Vector3(-0.15f, -1.5f, 0.15f);
+        }
     }
 
     public override void Init() {
@@ -163,6 +168,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
     
     public void InitReady() {
+        Sequence propStandDropingSequence = DOTween.Sequence();
+        propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
+                .SetEase(propStandAnimationCurve);
+        propStandDropingSequence.Play();
         readyText.gameObject.SetActive(true);
         progressBar.fillAmount = 0f;
     }
@@ -238,14 +247,12 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(deliveringTime, () => {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
-                Debug.Log("A");
             }));
         }
     }
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
-            Debug.Log("B");
             propStand.SetActive(true);
             Sequence propStandRisingSequence = DOTween.Sequence();
             propStandRisingSequence.Append(propStand.transform.DOMoveY(propStandMaxHeight, propStandAnimationTime))
@@ -276,9 +283,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        Debug.Log("LookAT");
         fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
         Vector3 tmp = fetchText.transform.eulerAngles;
+        //tmp.x += 180f;
+        tmp.x = -tmp.x;
         tmp.y += 180f;
         fetchText.transform.eulerAngles = tmp;
     }
@@ -286,10 +294,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
         fetchText.gameObject.SetActive(false);
-        Sequence propStandDropingSequence = DOTween.Sequence();
-        propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve);
-        propStandDropingSequence.Play();
+
         StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = false;
@@ -298,7 +303,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitReturning() {
         returnText.gameObject.SetActive(true);
-        readyPositionIndicator.SetActive(true);
+        readyTrigger.SetActive(true);
     }
 
     public void OnReturning() {
@@ -310,7 +315,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void ExitReturning() {
         returnText.gameObject.SetActive(false);
-        readyPositionIndicator.SetActive(false);
+        readyTrigger.SetActive(false);
     }
 
     /* Change State Functions */
