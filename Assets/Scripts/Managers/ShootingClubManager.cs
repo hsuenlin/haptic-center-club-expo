@@ -304,9 +304,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
         Vector3 tmp = fetchText.transform.eulerAngles;
         //tmp.x += 180f;
-        tmp.x = -tmp.x;
-        tmp.y += 180f;
-        fetchText.transform.eulerAngles = tmp;
+        //tmp.x = -tmp.x;
+        //tmp.y += 180f;
+        //fetchText.transform.eulerAngles = tmp;
     }
 
     public void ExitFetching() {
