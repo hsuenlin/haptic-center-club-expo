@@ -9935,6 +9935,7 @@ MonoBehaviour:
   finishTextTime: 2
   deliveringTime: 3
   returningTime: 3
+  gun: {fileID: 1144172645}
 --- !u!65 &5084863503506244723
 BoxCollider:
   m_ObjectHideFlags: 0

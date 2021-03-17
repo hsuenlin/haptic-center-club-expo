@@ -53,6 +53,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Variables for Quest mode */
     public float deliveringTime;
     public float returningTime;
+    public GameObject gun;
 
     /* Timer */
     private float timer = 0f;
@@ -124,7 +125,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         };
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            propStand.transform.position = new Vector3(-0.15f, -1.5f, 0.15f);
+            propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
+            Assert.IsNotNull(gun);
+            gun.transform.parent = propStand.transform;
+            gun.transform.position = new Vector3(0.18f, -0.15f, 0.15f);
             Assert.AreNotApproximatelyEqual(0f, deliveringTime);
             Assert.AreNotApproximatelyEqual(0f, returningTime);
             returningTime = 2f;
@@ -303,10 +307,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         }
         fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
         Vector3 tmp = fetchText.transform.eulerAngles;
-        //tmp.x += 180f;
-        //tmp.x = -tmp.x;
-        //tmp.y += 180f;
-        //fetchText.transform.eulerAngles = tmp;
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            tmp.x = -tmp.x;
+            tmp.y += 180f;
+            fetchText.transform.eulerAngles = tmp;
+        }   
     }
 
     public void ExitFetching() {
