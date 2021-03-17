@@ -38,7 +38,8 @@ public class PlayerManager : MonoBehaviour
     void OnTriggerEnter(Collider collider) {
         if(collider.tag == "Target" 
             && GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB) {
-            health -= (health > 0) ? 1 : 0;
+            TargetScript ts = collider.gameObject.GetComponent<TargetScript>();
+            health -= (health > 0) ? ts.attack : 0;
             healthBarImage.sprite = healthBarSprites[health];
             StartCoroutine(StartDamageAnimation());
         }

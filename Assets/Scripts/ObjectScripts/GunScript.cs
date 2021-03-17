@@ -63,7 +63,11 @@ public class GunScript : MonoBehaviour {
                     lineRenderer.SetPosition(1, hit.point);
                 }
                 if(hit.collider.tag == "Target") {
-                    TargetMachine.instance.KillTarget(hit.collider.gameObject);
+                    TargetScript ts = hit.collider.gameObject.GetComponent<TargetScript>();
+                    ts.hp--;
+                    if(ts.hp == 0) {
+                        TargetMachine.instance.KillTarget(hit.collider.gameObject);
+                    }
                 }
             } else {
                 lineRenderer.SetPosition(1, transform.forward * 5000);

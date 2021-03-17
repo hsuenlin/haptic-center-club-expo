@@ -51,16 +51,23 @@ public class TargetMachine : Singleton<TargetMachine>
     public Transform handbookCenter;
 
     
-    /* Initialized in Start() */
     public Transform[] targetGenerators;
     public List<float> targetColorsList;
     public List<GameObject> targetDemoList;
     private int nAliveTarget;
     
+    public List<int> targetHpsList;
+    public List<int> targetAttacksList;
+
+    public Image targetHpImage;
+    public Image targetAttackImage;
+    
     /* ====================================== */
 
     private float[] targetColors;
     private GameObject[] targetDemos;
+    private int[] targetHps;
+    private int[] targetAttacks;
     
     private int shootingIndex = 0;
     private int risingCount = 0;
@@ -71,8 +78,12 @@ public class TargetMachine : Singleton<TargetMachine>
     protected override void OnAwake()
     {
         Assert.IsNotNull(targetGenerators);
+        Assert.IsNotNull(targetHpImage);
+        Assert.IsNotNull(targetAttackImage);
         targetColorsList = new List<float>();
         targetDemoList = new List<GameObject>();
+        targetHpsList = new List<int>();
+        targetAttacksList = new List<int>();
         foreach(int x in shootingOrder) {
             nAliveTarget += x;
         }
@@ -80,6 +91,8 @@ public class TargetMachine : Singleton<TargetMachine>
 
     public IEnumerator StartShooting() {
         targetColors = targetColorsList.ToArray();
+        targetHps = targetHpsList.ToArray();
+        targetAttacks = targetAttacksList.ToArray();
         for(int round = 0; round < shootingOrder.Length / 3; ++round) {
             for (int i = 0; i < targetGenerators.Length; ++i)
             {
@@ -98,6 +111,12 @@ public class TargetMachine : Singleton<TargetMachine>
                     Renderer renderer = target.transform.GetChild(1).GetComponent<Renderer>();
                     int colorIndex = (shootingIndex + i) % targetColors.Length;
                     renderer.material.color = Color.HSVToRGB(targetColors[colorIndex], 0.6f, 1f);
+
+                    //Set target hp
+                    target.GetComponent<TargetScript>().hp = targetHps[colorIndex];
+                    
+                    //Set target attack
+                    target.GetComponent<TargetScript>().attack = targetAttacks[colorIndex];
 
                     TargetRise(target);
                 }
@@ -137,16 +156,30 @@ public class TargetMachine : Singleton<TargetMachine>
     public void AddTargetDemo() {
         targetDemo = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
         targetDemo.transform.parent = handbookCenter;
-        targetDemo.transform.localPosition = Vector3.zero;
+        targetDemo.transform.localPosition = new Vector3(-0.35f, 0f, 0f);
         targetDemo.transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -1f), Vector3.up);
         //targetDemo.transform.LookAt(Camera.main.transform);
         targetDemoList.Add(targetDemo);
-
+        
         float hue = Random.Range(0f, 1f);
         targetColorsList.Add(hue);
 
         Renderer renderer = targetDemo.transform.GetChild(1).GetComponent<Renderer>();
         renderer.material.color = Color.HSVToRGB(hue, 0.6f, 1f);
+
+        int hp = Random.Range(1, 6);
+        targetDemo.GetComponent<TargetScript>().hp = hp;
+        targetHpsList.Add(hp);
+
+        int attack = Random.Range(1, 6);
+        targetDemo.GetComponent<TargetScript>().attack = attack;
+        targetAttacksList.Add(attack);
+
+        targetHpImage.gameObject.SetActive(true);
+        targetAttackImage.gameObject.SetActive(true);
+        
+        targetHpImage.fillAmount = ((float)hp) / 5;
+        targetAttackImage.fillAmount = ((float)attack) / 5;
     }
 
     public void UpdateHandbook() {
@@ -178,6 +211,8 @@ public class TargetMachine : Singleton<TargetMachine>
                 Destroy(targetDemo);
             }
         }
+        targetHpImage.gameObject.SetActive(false);
+        targetAttackImage.gameObject.SetActive(false);
     }
 
     private void TargetRise(GameObject target)
