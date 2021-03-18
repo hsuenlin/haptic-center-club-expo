@@ -19,7 +19,6 @@ public static class Timer
             yield break;
         }
 
-        float timer = 0f;
         yield return new WaitForSeconds(maxTime);
 
         end();

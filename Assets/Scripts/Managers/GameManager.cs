@@ -77,6 +77,10 @@ public class GameManager : Singleton<GameManager>
         // -> Server will keep sending haptic center tracker data and player tracker data.
     }
 
+    void Start() {
+        ClientSend.NotifyServerStateChange(ServerState.CALIBRATION);
+    }
+
     void Update() {
         if(currentSceneState != nextSceneState) {
             ChangeSceneState();
@@ -86,12 +90,14 @@ public class GameManager : Singleton<GameManager>
             case SceneState.CALIBRATION:
                 if(DataManager.instance.isCalibrated) {
                     nextSceneState = SceneState.ARENA;
+                    ClientSend.NotifyServerStateChange(ServerState.ARENA);
                 }
                 break;
             case SceneState.ARENA:
                 for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
                     if(DataManager.instance.isClubReady[sceneIdx] && !DataManager.instance.isClubPlayed[sceneIdx]) {
                         nextSceneState = (SceneState) sceneIdx;
+                        ClientSend.NotifyServerStateChange((ServerState)sceneIdx);
                         break;
                     }
                 }
@@ -101,6 +107,7 @@ public class GameManager : Singleton<GameManager>
             case SceneState.MUSICGAME_CLUB:
                 if(DataManager.instance.isClubPlayed[(int)currentSceneState]) {
                     nextSceneState = SceneState.ARENA;
+                    ClientSend.NotifyServerStateChange(ServerState.ARENA);
                 }
                 break;
             default:

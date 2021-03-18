@@ -22,13 +22,6 @@ public class ClientHandle : MonoBehaviour
 {
     public static ClientHandle instance;
 
-    /* Server Data */
-    public Tracker[] trackers;
-    public Panel panel;
-    public bool[] deviceStatusArray;
-    public bool deviceReady;
-    public bool requestResult;
-
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -38,10 +31,6 @@ public class ClientHandle : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
-
-        trackers = new Tracker[14];
-        panel = new Panel();
-        deviceStatusArray = new bool[5];
     }
     
     // TODO: Move the following part to tennis club.
@@ -75,7 +64,7 @@ public class ClientHandle : MonoBehaviour
             switch(type) {
                 case TrackerType.HC_Origin:
                     DataManager.instance.hapticCenter.transform.position = pos;
-                    DataManager.instance.hapticCenter.transform.rotation = ror;
+                    DataManager.instance.hapticCenter.transform.rotation = rot;
                     break;
                 case TrackerType.Player1:
                     DataManager.instance.playerCamera.transform.position = pos;
@@ -89,7 +78,7 @@ public class ClientHandle : MonoBehaviour
                     DataManager.instance.controllerCartridge.transform.position = pos;
                     DataManager.instance.controllerCartridge.transform.rotation = rot;
                     break;
-                case TracketType.Shifty:
+                case TrackerType.Shifty:
                     DataManager.instance.shifty.transform.position = pos;
                     DataManager.instance.shifty.transform.rotation = rot;
                     break;
@@ -99,7 +88,7 @@ public class ClientHandle : MonoBehaviour
                     break;
                 case TrackerType.Panel:
                     DataManager.instance.panel.transform.position = pos;
-                    DataManager.instance.panel.transform.position = rot;
+                    DataManager.instance.panel.transform.rotation = rot;
                     break;
                 default:
                     Debug.Log($"Not handle tracker type {type}");
@@ -164,15 +153,15 @@ public class ClientHandle : MonoBehaviour
     }
     public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
-        DataManager.instance.djPanel.red = _packet.ReadInt();
-        DataManager.instance.djPanel.blue = _packet.ReadInt();
-        DataManager.instance.djPanel.sliders[0] = _packet.ReadInt();
-        DataManager.instance.djPanel.sliders[1] = _packet.ReadInt();
-        DataManager.instance.djPanel.sliders[2] = _packet.ReadInt();
-        DataManager.instance.djPanel.sliders[3] = _packet.ReadInt();
-        DataManager.instance.djPanel.x = _packet.ReadInt();
-        DataManager.instance.djPanel.y = _packet.ReadInt();
-        DataManager.instance.djPanel.deg = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.red = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.blue = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.sliders[0] = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.sliders[1] = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.sliders[2] = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.sliders[3] = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.x = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.y = _packet.ReadInt();
+        DataManager.instance.djPanel.GetComponent<DJPanelScript>().panelInfo.deg = _packet.ReadInt();
         //GameManager.instance.OnPanelInfoReady();
     }
     public void PlayerDisconnected(Packet _packet)

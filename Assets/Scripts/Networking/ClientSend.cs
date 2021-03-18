@@ -40,18 +40,18 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void RequestDevice(Device device) {
+    public static void RequestDevice(ServerDevice device) {
         using (Packet _packet = new Packet((int)ClientCommand.RequestDevice))
         {
             switch(device) {
-                case Device.CONTROLLER:
-                     _packet.Write(60);
+                case ServerDevice.Controller:
+                     _packet.Write((int)ServerDevice.Controller);
                     break;
-                case Device.SHIFTY:
-                    _packet.Write(40);
+                case ServerDevice.Shifty:
+                    _packet.Write((int)ServerDevice.Shifty);
                     break;
-                case Device.PANEL:
-                    _packet.Write(50);
+                case ServerDevice.Panel:
+                    _packet.Write((int)ServerDevice.Panel);
                     break;
                 default:
                     Debug.Log("Request strange device");

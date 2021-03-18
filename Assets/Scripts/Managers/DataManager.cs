@@ -4,6 +4,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
 
+public enum ServerCommand
+{
+    Welcome = 1,
+    SendTrackerInfo = 2,
+    SendDeviceStatus = 3,
+    SendRequestIsSuccess = 4,
+    SendDeviceReady = 5,
+    SendControllerTriggerPress = 60,
+    SendPanelInfo = 50,
+    PlayerDisconnected = 100,
+}
+
+public enum ClientCommand
+{
+    SendWelcomeBack = 1,
+    NotifyServerStateChange = 2,
+    RequestDevice = 3
+}
+
 public enum TrackerType
 {
     HC_Origin = 0,
@@ -22,33 +41,6 @@ public enum TrackerType
     Shield_Cartridge = 81,
 }
 
-public enum DeviceName
-{
-    Shifty = 40,
-    Panel = 50,
-    Controller = 60,
-    Gun = 70,
-    Shield = 80
-}
-public enum ServerGameState
-{
-    NONE = 0,
-    INIT = 1,
-    STORY = 2,
-    BRANCH = 3,
-    TENNIS_CLUB = 4,
-    SHOOTING_CLUB = 5,
-    MUSIC_CLUB = 6
-}
-public enum ServerStageState
-{
-    NONE = 0,
-    DISTRIBUTE_DEVICE = 1,
-    WAITING_DEVICE_READY = 2,
-    STAGE_START = 3,
-    STAGE_END = 4
-}
-
 public enum SceneState
 {
     CALIBRATION = -2,
@@ -57,12 +49,7 @@ public enum SceneState
     TENNIS_CLUB = 1,
     MUSICGAME_CLUB = 2
 }
-public enum Device
-{
-    CONTROLLER = 0,
-    SHIFTY = 1,
-    PANEL = 2
-}
+
 public enum ClubState
 {
     IDLE = 0,
@@ -71,6 +58,7 @@ public enum ClubState
     GAME = 3,
     RESULT = 4
 }
+
 public enum PropState
 {
     DELIVERING = 0,
@@ -78,24 +66,13 @@ public enum PropState
     RETURNING = 2
 }
 
-
-
-public enum ServerCommand
+public enum ServerState
 {
-    Welcome = 1,
-    SendTrackerInfo = 2,
-    SendDeviceStatus = 3,
-    SendRequestIsSuccess = 4,
-    SendDeviceReady = 5,
-    SendControllerTriggerPress = 60,
-    SendPanelInfo = 50,
-    PlayerDisconnected = 100,
-}
-public enum ClientCommand
-{
-    SendWelcomeBack = 1,
-    NotifyServerStateChange = 2,
-    RequestDevice = 3
+    CALIBRATION = -2,
+    ARENA = -1,
+    TENNIS_CLUB = 0,
+    SHOOTING_CLUB = 1,
+    MUSICGAME_CLUB = 2
 }
 
 public enum DeviceAppearance {
@@ -103,8 +80,24 @@ public enum DeviceAppearance {
     VIRTUAL = 1
 }
 
-public class DJPanel {
-    public DJPanel() {
+public enum Device
+{
+    CONTROLLER = 0,
+    SHIFTY = 1,
+    PANEL = 2
+}
+
+public enum ServerDevice
+{
+    Shifty = 40,
+    Panel = 50,
+    Controller = 60,
+    Gun = 70,
+    Shield = 80
+}
+
+public class PanelInfo {
+    public PanelInfo() {
         sliders = new int[4];
     }
     public int red, blue;
