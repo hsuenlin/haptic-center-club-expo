@@ -12,6 +12,9 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     public Text calibrationText;
     public float calibrationTime;
     
+    public Quaternion negateRotation;
+    public Vector3 negatePosition;
+    
     protected override void OnAwake() {
         Assert.IsNotNull(transparentBlack);
         Assert.IsNotNull(calibrationText);
@@ -21,6 +24,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
         transparentBlack.gameObject.SetActive(true);
         calibrationText.gameObject.SetActive(true);
         StartCoroutine(CalibrationCountDown());
+        DataManager.instance.ovrRig.GetComponent<OVRCameraRig>().UpdatedAnchors += NegateCameraTransform;
     }
 
     private IEnumerator CalibrationCountDown()
@@ -32,6 +36,25 @@ public class CalibrationManager : SceneManager<CalibrationManager>
             yield return null;
         }
         DataManager.instance.isCalibrated = true;
+    }
+
+    void NegateCameraTransform(OVRCameraRig cameraRig)
+    {
+        //Debug.Log("Update anchor callback");
+        
+        if(GameManager.instance.currentSceneState == SceneState.CALIBRATION) {
+            Matrix4x4 m = cameraRig.centerEyeAnchor.parent.worldToLocalMatrix * cameraRig.centerEyeAnchor.localToWorldMatrix;
+            negateRotation = m.inverse.rotation;
+            negatePosition.x = m.inverse.m03;
+            negatePosition.y = m.inverse.m13;
+            negatePosition.z = m.inverse.m23;
+        }
+        
+
+        
+        DataManager.instance.playerCamera.transform.parent.localRotation = negateRotation;
+        DataManager.instance.playerCamera.transform.parent.localPosition = negatePosition;
+        
     }
 
     public override void Exit() {

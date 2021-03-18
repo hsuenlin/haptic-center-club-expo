@@ -60,6 +60,8 @@ public class ClientHandle : MonoBehaviour
             TrackerType type = (TrackerType)_packet.ReadInt();
             Vector3 pos = _packet.ReadVector3();
             Quaternion rot = _packet.ReadQuaternion();
+            
+            //Debug.Log("")
 
             switch(type) {
                 case TrackerType.HC_Origin:
@@ -67,8 +69,8 @@ public class ClientHandle : MonoBehaviour
                     DataManager.instance.hapticCenter.transform.rotation = rot;
                     break;
                 case TrackerType.Player1:
-                    DataManager.instance.playerCamera.transform.position = pos;
-                    DataManager.instance.playerCamera.transform.rotation = rot;
+                    DataManager.instance.player.transform.position = pos;
+                    DataManager.instance.player.transform.rotation = rot;
                     break;
                 case TrackerType.Vive_Controller_Right:
                     DataManager.instance.controller.transform.position = pos;
@@ -138,10 +140,15 @@ public class ClientHandle : MonoBehaviour
     public void RequestResultHandle(Packet _packet) {
         if(_packet.ReadInt() == 1) {
             DataManager.instance.isRequestResultReady = true;
+            DataManager.instance.isClubReady = true;
+        } else {
+            DataManager.instance.isRequestResultReady = true;
+            DataManager.instance.isClubReady = false;
         }
     }
 
     public void DeviceReadyHandle(Packet _packet) {
+        Debug.Log("Receive Device Ready");
         DataManager.instance.isDeviceReady[(int)DataManager.instance.requestDevice] = true;
     }
 
@@ -149,6 +156,7 @@ public class ClientHandle : MonoBehaviour
     {
         if(ShootingClubManager.instance.currentClubState == ClubState.GAME) {
             DataManager.instance.gun.GetComponent<GunScript>().Shoot();
+            Debug.Log("射");
         }
     }
     public void PanelInfoHandle(Packet _packet) {

@@ -95,6 +95,8 @@ namespace OculusSampleFramework
 			_rayToolView.InteractableTool = this;
 			_coneAngleReleaseDegrees = _coneAngleDegrees * 1.2f;
 			_initialized = true;
+
+			//transform.parent = DataManager.instance.ovrRig.gameObject.transform;
 		}
 
 		private void OnDestroy()
@@ -114,8 +116,10 @@ namespace OculusSampleFramework
 
 			var hand = IsRightHandedTool ? HandsManager.Instance.RightHand : HandsManager.Instance.LeftHand;
 			var pointer = hand.PointerPose;
-			transform.position = pointer.position;
-			transform.rotation = pointer.rotation;
+			transform.position = IsRightHandedTool ? DataManager.instance.rightHandAnchor.transform.position : DataManager.instance.leftHandAnchor.transform.position;
+			transform.rotation = IsRightHandedTool ? DataManager.instance.rightHandAnchor.transform.rotation : DataManager.instance.leftHandAnchor.transform.rotation;
+			//transform.position = pointer.position + new Vector3(0f, -0.05f, -0.035f);
+			//transform.eulerAngles = pointer.eulerAngles + new Vector3(90f, 0f, 0f);
 
 			var prevPosition = InteractionPosition;
 			var currPosition = transform.position;

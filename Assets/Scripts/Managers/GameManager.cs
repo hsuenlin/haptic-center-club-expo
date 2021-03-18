@@ -71,14 +71,6 @@ public class GameManager : Singleton<GameManager>
         };
         
         sceneManagers[currentSceneState].Init();
-
-        // TODO: 
-        // Make connection with server. 
-        // -> Server will keep sending haptic center tracker data and player tracker data.
-    }
-
-    void Start() {
-        ClientSend.NotifyServerStateChange(ServerState.CALIBRATION);
     }
 
     void Update() {
@@ -95,7 +87,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             case SceneState.ARENA:
                 for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
-                    if(DataManager.instance.isClubReady[sceneIdx] && !DataManager.instance.isClubPlayed[sceneIdx]) {
+                    if(DataManager.instance.isClubReady && !DataManager.instance.isClubPlayed[sceneIdx]) {
                         nextSceneState = (SceneState) sceneIdx;
                         ClientSend.NotifyServerStateChange((ServerState)sceneIdx);
                         break;
@@ -123,8 +115,8 @@ public class GameManager : Singleton<GameManager>
         currentSceneManager.gameObject.SetActive(false);
         nextSceneManager.gameObject.SetActive(true);
         sceneManagers[nextSceneState].Init();
-        DataManager.instance.forestIslandRoot.position = sceneTransforms[nextSceneState].position;
-        DataManager.instance.forestIslandRoot.rotation = sceneTransforms[nextSceneState].rotation;
+        DataManager.instance.forestIslandRoot.localPosition = sceneTransforms[nextSceneState].localPosition;
+        DataManager.instance.forestIslandRoot.localRotation = sceneTransforms[nextSceneState].localRotation;
         currentSceneState = nextSceneState;
     }
 }

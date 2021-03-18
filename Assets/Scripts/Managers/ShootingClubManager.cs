@@ -28,6 +28,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public GameObject addTargetDemoBtn;
 
+    public GameObject gun;
     public GameObject propStand;
     public float propStandMinHeight;
     public float propStandMaxHeight;
@@ -97,6 +98,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         progressBar.gameObject.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         finishText.gameObject.SetActive(false);
+
+        gun.SetActive(false);
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
@@ -180,10 +183,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitReady() {
         readyText.gameObject.SetActive(true);
         progressBar.gameObject.SetActive(true);
-        
+        gun.SetActive(false);
         if(propStand.activeInHierarchy) {
             Sequence propStandDropingSequence = DOTween.Sequence();
-            propStandDropingSequence.Append(propStand.transform.DOMoveY(propStandMinHeight, propStandAnimationTime))
+            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
                     .SetEase(propStandAnimationCurve);
             propStandDropingSequence.Play();
         }
@@ -278,11 +281,15 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
+            Debug.Log("Arrived");
             propStand.SetActive(true);
             Sequence propStandRisingSequence = DOTween.Sequence();
-            propStandRisingSequence.Append(propStand.transform.DOMoveY(propStandMaxHeight, propStandAnimationTime))
+            propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
                 .SetEase(propStandAnimationCurve)
-                .AppendCallback(() => { nextPropState = PropState.FETCHING; });
+                .AppendCallback(() => {
+                    nextPropState = PropState.FETCHING;
+                    gun.SetActive(true);
+                    });
             propStandRisingSequence.Play();
         }
     }

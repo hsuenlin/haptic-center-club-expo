@@ -10,7 +10,7 @@ public enum ServerCommand
     SendTrackerInfo = 2,
     SendDeviceStatus = 3,
     SendRequestIsSuccess = 4,
-    SendDeviceReady = 5,
+    SendDeviceReady = 6,
     SendControllerTriggerPress = 60,
     SendPanelInfo = 50,
     PlayerDisconnected = 100,
@@ -20,7 +20,7 @@ public enum ClientCommand
 {
     SendWelcomeBack = 1,
     NotifyServerStateChange = 2,
-    RequestDevice = 3
+    RequestDevice = 5
 }
 
 public enum TrackerType
@@ -133,7 +133,7 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isDeviceReady;
     public bool[] isDeviceFetched;
     public Device requestDevice;
-    public bool[] isClubReady;
+    public bool isClubReady;
     public bool[] isClubPlayed;
     public bool[] isInReadyZone;
     public bool[] isReadyTextShowed;
@@ -145,7 +145,12 @@ public class DataManager : Singleton<DataManager> {
     public GameObject contactText;
     public GameObject failedText;
     public Transform[] clubPromptTransforms;
-    public bool isRequestResultReady; 
+    public bool isRequestResultReady;
+
+    public OVRCameraRig ovrRig;
+    
+    public Transform rightHandAnchor;
+    public Transform leftHandAnchor;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -163,11 +168,14 @@ public class DataManager : Singleton<DataManager> {
         Assert.IsNotNull(contactText);
         Assert.IsNotNull(clubPromptTransforms);
 
+        Assert.IsNotNull(ovrRig);
+
         isCalibrated = false;
         isDeviceFree = new bool[3];
         isDeviceReady = new bool[3];
         isDeviceFetched = new bool[3];
-        isClubReady = new bool[3];
+        //isClubReady = new bool[3];
+        isClubReady = false;
         isClubPlayed = new bool[3];
         isInReadyZone = new bool[3];
         isReadyTextShowed = new bool[3];

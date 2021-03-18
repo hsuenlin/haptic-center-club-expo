@@ -18,7 +18,7 @@ public class DeviceStatusSign: MonoBehaviour
 
     void Update() {
         // Fetching device status
-        if(DataManager.instance.isDeviceReady[(int)signifiedDevice]) {
+        if(DataManager.instance.isDeviceFree[(int)signifiedDevice]) {
             meshRenderer.material = freeMaterial;
         }
         else {
