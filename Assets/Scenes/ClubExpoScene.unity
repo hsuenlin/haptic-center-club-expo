@@ -4038,16 +4038,16 @@ MonoBehaviour:
   playerCamera: {fileID: 718714024057822365}
   handSDK: {fileID: 1685300262}
   hapticCenter: {fileID: 757767890}
-  controller: {fileID: 0}
-  controllerCartridge: {fileID: 0}
-  shifty: {fileID: 0}
-  shiftyCartridge: {fileID: 0}
-  panel: {fileID: 397379274}
+  controller: {fileID: 680368504}
+  controllerCartridge: {fileID: 331078328}
+  shifty: {fileID: 1438711208}
+  shiftyCartridge: {fileID: 602413338}
+  panel: {fileID: 2051268019}
   gun: {fileID: 1144172645}
-  gunSupport: {fileID: 0}
-  racket: {fileID: 1711279707}
-  racketSupport: {fileID: 0}
-  djPanel: {fileID: 0}
+  gunSupport: {fileID: 2046411553}
+  racket: {fileID: 1438711208}
+  racketSupport: {fileID: 602413338}
+  djPanel: {fileID: 2051268019}
   isCalibrated: 0
   isDeviceFree: 
   isDeviceReady: 
@@ -4061,6 +4061,12 @@ MonoBehaviour:
   canShoot: 0
   gunAppearance: 0
   isDeviceFollowHand: 0
+  contactText: {fileID: 8869514091596656062, guid: 351ed309ce17d8b488bd783b979853b5,
+    type: 3}
+  failedText: {fileID: 5254505839431265810, guid: 0890ed2297c948e409674d58cdef10d1,
+    type: 3}
+  clubPromptTransforms: []
+  isRequestResultReady: 0
 --- !u!1 &974050358
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4422,7 @@ PrefabInstance:
     - target: {fileID: 6250878258688070187, guid: 68c46b4f8988d4330bb26ea698e30fea,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6250878258688070191, guid: 68c46b4f8988d4330bb26ea698e30fea,
         type: 3}
@@ -5570,7 +5576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSceneState: -2
   nextSceneState: -2
-  gameMode: 0
+  gameMode: 1
   calibrationManager: {fileID: 446512360}
   arenaManager: {fileID: 235618658272809687}
   shootingClubManager: {fileID: 4355715245385055284}

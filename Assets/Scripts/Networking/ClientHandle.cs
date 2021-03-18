@@ -137,7 +137,7 @@ public class ClientHandle : MonoBehaviour
 
     public void RequestResultHandle(Packet _packet) {
         if(_packet.ReadInt() == 1) {
-            DataManager.instance.isClubReady[(int)DataManager.instance.requestDevice] = true;
+            DataManager.instance.isRequestResultReady = true;
         }
     }
 

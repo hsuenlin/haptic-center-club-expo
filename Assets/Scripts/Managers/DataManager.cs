@@ -141,6 +141,11 @@ public class DataManager : Singleton<DataManager> {
     public bool canShoot;
     public DeviceAppearance gunAppearance;
     public bool isDeviceFollowHand;
+
+    public GameObject contactText;
+    public GameObject failedText;
+    public Transform[] clubPromptTransforms;
+    public bool isRequestResultReady; 
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -155,6 +160,9 @@ public class DataManager : Singleton<DataManager> {
         Assert.IsNotNull(shiftyCartridge);
         Assert.IsNotNull(panel);
 
+        Assert.IsNotNull(contactText);
+        Assert.IsNotNull(clubPromptTransforms);
+
         isCalibrated = false;
         isDeviceFree = new bool[3];
         isDeviceReady = new bool[3];
@@ -167,5 +175,7 @@ public class DataManager : Singleton<DataManager> {
         canShoot = true;
         gunAppearance = DeviceAppearance.REAL;
         isDeviceFollowHand = false;
+
+        isRequestResultReady = false;
     }
 }
