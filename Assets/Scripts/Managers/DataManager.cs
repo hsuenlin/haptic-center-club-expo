@@ -187,3 +187,11 @@ public class DataManager : Singleton<DataManager> {
         isRequestResultReady = false;
     }
 }
+
+public class UIFunc {
+    public static void AttachObjects(GameObject src, GameObject dest) {
+        src.transform.parent = dest.transform;
+        src.transform.localPosition = Vector3.zero;
+        src.transform.localRotation = Queternioin.identity;
+    }
+}
