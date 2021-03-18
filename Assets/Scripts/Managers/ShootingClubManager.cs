@@ -53,7 +53,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Variables for Quest mode */
     public float deliveringTime;
     public float returningTime;
-    public GameObject gun;
 
     /* Timer */
     private float timer = 0f;
@@ -126,9 +125,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
-            Assert.IsNotNull(gun);
-            gun.transform.parent = propStand.transform;
-            gun.transform.position = new Vector3(0.18f, -0.15f, 0.15f);
+            DataManager.instance.gun.transform.parent = propStand.transform;
+            DataManager.instance.gun.transform.position = new Vector3(0.18f, -0.15f, 0.15f);
             Assert.AreNotApproximatelyEqual(0f, deliveringTime);
             Assert.AreNotApproximatelyEqual(0f, returningTime);
             returningTime = 2f;
@@ -252,6 +250,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitResult() {
         finishText.gameObject.SetActive(true);
+        // TODO: Put the prop back!!!
         timer = 0f;
     }
 

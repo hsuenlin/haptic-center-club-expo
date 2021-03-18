@@ -4005,6 +4005,7 @@ MonoBehaviour:
   forestIslandRoot: {fileID: 2063252459}
   player: {fileID: 184506988}
   playerCamera: {fileID: 718714024057822365}
+  handSDK: {fileID: 1685300262}
   hapticCenter: {fileID: 757767890}
   gun: {fileID: 1144172645}
   gunSupport: {fileID: 0}
@@ -4063,6 +4064,10 @@ PrefabInstance:
     - target: {fileID: 1099536711198800, guid: 2ced187cdc1b6b94da2fd30a37e8bc41, type: 3}
       propertyPath: m_Name
       value: InteractableToolsSDKDriver
+      objectReference: {fileID: 0}
+    - target: {fileID: 1099536711198800, guid: 2ced187cdc1b6b94da2fd30a37e8bc41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4344865891687486, guid: 2ced187cdc1b6b94da2fd30a37e8bc41, type: 3}
       propertyPath: m_RootOrder
@@ -4836,7 +4841,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coldDownTime: 0.1
   shotDuration: 0.1
-  autoShootingTime: 1
+  autoShootingTime: 0.2
   muzzle: {fileID: 2015941479}
   lineRenderer: {fileID: 1144172648}
   appearance: 0
@@ -6490,6 +6495,12 @@ Transform:
   m_Father: {fileID: 1632842980}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1685300262 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1099536711198800, guid: 2ced187cdc1b6b94da2fd30a37e8bc41,
+    type: 3}
+  m_PrefabInstance: {fileID: 979371690}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1701049143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9996,7 +10007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20f718e1ac1f8421d89b2db794aa0d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootingOrder: 010000000000000000000000
+  shootingOrder: 010000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000000000000000000000001000000010000000000000001000000000000000100000000000000010000000000000000000000000000000100000001000000000000000000000001000000010000000100000000000000010000000000000001000000000000000100000001000000010000000000000000000000010000000100000001000000
   occurrenceFrequency: 4
   risingTime: 1
   airTime: 0.5
@@ -10015,8 +10026,8 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
@@ -10024,8 +10035,8 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

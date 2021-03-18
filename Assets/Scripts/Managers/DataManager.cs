@@ -59,8 +59,8 @@ public enum SceneState
 }
 public enum Device
 {
-    GUN = 0,
-    RACKET = 1,
+    CONTROLLER = 0,
+    SHIFTY = 1,
     PANEL = 2
 }
 public enum ClubState
@@ -90,20 +90,27 @@ public enum ServerCommand
     SendControllerTriggerPress = 60,
     SendPanelInfo = 50,
     PlayerDisconnected = 100,
-
 }
 public enum ClientCommand
 {
     SendWelcomeBack = 1,
-    NotifyGameStateChange = 2,
-    NotifyStageStateChange = 3,
-    RequestDevicesStatus = 4,
-    RequestDevice = 5
+    NotifyServerStateChange = 2,
+    RequestDevice = 3
 }
 
 public enum DeviceAppearance {
     REAL = 0,
     VIRTUAL = 1
+}
+
+public class DJPanel {
+    public DJPanel() {
+        sliders = new int[4];
+    }
+    public int red, blue;
+    public int[] sliders;
+    public int x, y;
+    public int deg;
 }
 
 public class DataManager : Singleton<DataManager> {
@@ -112,17 +119,27 @@ public class DataManager : Singleton<DataManager> {
 
     public GameObject player;
     public Camera playerCamera;
+
+    public GameObject handSDK;
     
     public GameObject hapticCenter;
+    public GameObject controller;
+    public GameObject controllerCartridge;
+    public GameObject shifty;
+    public GameObject shiftyCartridge;
+    public GameObject panel;
+
     public GameObject gun;
     public GameObject gunSupport;
     public GameObject racket;
     public GameObject racketSupport;
-    public GameObject panel;
+    public GameObject djPanel;
+
     public bool isCalibrated;
     public bool[] isDeviceFree;
     public bool[] isDeviceReady;
     public bool[] isDeviceFetched;
+    public Device requestDevice;
     public bool[] isClubReady;
     public bool[] isClubPlayed;
     public bool[] isInReadyZone;
@@ -138,10 +155,11 @@ public class DataManager : Singleton<DataManager> {
         Assert.IsNotNull(hapticCenter);
         Assert.IsNotNull(player);
         Assert.IsNotNull(playerCamera);
-        Assert.IsNotNull(gun);
-        Assert.IsNotNull(gunSupport);
-        Assert.IsNotNull(racket);
-        Assert.IsNotNull(racketSupport);
+        Assert.IsNotNull(handSDK);
+        Assert.IsNotNull(controller);
+        Assert.IsNotNull(controllerCartridge);
+        Assert.IsNotNull(shifty);
+        Assert.IsNotNull(shiftyCartridge);
         Assert.IsNotNull(panel);
 
         isCalibrated = false;

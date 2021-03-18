@@ -17,15 +17,6 @@ public class Tracker {
     public Vector3 pos;
     public Quaternion rot;
 }
-public class Panel {
-    public Panel() {
-        sliders = new int[4];
-    }
-    public int red, blue;
-    public int[] sliders;
-    public int x, y;
-    public int deg;
-}
 
 public class ClientHandle : MonoBehaviour
 {
@@ -73,23 +64,6 @@ public class ClientHandle : MonoBehaviour
     }
 
     public void TrackerInfoHandle(Packet _packet) {
-        Dictionary<TrackerType, int> typeToIndex = new Dictionary<TrackerType, int>()
-        {
-            {TrackerType.HC_Origin, 0},
-            {TrackerType.Player1, 1},
-            {TrackerType.Player2, 2},
-            {TrackerType.Player3, 3},
-            {TrackerType.Shifty, 4},
-            {TrackerType.Shifty_Cartridge, 5},
-            {TrackerType.Panel, 6},
-            {TrackerType.Vive_Controller_Left, 7}, 
-            {TrackerType.Vive_Controller_Right, 8},
-            {TrackerType.Controller_Cartridge, 9},
-            {TrackerType.Gun, 10}, 
-            {TrackerType.Gun_Cartridge, 11},
-            {TrackerType.Shield, 12}, 
-            {TrackerType.Shield_Cartridge, 13}
-        };
         int trackerNum = _packet.ReadInt();
         
         for (int i = 0; i < trackerNum; ++i)
@@ -97,7 +71,40 @@ public class ClientHandle : MonoBehaviour
             TrackerType type = (TrackerType)_packet.ReadInt();
             Vector3 pos = _packet.ReadVector3();
             Quaternion rot = _packet.ReadQuaternion();
-            trackers[typeToIndex[type]] = new Tracker(pos, rot);
+
+            switch(type) {
+                case TrackerType.HC_Origin:
+                    DataManager.instance.hapticCenter.transform.position = pos;
+                    DataManager.instance.hapticCenter.transform.rotation = ror;
+                    break;
+                case TrackerType.Player1:
+                    DataManager.instance.playerCamera.transform.position = pos;
+                    DataManager.instance.playerCamera.transform.rotation = rot;
+                    break;
+                case TrackerType.Vive_Controller_Right:
+                    DataManager.instance.controller.transform.position = pos;
+                    DataManager.instance.controller.transform.rotation = rot;
+                    break;
+                case TrackerType.Controller_Cartridge:
+                    DataManager.instance.controllerCartridge.transform.position = pos;
+                    DataManager.instance.controllerCartridge.transform.rotation = rot;
+                    break;
+                case TracketType.Shifty:
+                    DataManager.instance.shifty.transform.position = pos;
+                    DataManager.instance.shifty.transform.rotation = rot;
+                    break;
+                case TrackerType.Shifty_Cartridge:
+                    DataManager.instance.shiftyCartridge.transform.position = pos;
+                    DataManager.instance.shiftyCartridge.transform.rotation = rot;
+                    break;
+                case TrackerType.Panel:
+                    DataManager.instance.panel.transform.position = pos;
+                    DataManager.instance.panel.transform.position = rot;
+                    break;
+                default:
+                    Debug.Log($"Not handle tracker type {type}");
+                    break;
+            }
             
             // TODO: Move following parts to tennis club.
             /*
@@ -132,40 +139,40 @@ public class ClientHandle : MonoBehaviour
         //GameManager.instance.OnTrackerInfoReady();
     }
     public void DeviceStatusHandle(Packet _packet) {
-        // Shifty, Shiled, Gun, Controller, Panel
-        // TODO: Inform game manager.
-        for(int i = 0; i < 5; ++i) {
-            deviceStatusArray[i] = (_packet.ReadInt() == 1);
-        }
-        //GameManager.instance.OnDeviceStatusReady();
+        DataManager.instance.isDeviceFree[(int)Device.SHIFTY] = (_packet.ReadInt() == 0);
+        _packet.ReadInt(); // Shield
+        _packet.ReadInt(); // Gun
+        DataManager.instance.isDeviceFree[(int)Device.CONTROLLER] = (_packet.ReadInt() == 0);
+        DataManager.instance.isDeviceFree[(int)Device.PANEL] = (_packet.ReadInt() == 0);
     }
 
     public void RequestResultHandle(Packet _packet) {
-        requestResult = (_packet.ReadInt() == 1);
-        //GameManager.instance.OnRequestResultReady();
+        if(_packet.ReadInt() == 1) {
+            DataManager.instance.isClubReady[(int)DataManager.instance.requestDevice] = true;
+        }
     }
 
     public void DeviceReadyHandle(Packet _packet) {
-        deviceReady = true;
-        //GameManager.instance.OnDeviceReady();
+        DataManager.instance.isDeviceReady[(int)DataManager.instance.requestDevice] = true;
     }
 
     public void TriggerHandle(Packet _packet)
     {
-        // TODO: Notify gun
-        //GameManager.instance.OnTriggered();
+        if(ShootingClubManager.instance.currentClubState == ClubState.GAME) {
+            DataManager.instance.gun.GetComponent<GunScript>().Shoot();
+        }
     }
     public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
-        panel.red = _packet.ReadInt();
-        panel.blue = _packet.ReadInt();
-        panel.sliders[0] = _packet.ReadInt();
-        panel.sliders[1] = _packet.ReadInt();
-        panel.sliders[2] = _packet.ReadInt();
-        panel.sliders[3] = _packet.ReadInt();
-        panel.x = _packet.ReadInt();
-        panel.y = _packet.ReadInt();
-        panel.deg = _packet.ReadInt();
+        DataManager.instance.djPanel.red = _packet.ReadInt();
+        DataManager.instance.djPanel.blue = _packet.ReadInt();
+        DataManager.instance.djPanel.sliders[0] = _packet.ReadInt();
+        DataManager.instance.djPanel.sliders[1] = _packet.ReadInt();
+        DataManager.instance.djPanel.sliders[2] = _packet.ReadInt();
+        DataManager.instance.djPanel.sliders[3] = _packet.ReadInt();
+        DataManager.instance.djPanel.x = _packet.ReadInt();
+        DataManager.instance.djPanel.y = _packet.ReadInt();
+        DataManager.instance.djPanel.deg = _packet.ReadInt();
         //GameManager.instance.OnPanelInfoReady();
     }
     public void PlayerDisconnected(Packet _packet)

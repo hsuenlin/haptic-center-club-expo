@@ -78,11 +78,15 @@ public class GunScript : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if(other.tag == "Hand" && DataManager.instance.isDeviceFollowHand) {
-            transform.parent = other.transform;
-            transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
-            transform.localEulerAngles = new Vector3(0f, -65f, 90f);
+        if(other.tag == "Hand") {
+            DataManager.instance.handSDK.SetActive(false);
+            if(DataManager.instance.isDeviceFollowHand) {
+                transform.parent = other.transform;
+                transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
+                transform.localEulerAngles = new Vector3(0f, -65f, 90f);
+            }
         }
+
     }
 
     void Update() {

@@ -31,33 +31,32 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void NotifyGameStateChange(int state) {
-        using(Packet _packet = new Packet((int)ClientCommand.NotifyGameStateChange)) {
-            _packet.Write(state);
-            SendTCPData(_packet);
-        }
-    }
-
-    public static void NotifyStageStateChange(int state)
+    public static void NotifyServerStateChange(ServerState nextState)
     {
-        using (Packet _packet = new Packet((int)ClientCommand.NotifyStageStateChange))
+        using (Packet _packet = new Packet((int)ClientCommand.NotifyServerStateChange))
         {
-            _packet.Write(state);
+            _packet.Write((int)nextState);
             SendTCPData(_packet);
         }
     }
 
-    public static void RequestDevicesStatus() {
-        using (Packet _packet = new Packet((int)ClientCommand.RequestDevicesStatus))
-        {
-            SendTCPData(_packet);
-        }
-    }
-
-    public static void RequestDevice(int device) {
+    public static void RequestDevice(Device device) {
         using (Packet _packet = new Packet((int)ClientCommand.RequestDevice))
         {
-            _packet.Write(device);
+            switch(device) {
+                case Device.CONTROLLER:
+                     _packet.Write(60);
+                    break;
+                case Device.SHIFTY:
+                    _packet.Write(40);
+                    break;
+                case Device.PANEL:
+                    _packet.Write(50);
+                    break;
+                default:
+                    Debug.Log("Request strange device");
+                    break;
+            }
             SendTCPData(_packet);
         }
     }

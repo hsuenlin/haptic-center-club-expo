@@ -16,11 +16,13 @@ public class TargetMachine : Singleton<TargetMachine>
         RISING = 3
     }
 
+    /*
     public int[] shootingOrder = {
         1, 0, 0
     };
+    */
 
-    /*
+    
     public int[] shootingOrder = { 
         1, 0, 0,
         1, 0, 0,
@@ -38,7 +40,6 @@ public class TargetMachine : Singleton<TargetMachine>
         1, 0, 0,
         1, 1, 1
         };
-    */
 
     public float occurrenceFrequency = 4.0f;
     public float risingTime = 1.0f;
