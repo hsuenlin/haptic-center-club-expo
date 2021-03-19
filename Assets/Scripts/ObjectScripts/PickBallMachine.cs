@@ -17,6 +17,8 @@ public class PickBallMachine : MonoBehaviour
 
     public float throwTime;
 
+    public GameObject ballContainerPrefab;
+
     void Awake()
     {
         Assert.AreNotApproximatelyEqual(0f, spawnTime);
@@ -46,6 +48,9 @@ public class PickBallMachine : MonoBehaviour
             region.throwTime = throwTime;
             region.spawnThreshold = spawnThreshold;
             region.spawnNum = spawnNum;
+            GameObject ballContainer = Instantiate(ballContainerPrefab, DataManager.instance.playerCamera.gameObject.transform);
+            ballContainer.transform.localPosition = new Vector3(0f, -0.5f, 0.5f);
+            region.ballContainer = ballContainer;
             regions[i] = region;
         }
 

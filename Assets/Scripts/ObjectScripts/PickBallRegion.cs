@@ -5,7 +5,7 @@ using UnityEngine;
 using OculusSampleFramework;
 public class PickBallRegion : HandsInteractable
 {
-    public GameObject hand;
+    public GameObject ballContainer;
     public GameObject ballPrefab;
     public int maxBallNum;
     public float sideLength;
@@ -45,7 +45,7 @@ public class PickBallRegion : HandsInteractable
         while(true) {
             if(ballStack.Count > 0) {
                 GameObject ball = ballStack.Pop();
-                ball.GetComponent<BallScript>().Track(hand);
+                ball.GetComponent<BallScript>().Track(ballContainer);
             }
             yield return new WaitForSeconds(throwTime);
         }
@@ -97,5 +97,6 @@ public class PickBallRegion : HandsInteractable
             GameObject ball = ballStack.Pop();
             Destroy(ball);
         }
+        Destroy(ballContainer);
     }
 }
