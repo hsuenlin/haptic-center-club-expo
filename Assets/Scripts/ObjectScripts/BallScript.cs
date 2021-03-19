@@ -9,6 +9,8 @@ public class BallScript : MonoBehaviour
     private string targetName;
     private bool isTracking;
 
+    public int id;
+
     void Awake() {
         Assert.AreNotApproximatelyEqual(0f, trackSpeed);
         isTracking = false;
@@ -29,8 +31,8 @@ public class BallScript : MonoBehaviour
         if(other.name == targetName) {
             if(isTracking) {
                 StopCoroutine("Track");
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
         }
     }
 }

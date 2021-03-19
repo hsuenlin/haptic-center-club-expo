@@ -41,9 +41,15 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public GameObject fetchText;
 
     public GameObject readyTrigger;
-    public GameObject readyText;
+    public Text readyText;
+    public float readyTextTime;
 
     public Image progressBar;
+
+    public Text startText;
+    public float startTextTime;
+    
+    public ServingMachine servingMachine;
 
     
     protected override void OnAwake() {
@@ -235,6 +241,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitGame() {
+        // Player initialization
         servingMachine.gameObject.SetActive(true);
         servingMachine.Init();
     }

@@ -151,6 +151,8 @@ public class DataManager : Singleton<DataManager> {
     
     public Transform rightHandAnchor;
     public Transform leftHandAnchor;
+
+    public bool isSenpaiSwing;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -185,6 +187,8 @@ public class DataManager : Singleton<DataManager> {
         isDeviceFollowHand = false;
 
         isRequestResultReady = false;
+
+        isSenpaiSwing= false;
     }
 }
 
