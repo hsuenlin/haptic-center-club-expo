@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -183,7 +183,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitReady() {
         readyText.gameObject.SetActive(true);
         progressBar.gameObject.SetActive(true);
-        gun.SetActive(false);
+        //gun.SetActive(false);
         if(propStand.activeInHierarchy) {
             Sequence propStandDropingSequence = DOTween.Sequence();
             propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))

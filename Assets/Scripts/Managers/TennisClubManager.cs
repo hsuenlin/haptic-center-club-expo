@@ -42,6 +42,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public GameObject readyTrigger;
     public GameObject readyText;
+
+    public Image progressBar;
+
     
     protected override void OnAwake() {
     //TODO:
@@ -93,6 +96,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitWaiting() {
         pickBallMachine.End();
         pickBallMachine.gameObject.SetActive(false);
+        StopCoroutine(UpdatePropState());
     }
 
     public void InitDelivering() {
@@ -170,6 +174,80 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitReturning() {
         returnText.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+    }
+
+    public void InitReady()
+    {
+        readyText.gameObject.SetActive(true);
+        progressBar.gameObject.SetActive(true);
+        if (propStand.activeInHierarchy)
+        {
+            Sequence propStandDropingSequence = DOTween.Sequence();
+            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
+                    .SetEase(propStandAnimationCurve);
+            propStandDropingSequence.Play();
+        }
+        progressBar.fillAmount = 0f;
+    }
+
+    public void OnReady()
+    {
+        if (DataManager.instance.isStartTextShowed[(int)currentClub])
+        {
+            nextClubState = ClubState.GAME;
+        }
+        else
+        {
+            Ray ray = DataManager.instance.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.gameObject.name == "GazeTrigger")
+                {
+                    progressBar.fillAmount += 1f / readyTextTime * Time.deltaTime;
+                }
+                else
+                {
+                    progressBar.fillAmount = 0f;
+                }
+            }
+            if (Mathf.Approximately(1f, progressBar.fillAmount))
+            {
+                DataManager.instance.isReadyTextShowed[(int)currentClub] = true;
+            }
+
+            if (readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub])
+            {
+                readyText.gameObject.SetActive(false);
+                progressBar.gameObject.SetActive(false);
+                startText.gameObject.SetActive(true);
+                StartCoroutine(Timer.StartTimer(startTextTime, () =>
+                {
+                    DataManager.instance.isStartTextShowed[(int)currentClub] = true;
+                }));
+            }
+        }
+    }
+
+    public void ExitReady()
+    {
+        startText.gameObject.SetActive(false);
+    }
+
+    public void InitGame() {
+        servingMachine.gameObject.SetActive(true);
+        servingMachine.Init();
+    }
+
+    public void OnGame() {
+        if(servingMachine.isGameOver) {
+            nextClubState = ClubState.RESULT;
+        }
+    }
+
+    public void ExitGame() {
+        servingMachine.End();
+        servingMachine.gameObject.SetActive(false);
     }
 
     public IEnumerator UpdateClubState() {
