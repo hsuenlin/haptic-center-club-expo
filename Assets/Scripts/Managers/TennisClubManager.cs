@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using OculusSampleFramework;
 
 public class TennisClubManager : SceneManager<TennisClubManager> {
     public SceneState currentClub;
@@ -20,6 +23,11 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public Dictionary<PropState, Action> propStateExits;
 
     public Text welcomeText;
+    public float welcomeTextTime;
+
+    public float deliveringTime;
+    public GameObject returnText;
+    public float returningTime;
 
     public PickBallMachine pickBallMachine;
     public GameObject propStand;
@@ -27,7 +35,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public float propStandMaxHeight;
     public float propStandMinHeight;
     public float propStandAnimationTime;
-    public float propStandAnimationCurve;
+    public AnimationCurve propStandAnimationCurve;
 
     public GameObject fetchTrigger;
     public GameObject fetchText;
@@ -60,7 +68,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         StartCoroutine(UpdateClubState());
     }
     public override void Exit() {
-        StopCoroutine(UpdateClubState())
+        StopCoroutine(UpdateClubState());
         Debug.Log("Tennis Club End");
     }
 
@@ -69,7 +77,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
-    public OnIdle() {}
+    public void OnIdle() {}
     
     public void ExitIdle() {
         welcomeText.gameObject.SetActive(false);
@@ -162,5 +170,12 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitReturning() {
         returnText.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+    }
+
+    public IEnumerator UpdateClubState() {
+        yield return null;
+    }
+    public IEnumerator UpdatePropState() {
+        yield return null;
     }
 }

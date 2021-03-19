@@ -2,45 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
-
+using OculusSampleFramework;
 public class PickBallMachine : MonoBehaviour
 {
-
     public float spawnTime;
+    public GameObject regionPrefab;
+    public PickBallRegion[] regions;
+
+    public int maxBallNum;
+    public float spawnThreshold;
+
+    public int spawnNum;
+    public float sideLength;
+
+    public float throwTime;
 
     void Awake()
     {
         Assert.AreNotApproximatelyEqual(0f, spawnTime);
+        if(spawnThreshold < 0f || spawnThreshold > 1f) {
+            Debug.LogError("spawnThreshold is out of range [0, 1].");
+        }
+        if(spawnNum > maxBallNum) {
+            Debug.LogError("SpawnNum is not less than maxBallNum");
+        }
     }
 
     public void Init() {
-        // Generate balls
-        // Setup pickBallRegion
-        StartCoroutine(Run());
-        StartCoroutine(Spawn());
-    }
+        regions = new PickBallRegion[8];
 
-    public IEnumerator Run() {
-        while(true) {
-            // TODO:
-            // Check if any region activated between this frame and last frome
-            // If so, start picking balls
-            // Check if any region deactivated between this frame and last frame
-            // If so, stop picking balls
-            // region.Throw(ball) ->  From ball.gameObject.position to region.hand.transform.position;
+        // Regions are generated clockwise
+        float d = sideLength / 2;
+        float[] xs = new float[8] {0f, d, d, d, 0, -d, -d, -d};
+        float[] zs = new float[8] {d, d, 0, -d, -d, -d, 0, d};
+        for(int i = 0; i < 8; ++i) {
+            GameObject regionObj = Instantiate(regionPrefab);
+            PickBallRegion region = regionObj.GetComponent<PickBallRegion>();
+            region.transform.parent = transform;
+            region.transform.localPosition = new Vector3(xs[i], 0f, zs[i]);
+            region.transform.localRotation = Quaternion.identity;
+            region.maxBallNum = maxBallNum;
+            region.sideLength = sideLength;
+            region.throwTime = throwTime;
+            region.spawnThreshold = spawnThreshold;
+            region.spawnNum = spawnNum;
+            regions[i] = region;
         }
-    }
 
-    public IEnumerator Spawn() {
-        while(true) {
-            // TODO:
-            // Check the number of balls in each region
-            // If less than a threshold, spawn balls.
-            yield return new WaitForSeconds(spawnTime);
-        }
     }
-
     public void End() {
-        // Detroy all balls
+        foreach(PickBallRegion region in regions) {
+            Destroy(region.gameObject);
+        }
     }
 }

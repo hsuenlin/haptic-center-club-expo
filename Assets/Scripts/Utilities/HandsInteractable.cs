@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace OculusSampleFramework
-{    public abstract class HandsInteractable : MonoBehaviour
+{
+        public abstract class HandsInteractable : MonoBehaviour
     {
         public GameObject controlButton;
         public virtual void OnNoInput() {}
