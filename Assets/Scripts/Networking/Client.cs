@@ -35,7 +35,7 @@ public class Client : MonoBehaviour
     }
 
     private void Start() {
-        ConnectToServer();
+        //ConnectToServer();
     }
 
     private void OnApplicationQuit()

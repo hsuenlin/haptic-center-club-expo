@@ -18,14 +18,15 @@ public class ServingMachine : MonoBehaviour
     public float maxThrustDeviation;// = 50;
     public float maxAzimuth;// = 30;
 
-    public bool isGameOver;
+    public bool isServeOver;
 
     void Awake() {
-        isGameOver = false;
+        isServeOver = false;
     }
 
     public void Init() {
         fairZone.gameObject.SetActive(true);
+        StartCoroutine(ServeBalls());
     }
 
     public void Serve(int id) {
@@ -50,15 +51,15 @@ public class ServingMachine : MonoBehaviour
                 yield return null;
             }
             Serve(i);
-            //ServeBall
-            //fairZone.leftOrRight = Random.Range(0f, 1f) > 0.5f ? CourtType.LEFT: CourtType.RIGHT;
             fairZone.ChangeFairZoneHalf();
             fairZone.currentBallId = i;
             yield return null;
         }
+        isServeOver = true;
     }
 
     public void End() {
+        StopCoroutine(ServeBalls());
         fairZone.gameObject.SetActive(false);
     }
 }

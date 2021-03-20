@@ -9,8 +9,12 @@ public class TennisSenpaiServingScript : StateMachineBehaviour
     public Vector3 pos;
     public Quaternion rot;
     public bool isFirst = true;
-    
-    private int frameCnt = 0;
+
+    public GameObject ballPrefab;
+
+    public bool isSwing;
+
+    private GameObject ball;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -23,21 +27,21 @@ public class TennisSenpaiServingScript : StateMachineBehaviour
             animator.gameObject.transform.localRotation = startingRotation;
         }
         isFirst = false;
-        frameCnt = 0;
+        isSwing = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(frameCnt == 135) {
+        
+        if(stateInfo.normalizedTime % 1 > 0.87f && !isSwing) {
             DataManager.instance.isSenpaiSwing = true;
+            isSwing = true;
         } else {
             DataManager.instance.isSenpaiSwing = false;
         }
-        frameCnt++;
         animator.applyRootMotion = true;
     }
-
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

@@ -1,118 +1,315 @@
 fileFormatVersion: 2
 guid: f974a057df2c6da4f95fbab9de24a1af
-timeCreated: 1478716211
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: Batch_09_Ch_01_Avatar_rig:Joints
-    100002: Extra2_J
-    100004: Extra_J
-    100006: Head_Jnt_01
-    100008: joint1
-    100010: L_Ankle_J
-    100012: L_Ball_J
-    100014: L_Hip_J
-    100016: L_Knee_J
-    100018: L_Toe_J
-    100020: Left_Clavicle_Jnt
-    100022: Left_Elbow_Jnt
-    100024: Left_Fingers_02_Jnt
-    100026: Left_Fingers_Jnt_01
-    100028: Left_Shoulder_Jnt
-    100030: Left_Thumb_Jnt_01
-    100032: Left_Thumb_Jnt_02
-    100034: Left_Wrist_Jnt
-    100036: Pelvis_Jnt
-    100038: R_Ankle_J
-    100040: R_Ball_J
-    100042: R_Hip_J
-    100044: R_Knee_J
-    100046: R_Toe_J
-    100048: Right_Clavicle_Jnt
-    100050: Right_Elbow_Jnt
-    100052: Right_Fingers_02_Jnt
-    100054: Right_Fingers_Jnt_01
-    100056: Right_Shoulder_Jnt
-    100058: Right_Thumb_Jnt_01
-    100060: Right_Thumb_Jnt_02
-    100062: Right_Wrist_Jnt
-    100064: Root_Jnt
-    100066: Spine_01_J
-    100068: Spine_02_J
-    100070: //RootNode
-    400000: Batch_09_Ch_01_Avatar_rig:Joints
-    400002: Extra2_J
-    400004: Extra_J
-    400006: Head_Jnt_01
-    400008: joint1
-    400010: L_Ankle_J
-    400012: L_Ball_J
-    400014: L_Hip_J
-    400016: L_Knee_J
-    400018: L_Toe_J
-    400020: Left_Clavicle_Jnt
-    400022: Left_Elbow_Jnt
-    400024: Left_Fingers_02_Jnt
-    400026: Left_Fingers_Jnt_01
-    400028: Left_Shoulder_Jnt
-    400030: Left_Thumb_Jnt_01
-    400032: Left_Thumb_Jnt_02
-    400034: Left_Wrist_Jnt
-    400036: Pelvis_Jnt
-    400038: R_Ankle_J
-    400040: R_Ball_J
-    400042: R_Hip_J
-    400044: R_Knee_J
-    400046: R_Toe_J
-    400048: Right_Clavicle_Jnt
-    400050: Right_Elbow_Jnt
-    400052: Right_Fingers_02_Jnt
-    400054: Right_Fingers_Jnt_01
-    400056: Right_Shoulder_Jnt
-    400058: Right_Thumb_Jnt_01
-    400060: Right_Thumb_Jnt_02
-    400062: Right_Wrist_Jnt
-    400064: Root_Jnt
-    400066: Spine_01_J
-    400068: Spine_02_J
-    400070: //RootNode
-    7400000: Take 001
-    9500000: //RootNode
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Batch_09_Ch_01_Avatar_rig:Joints
+  - first:
+      1: 100002
+    second: Extra2_J
+  - first:
+      1: 100004
+    second: Extra_J
+  - first:
+      1: 100006
+    second: Head_Jnt_01
+  - first:
+      1: 100008
+    second: joint1
+  - first:
+      1: 100010
+    second: L_Ankle_J
+  - first:
+      1: 100012
+    second: L_Ball_J
+  - first:
+      1: 100014
+    second: L_Hip_J
+  - first:
+      1: 100016
+    second: L_Knee_J
+  - first:
+      1: 100018
+    second: L_Toe_J
+  - first:
+      1: 100020
+    second: Left_Clavicle_Jnt
+  - first:
+      1: 100022
+    second: Left_Elbow_Jnt
+  - first:
+      1: 100024
+    second: Left_Fingers_02_Jnt
+  - first:
+      1: 100026
+    second: Left_Fingers_Jnt_01
+  - first:
+      1: 100028
+    second: Left_Shoulder_Jnt
+  - first:
+      1: 100030
+    second: Left_Thumb_Jnt_01
+  - first:
+      1: 100032
+    second: Left_Thumb_Jnt_02
+  - first:
+      1: 100034
+    second: Left_Wrist_Jnt
+  - first:
+      1: 100036
+    second: Pelvis_Jnt
+  - first:
+      1: 100038
+    second: R_Ankle_J
+  - first:
+      1: 100040
+    second: R_Ball_J
+  - first:
+      1: 100042
+    second: R_Hip_J
+  - first:
+      1: 100044
+    second: R_Knee_J
+  - first:
+      1: 100046
+    second: R_Toe_J
+  - first:
+      1: 100048
+    second: Right_Clavicle_Jnt
+  - first:
+      1: 100050
+    second: Right_Elbow_Jnt
+  - first:
+      1: 100052
+    second: Right_Fingers_02_Jnt
+  - first:
+      1: 100054
+    second: Right_Fingers_Jnt_01
+  - first:
+      1: 100056
+    second: Right_Shoulder_Jnt
+  - first:
+      1: 100058
+    second: Right_Thumb_Jnt_01
+  - first:
+      1: 100060
+    second: Right_Thumb_Jnt_02
+  - first:
+      1: 100062
+    second: Right_Wrist_Jnt
+  - first:
+      1: 100064
+    second: Root_Jnt
+  - first:
+      1: 100066
+    second: Spine_01_J
+  - first:
+      1: 100068
+    second: Spine_02_J
+  - first:
+      1: 100070
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Batch_09_Ch_01_Avatar_rig:Joints
+  - first:
+      4: 400002
+    second: Extra2_J
+  - first:
+      4: 400004
+    second: Extra_J
+  - first:
+      4: 400006
+    second: Head_Jnt_01
+  - first:
+      4: 400008
+    second: joint1
+  - first:
+      4: 400010
+    second: L_Ankle_J
+  - first:
+      4: 400012
+    second: L_Ball_J
+  - first:
+      4: 400014
+    second: L_Hip_J
+  - first:
+      4: 400016
+    second: L_Knee_J
+  - first:
+      4: 400018
+    second: L_Toe_J
+  - first:
+      4: 400020
+    second: Left_Clavicle_Jnt
+  - first:
+      4: 400022
+    second: Left_Elbow_Jnt
+  - first:
+      4: 400024
+    second: Left_Fingers_02_Jnt
+  - first:
+      4: 400026
+    second: Left_Fingers_Jnt_01
+  - first:
+      4: 400028
+    second: Left_Shoulder_Jnt
+  - first:
+      4: 400030
+    second: Left_Thumb_Jnt_01
+  - first:
+      4: 400032
+    second: Left_Thumb_Jnt_02
+  - first:
+      4: 400034
+    second: Left_Wrist_Jnt
+  - first:
+      4: 400036
+    second: Pelvis_Jnt
+  - first:
+      4: 400038
+    second: R_Ankle_J
+  - first:
+      4: 400040
+    second: R_Ball_J
+  - first:
+      4: 400042
+    second: R_Hip_J
+  - first:
+      4: 400044
+    second: R_Knee_J
+  - first:
+      4: 400046
+    second: R_Toe_J
+  - first:
+      4: 400048
+    second: Right_Clavicle_Jnt
+  - first:
+      4: 400050
+    second: Right_Elbow_Jnt
+  - first:
+      4: 400052
+    second: Right_Fingers_02_Jnt
+  - first:
+      4: 400054
+    second: Right_Fingers_Jnt_01
+  - first:
+      4: 400056
+    second: Right_Shoulder_Jnt
+  - first:
+      4: 400058
+    second: Right_Thumb_Jnt_01
+  - first:
+      4: 400060
+    second: Right_Thumb_Jnt_02
+  - first:
+      4: 400062
+    second: Right_Wrist_Jnt
+  - first:
+      4: 400064
+    second: Root_Jnt
+  - first:
+      4: 400066
+    second: Spine_01_J
+  - first:
+      4: 400068
+    second: Spine_02_J
+  - first:
+      4: 400070
+    second: //RootNode
+  - first:
+      74: 7400000
+    second: Serve
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'L_Ball_J' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'R_Ball_J' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Serve
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 155
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -122,10 +319,14 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Root_Jnt
       humanName: Hips
@@ -555,14 +756,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

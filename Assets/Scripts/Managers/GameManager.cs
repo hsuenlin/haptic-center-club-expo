@@ -12,6 +12,8 @@ public enum GameMode {
 public class GameManager : Singleton<GameManager>
 {
 
+    public Client client;
+
     public SceneState currentSceneState;
     public SceneState nextSceneState;
 
@@ -35,6 +37,8 @@ public class GameManager : Singleton<GameManager>
 
     // Start is called before the first frame update
     protected override void OnAwake() {
+
+        Assert.IsNotNull(client);
 
         Assert.IsNotNull(calibrationManager);
         Assert.IsNotNull(arenaManager);
@@ -69,6 +73,10 @@ public class GameManager : Singleton<GameManager>
             {SceneState.TENNIS_CLUB, tennisClubSceneTransform},
             {SceneState.MUSICGAME_CLUB, musicGameClubSceneTransform}
         };
+
+        if(gameMode == GameMode.HAPTIC_CENTER) {
+            client.ConnectToServer();
+        }
         
         sceneManagers[currentSceneState].Init();
     }

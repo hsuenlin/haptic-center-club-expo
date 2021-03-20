@@ -50,7 +50,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public float startTextTime;
     
     public ServingMachine servingMachine;
-
+    
+    public Image completionImage;
+    public GameObject senpai;
     
     protected override void OnAwake() {
     //TODO:
@@ -241,13 +243,18 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitGame() {
-        // Player initialization
+        senpai.SetActive(true);
         servingMachine.gameObject.SetActive(true);
         servingMachine.Init();
+        completionImage.fillAmount = 0f;
+        completionImage.gameObject.SetActive(true);
+        servingMachine.fairZone.OnGetPoint = () => {
+            completionImage.fillAmount += (1f / servingMachine.serveNum);
+        };
     }
 
     public void OnGame() {
-        if(servingMachine.isGameOver) {
+        if(servingMachine.isServeOver) {
             nextClubState = ClubState.RESULT;
         }
     }
@@ -255,6 +262,8 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitGame() {
         servingMachine.End();
         servingMachine.gameObject.SetActive(false);
+        completionImage.gameObject.SetActive(false);
+        senpai.SetActive(false);
     }
 
     public IEnumerator UpdateClubState() {
