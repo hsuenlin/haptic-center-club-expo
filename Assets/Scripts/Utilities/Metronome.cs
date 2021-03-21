@@ -40,6 +40,7 @@ public abstract class Metronome : MonoBehaviour
         float halfWidth = beatWidth / 2;
         yield return new WaitForSeconds(firstBeatTime - halfWidth);
         while(true) {
+            Debug.Log("Tick");
             OnBeatEnter();
             yield return new WaitForSeconds(halfWidth);
             OnBeat();
