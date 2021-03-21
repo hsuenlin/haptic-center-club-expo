@@ -9,11 +9,16 @@ public class TestMusicGameScript : MonoBehaviour
     public PunchBeatGame pbGame;
     void Awake() {
         pbGame.Init();
-        pbGame.Run();
+    }
+
+    void Update() {
+        if(Input.GetKeyDown(KeyCode.Space)) {
+            pbGame.Run();
+        }
     }
 
     void OnDisable() {
-        pbGame.End();
+        //pbGame.End();
     }
 
 }

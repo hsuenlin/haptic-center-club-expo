@@ -4,8 +4,9 @@ using UnityEngine;
 using DG.Tweening;
 
 public class PunchBeatScript : MonoBehaviour {
+    public Half half;
     public PunchBeatGame pbGame;
-    public Half activatedHalf;
+    //public Half activatedHalf;
     public AudioClip missSound;
     public AudioClip goodSound;
     public AudioClip perfectSound;
@@ -24,20 +25,24 @@ public class PunchBeatScript : MonoBehaviour {
     private Dictionary<HitType, AudioClip> hitSoundDict;
     private Dictionary<HitType, Animation> hitAnimationDict;
     private Dictionary<HitType, GameObject> hitTextDict;
-    public void Init(PunchBeatGame _pbGame, Transform _parent) {
+    public void Init(PunchBeatGame _pbGame, Transform _parent, Half _half) {
         pbGame = _pbGame;
 
-        activatedHalf = pbGame.GetActivatedHalf();
+        half = _half;
         missSound = pbGame.missSound;
         goodSound = pbGame.goodSound;
         perfectSound = pbGame.perfectSound;
         missAnimation = pbGame.missAnimation;
         goodAnimation = pbGame.goodAnimation;
         perfectAnimation = pbGame.perfectAnimation;
-        audioSource = new AudioSource();
+        audioSource = gameObject.AddComponent<AudioSource>();
         missText = ClubUtil.InstantiateOn(pbGame.missText, gameObject.transform);
         goodText = ClubUtil.InstantiateOn(pbGame.goodText, gameObject.transform);
-        perfectText = Instantiate(pbGame.perfectText, gameObject.transform);
+        perfectText = ClubUtil.InstantiateOn(pbGame.perfectText, gameObject.transform);
+
+        missText.SetActive(false);
+        goodText.SetActive(false);
+        perfectText.SetActive(false);
 
         textRiseHeight = pbGame.textRiseHeight;
         textRiseTime = pbGame.textRiseTime;
@@ -62,20 +67,27 @@ public class PunchBeatScript : MonoBehaviour {
         };
     }
     void PlayHitTextAnimation(GameObject text) {
-        text.transform.parent = pbGame.punchBeatDict[activatedHalf].transform;
+        Debug.Log("Text Start");
+        text.SetActive(true);
+        text.transform.parent = pbGame.punchBeatDict[pbGame.pbAnimationMetro.activatedHalf].transform;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);
-        text.SetActive(true);
         Sequence hitSeq = DOTween.Sequence();
         hitSeq.Append(text.transform.DOLocalMoveY(textRiseHeight, textRiseTime))
-              .Append(text.GetComponent<Renderer>().material.DOFade(0f, textFadeTime));
+              .Append(text.GetComponent<Renderer>().material.DOFade(0f, textFadeTime))
+              .AppendCallback(()=>{ text.SetActive(false); });
         hitSeq.Play();
+        Debug.Log("Text End");
     }
     
     void OnTriggerEnter(Collider other) {
+        Debug.Log($"Hit {half}");
+        Debug.Log("Trigger");
         if(other.tag == "Hand") {
+            Debug.Log("Hit");
             HitType hitResult = pbGame.JudgeHit();
+            audioSource.clip = hitSoundDict[hitResult];
             audioSource.PlayOneShot(hitSoundDict[hitResult]);
             //hitAnimationDict[hitResult].Play(); // May not work
             PlayHitTextAnimation(hitTextDict[hitResult]);

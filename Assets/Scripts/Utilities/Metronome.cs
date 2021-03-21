@@ -23,14 +23,14 @@ public abstract class Metronome : MonoBehaviour
     }
 
     public IEnumerator Tick(int beatNum, Action OnTickEnd) {
-        yield return new WaitForSeconds(firstBeatTime - halfWidth);
+        yield return new WaitForSecondsRealtime(firstBeatTime - halfWidth);
         for(int i = 0; i < beatNum; ++i) {
             OnBeatEnter();
-            yield return new WaitForSeconds(halfWidth);
+            yield return new WaitForSecondsRealtime(halfWidth);
             OnBeat();
-            yield return new WaitForSeconds(halfWidth);
+            yield return new WaitForSecondsRealtime(halfWidth);
             OnBeatExit();
-            yield return new WaitForSeconds(idleTime);
+            yield return new WaitForSecondsRealtime(idleTime);
         }
         OnTickEnd();
     }
@@ -38,15 +38,14 @@ public abstract class Metronome : MonoBehaviour
     public IEnumerator InfTick() {
         float idleTime = beatTime - beatWidth;
         float halfWidth = beatWidth / 2;
-        yield return new WaitForSeconds(firstBeatTime - halfWidth);
+        yield return new WaitForSecondsRealtime(firstBeatTime - halfWidth);
         while(true) {
-            Debug.Log("Tick");
             OnBeatEnter();
-            yield return new WaitForSeconds(halfWidth);
+            yield return new WaitForSecondsRealtime(halfWidth);
             OnBeat();
-            yield return new WaitForSeconds(halfWidth);
+            yield return new WaitForSecondsRealtime(halfWidth);
             OnBeatExit();
-            yield return new WaitForSeconds(idleTime);
+            yield return new WaitForSecondsRealtime(idleTime);
         }
     }
 }

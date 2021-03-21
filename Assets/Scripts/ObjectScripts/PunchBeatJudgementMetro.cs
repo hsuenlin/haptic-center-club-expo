@@ -8,12 +8,17 @@ public class PunchBeatJudgementMetro : Metronome {
     Dictionary<Half, PunchBeatScript> punchBeatDict;
     public PunchBeatJudgementMetro(PunchBeatGame pbGame)
     {
+        beatTime = pbGame.beatTime;
+        firstBeatTime = pbGame.firstBeatTime;
+        beatWidth = pbGame.animationBeatWidth;
+        halfWidth = beatWidth / 2;
+
         punchBeatDict = pbGame.punchBeatDict;
         isPerfact = false;
     }
     
     public override void OnBeatEnter() {
-        isPerfact = true;             
+        isPerfact = true;  
     }
     public override void OnBeat() {
     }

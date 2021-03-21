@@ -16,8 +16,8 @@ public class PunchBeatGame : MonoBehaviour {
     public Transform punchBeatRightTransform;
     public Dictionary<Half, PunchBeatScript> punchBeatDict;
 
-    private PunchBeatAnimationMetro pbAnimationMetro;
-    private PunchBeatJudgementMetro pbJudgementMetro;
+    public PunchBeatAnimationMetro pbAnimationMetro;
+    public PunchBeatJudgementMetro pbJudgementMetro;
 
     public float beatTime;
     public float firstBeatTime;
@@ -39,14 +39,13 @@ public class PunchBeatGame : MonoBehaviour {
     public float textRiseTime;
     public float textFadeTime;
 
-
     public void Init() {
         GameObject punchBeatLeft = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatLeftTransform);
-        punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform);
+        punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform, Half.LEFT);
         punchBeatLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         GameObject punchBeatRight = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatRightTransform);
-        punchBeatRight.GetComponent<PunchBeatScript>().Init(this, punchBeatRightTransform);
+        punchBeatRight.GetComponent<PunchBeatScript>().Init(this, punchBeatRightTransform, Half.RIGHT);
         punchBeatRight.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         punchBeatDict = new Dictionary<Half, PunchBeatScript>() {
@@ -63,6 +62,7 @@ public class PunchBeatGame : MonoBehaviour {
         audioSource.PlayOneShot(gameAudio);
         StartCoroutine(pbAnimationMetro.InfTick());
         StartCoroutine(pbJudgementMetro.InfTick());
+        Debug.Log("Hi");
     }
 
     public void End() {
@@ -78,9 +78,5 @@ public class PunchBeatGame : MonoBehaviour {
         else {
             return HitType.MISS;
         }
-    }
-
-    public Half GetActivatedHalf() {
-        return pbAnimationMetro.activatedHalf;
     }
 }
