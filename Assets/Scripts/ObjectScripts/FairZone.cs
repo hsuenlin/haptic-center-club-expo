@@ -5,7 +5,9 @@ using UnityEngine;
 
 public enum Half {
     LEFT = 0,
-    RIGHT = 1
+    RIGHT = 1,
+    WHOLE = 2,
+    NONE = 3
 }
 public class FairZone : MonoBehaviour
 {
