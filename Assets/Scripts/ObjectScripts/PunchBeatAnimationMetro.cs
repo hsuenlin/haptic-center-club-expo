@@ -18,7 +18,6 @@ public class PunchBeatAnimationMetro : Metronome {
 
         punchBeatDict = pbGame.punchBeatDict;
         isActivated = false;
-        
     }
     public override void OnBeatEnter() {
         activatedHalf = (Half)(int)Random.Range(0, 3);

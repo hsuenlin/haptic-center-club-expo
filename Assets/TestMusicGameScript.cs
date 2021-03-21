@@ -6,6 +6,17 @@ using DG.Tweening;
 
 public class TestMusicGameScript : MonoBehaviour
 {
+    public PunchBeatGame pbGame;
+    void Awake() {
+        pbGame.Init();
+        pbGame.Run();
+    }
+
+    void OnDisable() {
+        pbGame.End();
+    }
+
+}
     /*
     public float initTime;
     public float beatTime;
@@ -101,4 +112,3 @@ public class TestMusicGameScript : MonoBehaviour
         
     }
     */
-}

@@ -4,8 +4,8 @@ using UnityEngine;
 using DG.Tweening;
 
 public class PunchBeatScript : MonoBehaviour {
-    
     public PunchBeatGame pbGame;
+    public Half activatedHalf;
     public AudioClip missSound;
     public AudioClip goodSound;
     public AudioClip perfectSound;
@@ -23,13 +23,30 @@ public class PunchBeatScript : MonoBehaviour {
 
     private Dictionary<HitType, AudioClip> hitSoundDict;
     private Dictionary<HitType, Animation> hitAnimationDict;
-
     private Dictionary<HitType, GameObject> hitTextDict;
-    void Awake() {
+    public void Init(PunchBeatGame _pbGame, Transform _parent) {
+        pbGame = _pbGame;
+
+        activatedHalf = pbGame.GetActivatedHalf();
+        missSound = pbGame.missSound;
+        goodSound = pbGame.goodSound;
+        perfectSound = pbGame.perfectSound;
+        missAnimation = pbGame.missAnimation;
+        goodAnimation = pbGame.goodAnimation;
+        perfectAnimation = pbGame.perfectAnimation;
+        audioSource = new AudioSource();
+        missText = ClubUtil.InstantiateOn(pbGame.missText, gameObject.transform);
+        goodText = ClubUtil.InstantiateOn(pbGame.goodText, gameObject.transform);
+        perfectText = Instantiate(pbGame.perfectText, gameObject.transform);
+
+        textRiseHeight = pbGame.textRiseHeight;
+        textRiseTime = pbGame.textRiseTime;
+        textFadeTime = pbGame.textFadeTime;
+        
         hitSoundDict = new Dictionary<HitType, AudioClip>() {
-            {HitType.MISS, missSound},  
-            {HitType.GOOD, goodSound},  
-            {HitType.PERFECT, perfectSound}  
+            {HitType.MISS, missSound},
+            {HitType.GOOD, goodSound},
+            {HitType.PERFECT, perfectSound}
         };
 
         hitAnimationDict = new Dictionary<HitType, Animation>() {
@@ -45,7 +62,7 @@ public class PunchBeatScript : MonoBehaviour {
         };
     }
     void PlayHitTextAnimation(GameObject text) {
-        text.transform.parent = pbGame.punchBeatDict[pbGame.pbAnimationMetro.activatedHalf].transform;
+        text.transform.parent = pbGame.punchBeatDict[activatedHalf].transform;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);
@@ -60,7 +77,7 @@ public class PunchBeatScript : MonoBehaviour {
         if(other.tag == "Hand") {
             HitType hitResult = pbGame.JudgeHit();
             audioSource.PlayOneShot(hitSoundDict[hitResult]);
-            hitAnimationDict[hitResult].Play(); // May not work
+            //hitAnimationDict[hitResult].Play(); // May not work
             PlayHitTextAnimation(hitTextDict[hitResult]);
         }
     }
