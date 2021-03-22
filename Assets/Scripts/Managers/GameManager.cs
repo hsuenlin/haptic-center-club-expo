@@ -90,14 +90,18 @@ public class GameManager : Singleton<GameManager>
             case SceneState.CALIBRATION:
                 if(DataManager.instance.isCalibrated) {
                     nextSceneState = SceneState.ARENA;
-                    ClientSend.NotifyServerStateChange(ServerState.ARENA);
+                    if(gameMode == GameMode.HAPTIC_CENTER) {
+                        ClientSend.NotifyServerStateChange(ServerState.ARENA);
+                    }
                 }
                 break;
             case SceneState.ARENA:
                 for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
-                    if(DataManager.instance.isClubReady && !DataManager.instance.isClubPlayed[sceneIdx]) {
+                    if(DataManager.instance.isClubReady[sceneIdx] && !DataManager.instance.isClubPlayed[sceneIdx]) {
                         nextSceneState = (SceneState) sceneIdx;
-                        ClientSend.NotifyServerStateChange((ServerState)sceneIdx);
+                        if(gameMode == GameMode.HAPTIC_CENTER) {
+                            ClientSend.NotifyServerStateChange((ServerState)sceneIdx);
+                        }
                         break;
                     }
                 }
@@ -107,7 +111,9 @@ public class GameManager : Singleton<GameManager>
             case SceneState.MUSICGAME_CLUB:
                 if(DataManager.instance.isClubPlayed[(int)currentSceneState]) {
                     nextSceneState = SceneState.ARENA;
-                    ClientSend.NotifyServerStateChange(ServerState.ARENA);
+                    if(gameMode == GameMode.HAPTIC_CENTER) {
+                        ClientSend.NotifyServerStateChange(ServerState.ARENA);
+                    }
                 }
                 break;
             default:

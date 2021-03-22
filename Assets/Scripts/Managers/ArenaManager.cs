@@ -49,7 +49,10 @@ public class ArenaManager : SceneManager<ArenaManager>
             DataManager.instance.isDeviceFree[2] = true;
         }
         DataManager.instance.handSDK.SetActive(true);
-        DataManager.instance.isClubReady = false;
+        DataManager.instance.requestClub = SceneState.ARENA;
+        DataManager.instance.isClubReady[0] = false;
+        DataManager.instance.isClubReady[1] = false;
+        DataManager.instance.isClubReady[2] = false;
     }
 
     public override void Exit() {

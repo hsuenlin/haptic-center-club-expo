@@ -133,7 +133,8 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isDeviceReady;
     public bool[] isDeviceFetched;
     public Device requestDevice;
-    public bool isClubReady;
+    public SceneState requestClub;
+    public bool[] isClubReady;
     public bool[] isClubPlayed;
     public bool[] isInReadyZone;
     public bool[] isReadyTextShowed;
@@ -153,6 +154,8 @@ public class DataManager : Singleton<DataManager> {
     public Transform leftHandAnchor;
 
     public bool isSenpaiSwing;
+    
+    public List<GameObject> rayTools;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -177,7 +180,7 @@ public class DataManager : Singleton<DataManager> {
         isDeviceReady = new bool[3];
         isDeviceFetched = new bool[3];
         //isClubReady = new bool[3];
-        isClubReady = false;
+        isClubReady = new bool[3];
         isClubPlayed = new bool[3];
         isInReadyZone = new bool[3];
         isReadyTextShowed = new bool[3];
@@ -189,6 +192,19 @@ public class DataManager : Singleton<DataManager> {
         isRequestResultReady = false;
 
         isSenpaiSwing= false;
+
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            gun.transform.parent = gunSupport.transform;
+            gun.transform.localPosition = Vector3.zero;
+            gun.transform.localRotation = Quaternion.identity;
+
+            //racket
+            //panel
+        } else {
+            // Put props under tracker anchor
+        }
+
+        rayTools = new List<GameObject>();
     }
 }
 

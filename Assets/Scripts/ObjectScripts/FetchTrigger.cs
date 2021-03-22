@@ -5,7 +5,9 @@ using UnityEngine.Assertions;
 
 public class FetchTrigger : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other) {
+    public void OnTriggerEnter(Collider other) {
+        Debug.Log(other.name);
+        Debug.Log(other.tag);
         switch(other.name) {
             case "Gun":
                 DataManager.instance.isDeviceFetched[(int)SceneState.SHOOTING_CLUB] = true;

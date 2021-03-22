@@ -22,7 +22,7 @@ namespace OculusSampleFramework
                 if(DataManager.instance.isRequestResultReady) {
                     DataManager.instance.isRequestResultReady = false;
                     DataManager.instance.contactText.SetActive(false);
-                    if(!DataManager.instance.isClubReady) {
+                    if(!DataManager.instance.isClubReady[(int)signifiedScene]) {
                         DataManager.instance.failedText.transform.parent = DataManager.instance.clubPromptTransforms[(int)signifiedScene];
                         DataManager.instance.failedText.transform.localPosition = Vector3.zero;
                         DataManager.instance.failedText.transform.localRotation = Quaternion.identity;
@@ -50,6 +50,7 @@ namespace OculusSampleFramework
         }
 
         public override void OnPrimaryInputUp() {
+            DataManager.instance.requestClub = signifiedScene;
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
             
             int sceneIndex = (int)signifiedScene;
@@ -80,7 +81,7 @@ namespace OculusSampleFramework
                     StartCoroutine(PollingIsClubReady());
                 }
                 else if(GameManager.instance.gameMode == GameMode.QUEST) {
-                    DataManager.instance.isClubReady = true;
+                    DataManager.instance.isClubReady[(int)signifiedScene] = true;
                 }
             }
         }

@@ -31,7 +31,6 @@ public class BallScript : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        Debug.Log("E?");
         if(other.name == trackTargetName) {
             if(isTracking) {
                 StopCoroutine("Track");

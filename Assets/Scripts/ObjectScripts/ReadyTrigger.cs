@@ -9,7 +9,9 @@ public class ReadyTrigger : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if(GameManager.instance.currentSceneState > SceneState.ARENA) {
-            DataManager.instance.isInReadyZone[(int)GameManager.instance.currentSceneState] = true;
+            if(GameManager.instance.gameMode == GameMode.HAPTIC_CENTER) {
+                DataManager.instance.isInReadyZone[(int)GameManager.instance.currentSceneState] = true;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Target
   - Hand
+  - Gun
   layers:
   - Default
   - TransparentFX

@@ -58,6 +58,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Timer */
     private float timer = 0f;
 
+    public Transform propStandAnchor;
+    public Transform questPropStandAnchor;
+    public GameObject readyArea;
+
+    public GameObject aimImage;
+    
+
     protected override void OnAwake()
     {
 
@@ -87,6 +94,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         Assert.IsNotNull(finishText);
         Assert.AreNotApproximatelyEqual(0f, finishTextTime);
 
+        Assert.IsNotNull(propStandAnchor);
+
         welcomeText.gameObject.SetActive(false);
         addTargetDemoBtn.SetActive(false);
         propStand.SetActive(false);
@@ -98,8 +107,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         progressBar.gameObject.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         finishText.gameObject.SetActive(false);
-
-        gun.SetActive(false);
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
@@ -127,9 +134,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         };
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
+            //propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
+            propStandAnchor = questPropStandAnchor;
+            propStand.transform.parent = propStandAnchor;
             DataManager.instance.gun.transform.parent = propStand.transform;
-            DataManager.instance.gun.transform.position = new Vector3(0.18f, -0.15f, 0.15f);
+            DataManager.instance.gun.transform.localPosition = Vector3.zero;
             Assert.AreNotApproximatelyEqual(0f, deliveringTime);
             Assert.AreNotApproximatelyEqual(0f, returningTime);
             returningTime = 2f;
@@ -137,6 +146,12 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public override void Init() {
+        //ReadyZone
+        readyArea.SetActive(false);
+        gun.SetActive(false);
+        readyTrigger.SetActive(false);
+        propStand.SetActive(false);
+        //PropStand
         InitIdle();
         StartCoroutine(UpdateClubState());
     }
@@ -181,6 +196,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
     
     public void InitReady() {
+        aimImage.SetActive(true);
         readyText.gameObject.SetActive(true);
         progressBar.gameObject.SetActive(true);
         //gun.SetActive(false);
@@ -213,6 +229,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         }
 
         if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
+            aimImage.SetActive(false);
             readyText.gameObject.SetActive(false);
             progressBar.gameObject.SetActive(false);
             startText.gameObject.SetActive(true);
@@ -243,9 +260,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitGame() {
-        DataManager.instance.player.SetActive(false);
+        //DataManager.instance.player.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
+            Debug.Log("stop auto shooting");
             StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
         }
         StopCoroutine(TargetMachine.instance.StartShooting());
@@ -272,6 +290,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Prop States Methods */
 
     public void InitDelivering() {
+        propStand.transform.parent = propStandAnchor;
+        propStand.transform.localPosition = Vector3.zero;
+        propStand.transform.localRotation = Quaternion.identity;
+        propStand.SetActive(false);
+
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(deliveringTime, () => {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
@@ -282,8 +305,12 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
             Debug.Log("Arrived");
+            propStand.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
             propStand.SetActive(true);
             Sequence propStandRisingSequence = DOTween.Sequence();
+            Debug.Log(propStandAnimationTime);
+            Debug.Log(propStandMaxHeight);
+            
             propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
                 .SetEase(propStandAnimationCurve)
                 .AppendCallback(() => {
@@ -299,6 +326,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitFetching() {
+        // fetchArea
         fetchTrigger.SetActive(true);
         fetchText.gameObject.SetActive(true);
         StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
@@ -331,6 +359,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitReturning() {
+        readyArea.SetActive(true);
         returnText.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -345,9 +374,18 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             ExitReturning();
             //nextClubState = ClubState.READY;
         }
+        returnText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
+        Vector3 tmp = returnText.transform.eulerAngles;
+        if (GameManager.instance.gameMode == GameMode.QUEST)
+        {
+            tmp.x = -tmp.x;
+            tmp.y += 180f;
+            returnText.transform.eulerAngles = tmp;
+        }
     }
 
     public void ExitReturning() {
+        readyArea.SetActive(false);
         returnText.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
     }

@@ -96,6 +96,8 @@ namespace OculusSampleFramework
 			_coneAngleReleaseDegrees = _coneAngleDegrees * 1.2f;
 			_initialized = true;
 
+			DataManager.instance.rayTools.Add(this.gameObject);
+
 			//transform.parent = DataManager.instance.ovrRig.gameObject.transform;
 		}
 
