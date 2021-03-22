@@ -59,9 +59,9 @@ public class PunchBeatGame : MonoBehaviour {
 
     
     public void Run() {
-        audioSource.PlayOneShot(gameAudio);
         StartCoroutine(pbAnimationMetro.InfTick());
         StartCoroutine(pbJudgementMetro.InfTick());
+        audioSource.PlayOneShot(gameAudio);
         Debug.Log("Hi");
     }
 

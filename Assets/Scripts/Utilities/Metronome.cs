@@ -37,7 +37,6 @@ public abstract class Metronome : MonoBehaviour
 
     public IEnumerator InfTick() {
         float idleTime = beatTime - beatWidth;
-        float halfWidth = beatWidth / 2;
         yield return new WaitForSecondsRealtime(firstBeatTime - halfWidth);
         while(true) {
             OnBeatEnter();

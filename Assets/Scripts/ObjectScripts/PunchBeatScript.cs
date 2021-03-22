@@ -36,6 +36,7 @@ public class PunchBeatScript : MonoBehaviour {
         goodAnimation = pbGame.goodAnimation;
         perfectAnimation = pbGame.perfectAnimation;
         audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.dopplerLevel = 0f;
         missText = ClubUtil.InstantiateOn(pbGame.missText, gameObject.transform);
         goodText = ClubUtil.InstantiateOn(pbGame.goodText, gameObject.transform);
         perfectText = ClubUtil.InstantiateOn(pbGame.perfectText, gameObject.transform);

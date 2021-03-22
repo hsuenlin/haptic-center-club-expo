@@ -57,7 +57,7 @@ namespace OculusSampleFramework
                 
             
                 // Pinched && DeviceReady
-                if (DataManager.instance.isDeviceFree[sceneIndex] && !isRequesting) {
+                if (GameManager.instance.gameMode == GameMode.HAPTIC_CENTER && DataManager.instance.isDeviceFree[sceneIndex] && !isRequesting) {
                     isRequesting = true;
                     switch(signifiedScene) {
                         case SceneState.SHOOTING_CLUB:
@@ -78,6 +78,9 @@ namespace OculusSampleFramework
                     DataManager.instance.contactText.transform.localRotation = Quaternion.identity;
                     DataManager.instance.contactText.SetActive(true);
                     StartCoroutine(PollingIsClubReady());
+                }
+                else if(GameManager.instance.gameMode == GameMode.QUEST) {
+                    DataManager.instance.isClubReady = true;
                 }
             }
         }
