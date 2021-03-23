@@ -52,6 +52,11 @@ namespace OculusSampleFramework
         public override void OnPrimaryInputUp() {
             DataManager.instance.requestClub = signifiedScene;
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
+
+            if(signifiedScene == SceneState.ARENA) {
+                DataManager.instance.isClubPlayed[(int)GameManager.instance.currentSceneState] = true;
+                return;
+            } 
             
             int sceneIndex = (int)signifiedScene;
             if(!DataManager.instance.isClubPlayed[sceneIndex]) {

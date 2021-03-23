@@ -10,18 +10,26 @@ public class FloatingScript : MonoBehaviour
     public float bouncingFrequency = 1f;
     public float bouncingRange = 0.15f;
 
+    private Sequence upAndDown;
+    private Sequence infRotation;
+
     // Start is called before the first frame update
     void Start()
     {
         DOTween.SetTweensCapacity(2000, 100);
-        Sequence upAndDown = DOTween.Sequence();
+        upAndDown = DOTween.Sequence();
         upAndDown.Append(transform.DOLocalMoveY(transform.localPosition.y + bouncingRange, 1.25f).SetEase(Ease.InOutSine))
             .Append(transform.DOLocalMoveY(transform.localPosition.y, 1.25f).SetEase(Ease.InOutSine))
             .SetLoops(-1);
-        upAndDown.Play();
-        Sequence infRotation = DOTween.Sequence();
+        
+        infRotation = DOTween.Sequence();
         infRotation.Append(transform.DORotate(new Vector3(0, 360, 0), 2.5f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear))
             .SetLoops(-1);
+        infRotation.Play();
+    }
+
+    void OnEnable() {
+        upAndDown.Play();
         infRotation.Play();
     }
 

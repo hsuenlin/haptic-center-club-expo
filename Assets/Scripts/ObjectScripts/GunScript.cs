@@ -80,17 +80,13 @@ public class GunScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Hand") {
             //DataManager.instance.handSDK.SetActive(false);
-            foreach (GameObject rayToolObj in DataManager.instance.rayTools)
-            {
-                rayToolObj.SetActive(false);
-            }
             if(DataManager.instance.isDeviceFollowHand) {
+                Debug.Log("Start follow hand");
                 transform.parent = other.transform;
                 transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
                 transform.localEulerAngles = new Vector3(0f, -65f, 90f);
             }
         }
-
     }
 
     void OnDisable() {

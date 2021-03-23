@@ -71,6 +71,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public GameObject arenaSign;
     
+    private GunScript gunScript;
 
     protected override void OnAwake()
     {
@@ -124,6 +125,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         putBackText.SetActive(false);
 
         isPropStateMachineRunning = false;
+
+        arenaSign.SetActive(false);
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
@@ -142,12 +145,14 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         propStateInits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ InitDelivering(); }},
             {PropState.FETCHING, ()=>{ InitFetching(); }},
-            {PropState.RETURNING, ()=>{ InitReturning(); }}
+            {PropState.RETURNING, ()=>{ InitReturning(); }},
+            {PropState.PUTBACK, ()=>{ InitPutBack(); }}
         };
         propStateExits = new Dictionary<PropState, Action>() {
             {PropState.DELIVERING, ()=>{ ExitDelivering(); }},
             {PropState.FETCHING, ()=>{ ExitFetching(); }},
-            {PropState.RETURNING, ()=>{ ExitReturning(); }}
+            {PropState.RETURNING, ()=>{ ExitReturning(); }},
+            {PropState.PUTBACK, ()=>{ ExitPutBack(); }}
         };
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -160,12 +165,15 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             Assert.AreNotApproximatelyEqual(0f, returningTime);
             returningTime = 2f;
         }
+
+        gunScript = DataManager.instance.gun.GetComponent<GunScript>();
+
     }
 
     public override void Init() {
         //ReadyZone
         readyArea.SetActive(false);
-        gun.SetActive(false);
+        gun.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
         propStand.SetActive(false);
         //PropStand
@@ -263,11 +271,12 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitGame() {
+        Debug.Log("Init Game");
         DataManager.instance.player.SetActive(true);
         healthBarImage.gameObject.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
+            StartCoroutine(gunScript.StartAutoShooting());
         }
     }
 
@@ -282,12 +291,14 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         healthBarImage.gameObject.SetActive(false);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             Debug.Log("stop auto shooting");
-            StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartAutoShooting());
+            StopCoroutine(gunScript.StartAutoShooting());
         }
         StopCoroutine(TargetMachine.instance.StartShooting());
     }
 
     public void InitResult() {
+        DataManager.instance.isInReadyZone[(int)currentClub] = false;
+        arenaSign.SetActive(false);
         finishText.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(finishTextTime, () =>
         {
@@ -301,9 +312,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnResult() {
-        if(!isPropStateMachineRunning) {
+        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
             arenaSign.SetActive(true);
-            // Showing floating arena
         }
     }
 
@@ -337,7 +347,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
                 .SetEase(propStandAnimationCurve)
                 .AppendCallback(() => {
                     nextPropState = PropState.FETCHING;
-                    gun.SetActive(true);
+                    gun.gameObject.SetActive(true);
                     });
             propStandRisingSequence.Play();
         }
@@ -351,7 +361,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         // fetchArea
         fetchTrigger.SetActive(true);
         fetchText.gameObject.SetActive(true);
-        StartCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = true;
         }
@@ -373,11 +382,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
         fetchText.gameObject.SetActive(false);
-
-        StopCoroutine(DataManager.instance.gun.GetComponent<GunScript>().StartListenToFetchTrigger());
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            DataManager.instance.isDeviceFollowHand = false;
-        }
     }
 
     public void InitReturning() {
@@ -424,18 +428,20 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             {
                 putBackTrigger.SetActive(true);
                 putBackText.gameObject.SetActive(true);
-                DataManager.instance.gun.GetComponent<GunScript>().appearance = DeviceAppearance.REAL;
+                
             });
         propStandRisingSequence.Play();
     }
 
     public void OnPutBack() {
         if(DataManager.instance.isPropPutBack[(int)requiredDevice]) {
+            Debug.Log("On put back exit");
             nextPropState = PropState.RETURNING;
         }
     }
 
     public void ExitPutBack() {
+        Debug.Log("Exit put back");
         putBackTrigger.SetActive(false);
         putBackText.gameObject.SetActive(false);
         Sequence propStandDropingSequence = DOTween.Sequence();
@@ -505,6 +511,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
                     break;
                 case PropState.RETURNING:
                     OnReturning();
+                    break;
+                case PropState.PUTBACK:
+                    OnPutBack();
                     break;
                 default:
                     break;

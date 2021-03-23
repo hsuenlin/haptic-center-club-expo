@@ -99,7 +99,6 @@ public class TargetMachine : Singleton<TargetMachine>
             {
                 if (shootingOrder[shootingIndex + i] == 1)
                 {
-                    Debug.Log("Shoot");
                     risingCount++;
                     // Instantiate target
                     target = Instantiate(targetPrefab, Vector3.zero, Quaternion.identity);
@@ -137,7 +136,6 @@ public class TargetMachine : Singleton<TargetMachine>
 
     public bool AllTargetsDie()
     {
-        Debug.Log($"Alive targets: {nAliveTarget}");
         return nAliveTarget == 0;
     }
 
@@ -218,7 +216,6 @@ public class TargetMachine : Singleton<TargetMachine>
 
     private void TargetRise(GameObject target)
     {
-        Debug.Log("Rise");
         Sequence risingSequence = DOTween.Sequence();
         risingSequence.Append(target.transform.DOLocalMoveY(maxHeight, risingTime))
             .SetEase(targetCurve)
