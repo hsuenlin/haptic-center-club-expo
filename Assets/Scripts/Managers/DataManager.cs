@@ -56,14 +56,15 @@ public enum ClubState
     WAITING = 1,
     READY = 2,
     GAME = 3,
-    RESULT = 4
+    RESULT = 4,
 }
 
 public enum PropState
 {
     DELIVERING = 0,
     FETCHING = 1,
-    RETURNING = 2
+    RETURNING = 2,
+    PUTBACK = 3
 }
 
 public enum ServerState
@@ -156,6 +157,8 @@ public class DataManager : Singleton<DataManager> {
     public bool isSenpaiSwing;
     
     public List<GameObject> rayTools;
+
+    public bool[] isPropPutBack;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
@@ -192,6 +195,8 @@ public class DataManager : Singleton<DataManager> {
         isRequestResultReady = false;
 
         isSenpaiSwing= false;
+
+        isPropPutBack = new bool[3];
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             gun.transform.parent = gunSupport.transform;

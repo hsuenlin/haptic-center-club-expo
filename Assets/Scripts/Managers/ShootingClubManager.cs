@@ -63,6 +63,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public GameObject readyArea;
 
     public GameObject aimImage;
+
+    public GameObject putBackTrigger;
+    public GameObject putBackText;
+
+    private bool isPropStateMachineRunning;
+
+    public GameObject arenaSign;
     
 
     protected override void OnAwake()
@@ -96,6 +103,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         Assert.IsNotNull(propStandAnchor);
 
+        Assert.IsNotNull(putBackTrigger);
+        Assert.IsNotNull(putBackText);
+
+        Assert.IsNotNull(arenaSign);
+
         welcomeText.gameObject.SetActive(false);
         addTargetDemoBtn.SetActive(false);
         propStand.SetActive(false);
@@ -107,6 +119,11 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         progressBar.gameObject.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         finishText.gameObject.SetActive(false);
+
+        putBackTrigger.SetActive(false);
+        putBackText.SetActive(false);
+
+        isPropStateMachineRunning = false;
         
         clubStateInits = new Dictionary<ClubState, Action>() {
             {ClubState.IDLE, ()=>{ InitIdle(); }},
@@ -179,12 +196,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         timer = 0f;
         addTargetDemoBtn.SetActive(true);
         TargetMachine.instance.AddTargetDemo();
+        isPropStateMachineRunning = true;
         InitDelivering();
         StartCoroutine(UpdatePropState());
     }
 
     public void OnWaiting() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
+        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
             nextClubState = ClubState.READY;
         }
     }
@@ -271,20 +289,25 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitResult() {
         finishText.gameObject.SetActive(true);
-        // TODO: Put the prop back!!!
-        timer = 0f;
+        StartCoroutine(Timer.StartTimer(finishTextTime, () =>
+        {
+            finishText.gameObject.SetActive(false);
+            currentPropState = PropState.PUTBACK;
+            nextPropState = PropState.PUTBACK;
+            InitPutBack();
+            isPropStateMachineRunning = true;
+            StartCoroutine(UpdatePropState());
+        }));
     }
 
     public void OnResult() {
-        if(timer >= finishTextTime) {
-            ExitResult();
-            DataManager.instance.isClubPlayed[(int)currentClub] = true;
+        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
+            arenaSign.SetActive(true);
+            // Showing floating arena
         }
-        timer += Time.deltaTime;
     }
 
     public void ExitResult() {
-        finishText.gameObject.SetActive(false);
     }
 
     /* Prop States Methods */
@@ -305,11 +328,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
             Debug.Log("Arrived");
+            
             propStand.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
             propStand.SetActive(true);
             Sequence propStandRisingSequence = DOTween.Sequence();
-            Debug.Log(propStandAnimationTime);
-            Debug.Log(propStandMaxHeight);
             
             propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
                 .SetEase(propStandAnimationCurve)
@@ -359,6 +381,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void InitReturning() {
+        DataManager.instance.isInReadyZone[(int)currentClub] = false;
         readyArea.SetActive(true);
         returnText.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
@@ -372,7 +395,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void OnReturning() {
         if(DataManager.instance.isInReadyZone[(int)currentClub]) {
             ExitReturning();
-            //nextClubState = ClubState.READY;
         }
         returnText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
         Vector3 tmp = returnText.transform.eulerAngles;
@@ -388,6 +410,44 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         readyArea.SetActive(false);
         returnText.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+        isPropStateMachineRunning = false;
+    }
+
+    public void InitPutBack() {
+        propStand.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
+        propStand.SetActive(true);
+        Sequence propStandRisingSequence = DOTween.Sequence();
+
+        propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
+            .SetEase(propStandAnimationCurve)
+            .AppendCallback(() =>
+            {
+                putBackTrigger.SetActive(true);
+                putBackText.gameObject.SetActive(true);
+                DataManager.instance.gun.GetComponent<GunScript>().appearance = DeviceAppearance.REAL;
+            });
+        propStandRisingSequence.Play();
+    }
+
+    public void OnPutBack() {
+        if(DataManager.instance.isPropPutBack[(int)requiredDevice]) {
+            nextPropState = PropState.RETURNING;
+        }
+    }
+
+    public void ExitPutBack() {
+        putBackTrigger.SetActive(false);
+        putBackText.gameObject.SetActive(false);
+        if (propStand.activeInHierarchy)
+        {
+            Sequence propStandDropingSequence = DOTween.Sequence();
+            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
+                    .SetEase(propStandAnimationCurve)
+                    .AppendCallback(()=>{ 
+                        propStand.SetActive(false);
+                    });
+            propStandDropingSequence.Play();
+        }
     }
 
     /* Change State Functions */

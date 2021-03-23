@@ -7,6 +7,7 @@ using DG.Tweening;
 public class TestMusicGameScript : MonoBehaviour
 {
     public PunchBeatGame pbGame;
+    public AudioTest audioTest;
     void Awake() {
         pbGame.Init();
     }
@@ -14,6 +15,9 @@ public class TestMusicGameScript : MonoBehaviour
     void Update() {
         if(Input.GetKeyDown(KeyCode.Space)) {
             pbGame.Run();
+        }
+        if(Input.GetKeyDown(KeyCode.A)) {
+            //audioTest.
         }
     }
 

@@ -47,4 +47,11 @@ public abstract class Metronome : MonoBehaviour
             yield return new WaitForSecondsRealtime(idleTime);
         }
     }
+
+    public IEnumerator RecordTick() {
+        List<int> beatList = new List<int>();
+        while(true) {
+            
+        }
+    }
 }
