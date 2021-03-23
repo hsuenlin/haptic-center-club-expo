@@ -202,7 +202,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnWaiting() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
+        if(!isPropStateMachineRunning) {
             nextClubState = ClubState.READY;
         }
     }
@@ -301,7 +301,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnResult() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
+        if(!isPropStateMachineRunning) {
             arenaSign.SetActive(true);
             // Showing floating arena
         }
@@ -393,9 +393,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnReturning() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
-            ExitReturning();
-        }
         returnText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
         Vector3 tmp = returnText.transform.eulerAngles;
         if (GameManager.instance.gameMode == GameMode.QUEST)
@@ -403,6 +400,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             tmp.x = -tmp.x;
             tmp.y += 180f;
             returnText.transform.eulerAngles = tmp;
+        }
+        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
+            ExitReturning();
         }
     }
 
@@ -438,16 +438,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void ExitPutBack() {
         putBackTrigger.SetActive(false);
         putBackText.gameObject.SetActive(false);
-        if (propStand.activeInHierarchy)
-        {
-            Sequence propStandDropingSequence = DOTween.Sequence();
-            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
-                    .SetEase(propStandAnimationCurve)
-                    .AppendCallback(()=>{ 
-                        propStand.SetActive(false);
-                    });
-            propStandDropingSequence.Play();
-        }
+        Sequence propStandDropingSequence = DOTween.Sequence();
+        propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
+                .SetEase(propStandAnimationCurve)
+                .AppendCallback(()=>{ 
+                    propStand.SetActive(false);
+                });
+        propStandDropingSequence.Play();
     }
 
     /* Change State Functions */
