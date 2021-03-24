@@ -20,6 +20,7 @@ public enum ClientCommand
 {
     SendWelcomeBack = 1,
     NotifyServerStateChange = 2,
+    ReleaseDevice = 3,
     RequestDevice = 5
 }
 
@@ -214,9 +215,5 @@ public class DataManager : Singleton<DataManager> {
 }
 
 public class UIFunc {
-    public static void AttachObjects(GameObject src, GameObject dest) {
-        src.transform.parent = dest.transform;
-        src.transform.localPosition = Vector3.zero;
-        src.transform.localRotation = Quaternion.identity;
-    }
+    
 }

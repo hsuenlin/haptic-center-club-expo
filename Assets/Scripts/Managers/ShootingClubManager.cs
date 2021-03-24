@@ -354,7 +354,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitDelivering() {
-        
     }
 
     public void InitFetching() {
@@ -436,6 +435,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void OnPutBack() {
         if(DataManager.instance.isPropPutBack[(int)requiredDevice]) {
             Debug.Log("On put back exit");
+            ClientSend.ReleaseDevice();
             nextPropState = PropState.RETURNING;
         }
     }

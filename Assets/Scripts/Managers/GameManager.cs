@@ -35,6 +35,24 @@ public class GameManager : Singleton<GameManager>
     private Dictionary<SceneState, IState> sceneManagers;
     private Dictionary<SceneState, Transform> sceneTransforms;
 
+    /* Tracker Roots */
+    public Transform playerRoot;
+    public Transform hapticCenterRoot;
+    public Transform controllerRoot;
+    public Transform controllerCartridgeRoot;
+    public Transform shiftyRoot;
+    public Transform shiftyCartridgeRoot;
+    public Transform panelRoot;
+    
+    /* Game Roots */
+    public Transform ovrCameraRoot;
+    public Transform sceneRoot;
+    public Transform gunRoot;
+    public Transform gunSupportRoot;
+    public Transform racketRoot;
+    public Transform racketSupportRoot;
+    public Transform djPanelRoot;
+
     // Start is called before the first frame update
     protected override void OnAwake() {
 
@@ -79,6 +97,17 @@ public class GameManager : Singleton<GameManager>
         }
         
         sceneManagers[currentSceneState].Init();
+
+        if(gameMode == GameMode.HAPTIC_CENTER) {
+            
+            AttachTransform(ovrCameraRoot, playerRoot);
+            AttachTransform(sceneRoot, hapticCenterRoot);
+            AttachTransform(gunRoot, controllerRoot);
+            AttachTransform(gunSupportRoot, controllerCartridgeRoot);
+            AttachTransform(racketRoot, shiftyRoot);
+            AttachTransform(racketSupportRoot, shiftyCartridgeRoot);
+            AttachTransform(djPanelRoot, panelRoot);
+        }
     }
 
     void Update() {
@@ -132,5 +161,12 @@ public class GameManager : Singleton<GameManager>
         DataManager.instance.forestIslandRoot.localPosition = sceneTransforms[nextSceneState].localPosition;
         DataManager.instance.forestIslandRoot.localRotation = sceneTransforms[nextSceneState].localRotation;
         currentSceneState = nextSceneState;
+    }
+
+    public void AttachTransform(Transform src, Transform dest)
+    {
+        src.parent = dest;
+        src.localPosition = Vector3.zero;
+        src.localRotation = Quaternion.identity;
     }
 }

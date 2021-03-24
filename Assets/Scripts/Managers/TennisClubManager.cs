@@ -84,14 +84,20 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitIdle() {
-        welcomeText.gameObject.SetActive(true);
-        StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
+        Debug.Log("TennisClubStart");
+        DataManager.instance.isDeviceReady[(int)requiredDevice] = false;
+        //welcomeText.gameObject.SetActive(true);
+        //StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
-    public void OnIdle() {}
+    public void OnIdle() {
+        if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            Debug.Log("Rackey is ready");
+        }
+    }
     
     public void ExitIdle() {
-        welcomeText.gameObject.SetActive(false);
+        //welcomeText.gameObject.SetActive(false);
     }
 
     public void InitWaiting() {

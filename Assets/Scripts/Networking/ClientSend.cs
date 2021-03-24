@@ -40,6 +40,15 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void ReleaseDevice()
+    {
+        using (Packet _packet = new Packet((int)ClientCommand.ReleaseDevice))
+        {
+            _packet.Write(4);
+            SendTCPData(_packet);
+        }
+    }
+
     public static void RequestDevice(ServerDevice device) {
         using (Packet _packet = new Packet((int)ClientCommand.RequestDevice))
         {
