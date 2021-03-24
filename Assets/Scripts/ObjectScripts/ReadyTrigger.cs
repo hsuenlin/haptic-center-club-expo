@@ -10,7 +10,7 @@ public class ReadyTrigger : MonoBehaviour
     {
         if(GameManager.instance.currentSceneState > SceneState.ARENA) {
             if(GameManager.instance.gameMode == GameMode.HAPTIC_CENTER) {
-                DataManager.instance.isInReadyZone[(int)GameManager.instance.currentSceneState] = true;
+                DataManager.instance.isInReadyZone = true;
             }
         }
     }

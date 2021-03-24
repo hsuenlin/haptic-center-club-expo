@@ -23,28 +23,32 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     private Dictionary<PropState, Action> propStateInits;
     private Dictionary<PropState, Action> propStateExits;
 
-    public Text welcomeText;
+    /* Idle State */
+    public Text welcomeText2d;
     public float welcomeTextTime; //3f
 
     public GameObject addTargetDemoBtn;
 
-    public GameObject gun;
-    public GameObject propStand;
+    private GunScript gun;
+    private PropSupport gunSupport;
+
+    private GameObject controllerRoot;
+    private GameObject controllerCartridgeRoot;
     public float propStandMinHeight;
     public float propStandMaxHeight;
     public float propStandAnimationTime;
     public AnimationCurve propStandAnimationCurve;
     public GameObject fetchTrigger;
-    public GameObject fetchText;
+    public GameObject fetchText3d;
 
-    public GameObject returnText;
+    public GameObject returnText3d;
     public GameObject readyTrigger;
 
-    public Text readyText;
-    public Text startText;
+    public Text readyText2d;
+    public Text startText2d;
     public float readyTextTime; // 1f
     public float startTextTime; // 1.75f
-    public Image progressBar;
+    public Image progressBarImage;
 
     public Image healthBarImage;
 
@@ -54,75 +58,69 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Variables for Quest mode */
     public float deliveringTime;
     public float returningTime;
-
-    /* Timer */
-    private float timer = 0f;
-
-    public Transform propStandAnchor;
-    public Transform questPropStandAnchor;
+    public GameObject questGunSupportAnchor;
     public GameObject readyArea;
 
     public GameObject aimImage;
 
     public GameObject putBackTrigger;
-    public GameObject putBackText;
+    public GameObject putBackText3d;
 
     private bool isPropStateMachineRunning;
 
     public GameObject arenaSign;
-    
-    private GunScript gunScript;
+
+    private bool isReadyTextShowed;
+    private bool isStartTextShowed;
+
+    private Camera playerCamera;
 
     protected override void OnAwake()
     {
 
-        Assert.IsNotNull(welcomeText);
+        Assert.IsNotNull(welcomeText2d);
         Assert.AreNotApproximatelyEqual(0f, welcomeTextTime);
         
         Assert.IsNotNull(addTargetDemoBtn);
 
-        Assert.IsNotNull(propStand);
         Assert.AreNotApproximatelyEqual(0f, propStandAnimationTime);
         
         Assert.IsNotNull(propStandAnimationCurve);
         Assert.IsNotNull(fetchTrigger);
-        Assert.IsNotNull(fetchText);
+        Assert.IsNotNull(fetchText3d);
     
-        Assert.IsNotNull(returnText);
+        Assert.IsNotNull(returnText3d);
         Assert.IsNotNull(readyTrigger);
 
-        Assert.IsNotNull(readyText);
-        Assert.IsNotNull(startText);
+        Assert.IsNotNull(readyText2d);
+        Assert.IsNotNull(startText2d);
         Assert.AreNotApproximatelyEqual(0f, readyTextTime);
         Assert.AreNotApproximatelyEqual(0f, startTextTime);
-        Assert.IsNotNull(progressBar);
+        Assert.IsNotNull(progressBarImage);
 
         Assert.IsNotNull(healthBarImage);
 
         Assert.IsNotNull(finishText);
         Assert.AreNotApproximatelyEqual(0f, finishTextTime);
 
-        Assert.IsNotNull(propStandAnchor);
-
         Assert.IsNotNull(putBackTrigger);
-        Assert.IsNotNull(putBackText);
+        Assert.IsNotNull(putBackText3d);
 
         Assert.IsNotNull(arenaSign);
 
-        welcomeText.gameObject.SetActive(false);
+        welcomeText2d.gameObject.SetActive(false);
         addTargetDemoBtn.SetActive(false);
-        propStand.SetActive(false);
         fetchTrigger.SetActive(false);
-        fetchText.SetActive(false);
-        returnText.SetActive(false);
-        readyText.gameObject.SetActive(false);
-        startText.gameObject.SetActive(false);
-        progressBar.gameObject.SetActive(false);
+        fetchText3d.SetActive(false);
+        returnText3d.SetActive(false);
+        readyText2d.gameObject.SetActive(false);
+        startText2d.gameObject.SetActive(false);
+        progressBarImage.gameObject.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
         finishText.gameObject.SetActive(false);
 
         putBackTrigger.SetActive(false);
-        putBackText.SetActive(false);
+        putBackText3d.SetActive(false);
 
         isPropStateMachineRunning = false;
 
@@ -155,27 +153,34 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             {PropState.PUTBACK, ()=>{ ExitPutBack(); }}
         };
 
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            //propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
-            propStandAnchor = questPropStandAnchor;
-            propStand.transform.parent = propStandAnchor;
-            DataManager.instance.gunObj.transform.parent = propStand.transform;
-            DataManager.instance.gunObj.transform.localPosition = Vector3.zero;
-            Assert.AreNotApproximatelyEqual(0f, deliveringTime);
-            Assert.AreNotApproximatelyEqual(0f, returningTime);
-            returningTime = 2f;
-        }
-
-        gunScript = DataManager.instance.gunObj.GetComponent<GunScript>();
-
+        
+        gun = DataManager.instance.gunObj.GetComponent<GunScript>();
+        gunSupport = DataManager.instance.gunSupportObj.GetComponent<PropSupport>();
+        controllerRoot = DataManager.instance.controllerRoot;
+        controllerCartridgeRoot = DataManager.instance.controllerCartridgeRoot;
     }
 
     public override void Init() {
+        playerCamera = DataManager.instance.playerCamera;
         //ReadyZone
         readyArea.SetActive(false);
         gun.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
-        propStand.SetActive(false);
+        gunSupport.gameObject.SetActive(false);
+        gunSupport.gameObject.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
+
+        if (GameManager.instance.gameMode == GameMode.QUEST)
+        {
+            ClubUtil.Attach(gun.gameObject, gunSupport.gameObject);
+            ClubUtil.Attach(gunSupport.gameObject, questGunSupportAnchor);
+            Assert.AreNotApproximatelyEqual(0f, deliveringTime);
+            Assert.AreNotApproximatelyEqual(0f, returningTime);
+            returningTime = 2f;
+        } else {
+            ClubUtil.Attach(gun.gameObject, controllerRoot);
+            ClubUtil.Attach(gunSupport.gameObject, controllerCartridgeRoot);
+        }
+
         //PropStand
         InitIdle();
         StartCoroutine(UpdateClubState());
@@ -188,7 +193,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Club States Methods */
 
     public void InitIdle() {
-        welcomeText.gameObject.SetActive(true);
+        welcomeText2d.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
@@ -196,20 +201,17 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitIdle() {
-        welcomeText.gameObject.SetActive(false);
+        welcomeText2d.gameObject.SetActive(false);
     }
 
     public void InitWaiting() {
-        timer = 0f;
         addTargetDemoBtn.SetActive(true);
         TargetMachine.instance.AddTargetDemo();
-        isPropStateMachineRunning = true;
-        InitDelivering();
-        StartCoroutine(UpdatePropState());
+        StartPropStateMachine(PropState.DELIVERING, InitDelivering);
     }
 
     public void OnWaiting() {
-        if(!isPropStateMachineRunning) {
+        if(DataManager.instance.isInReadyZone && !isPropStateMachineRunning) {
             nextClubState = ClubState.READY;
         }
     }
@@ -217,65 +219,61 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void ExitWaiting() {
         addTargetDemoBtn.SetActive(false);
         TargetMachine.instance.DestroyTargetDemos();
-        StopCoroutine(UpdatePropState());
+        StopPropStateMachine();
     }
     
     public void InitReady() {
         aimImage.SetActive(true);
-        readyText.gameObject.SetActive(true);
-        progressBar.gameObject.SetActive(true);
-        //gun.SetActive(false);
-        if(propStand.activeInHierarchy) {
-            Sequence propStandDropingSequence = DOTween.Sequence();
-            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
-                    .SetEase(propStandAnimationCurve);
-            propStandDropingSequence.Play();
-        }
+        readyText2d.gameObject.SetActive(true);
+        progressBarImage.gameObject.SetActive(true);
+        progressBarImage.fillAmount = 0f;
 
-        progressBar.fillAmount = 0f;
+        isReadyTextShowed = false;
+        isStartTextShowed = false;
+
+        gunSupport.Drop(() => { gunSupport.gameObject.SetActive(false); });
     }
 
     public void OnReady() {
-        if(DataManager.instance.isStartTextShowed[(int)currentClub]) {
+        if(isStartTextShowed) {
             nextClubState = ClubState.GAME;
         }
-        else {
-        Ray ray = DataManager.instance.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        RaycastHit hit;
-        if(Physics.Raycast(ray, out hit)) {
-            if(hit.transform.gameObject.name == "GazeTrigger") {
-                progressBar.fillAmount += 1f / readyTextTime * Time.deltaTime;
-            } else {
-                progressBar.fillAmount = 0f;
+        else 
+        {
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit)) {
+                if(hit.transform.gameObject.name == "GazeTrigger") {
+                    progressBarImage.fillAmount += 1f / readyTextTime * Time.deltaTime;
+                } else {
+                    progressBarImage.fillAmount = 0f;
+                }
             }
-        }
-        if(Mathf.Approximately(1f, progressBar.fillAmount)) {
-            DataManager.instance.isReadyTextShowed[(int)currentClub] = true;
-        }
+            if(Mathf.Approximately(1f, progressBarImage.fillAmount)) {
+                isReadyTextShowed = true;
+             }
 
-        if(readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub]) {
-            aimImage.SetActive(false);
-            readyText.gameObject.SetActive(false);
-            progressBar.gameObject.SetActive(false);
-            startText.gameObject.SetActive(true);
-            StartCoroutine(Timer.StartTimer(startTextTime, ()=>{
-                DataManager.instance.isStartTextShowed[(int)currentClub] = true;
-            }));
-        }
+            if(readyText2d.IsActive() && isReadyTextShowed) {
+                aimImage.SetActive(false);
+                readyText2d.gameObject.SetActive(false);
+                progressBarImage.gameObject.SetActive(false);
+                startText2d.gameObject.SetActive(true);
+                StartCoroutine(Timer.StartTimer(startTextTime, ()=>{
+                    isStartTextShowed = true;
+                }));
+            }
         }
     }
 
     public void ExitReady() {
-        startText.gameObject.SetActive(false);
+        startText2d.gameObject.SetActive(false);
     }
 
     public void InitGame() {
-        Debug.Log("Init Game");
-        DataManager.instance.playerTracker.SetActive(true);
         healthBarImage.gameObject.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            StartCoroutine(gunScript.StartAutoShooting());
+            StartCoroutine(gun.StartAutoShooting());
         }
     }
 
@@ -286,32 +284,27 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitGame() {
-        //DataManager.instance.player.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            Debug.Log("stop auto shooting");
-            StopCoroutine(gunScript.StartAutoShooting());
-        }
         StopCoroutine(TargetMachine.instance.StartShooting());
+        if(GameManager.instance.gameMode == GameMode.QUEST) {
+            StopCoroutine(gun.StartAutoShooting());
+        }
     }
 
     public void InitResult() {
-        DataManager.instance.isInReadyZone[(int)currentClub] = false;
+        DataManager.instance.isInReadyZone = false;
         arenaSign.SetActive(false);
         finishText.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(finishTextTime, () =>
         {
             finishText.gameObject.SetActive(false);
-            currentPropState = PropState.PUTBACK;
-            nextPropState = PropState.PUTBACK;
-            InitPutBack();
-            isPropStateMachineRunning = true;
-            StartCoroutine(UpdatePropState());
+            StartPropStateMachine(PropState.PUTBACK, InitPutBack);
         }));
     }
 
     public void OnResult() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub] && !isPropStateMachineRunning) {
+        if(DataManager.instance.isInReadyZone && !isPropStateMachineRunning) {
+            StopPropStateMachine();
             arenaSign.SetActive(true);
         }
     }
@@ -322,11 +315,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Prop States Methods */
 
     public void InitDelivering() {
-        propStand.transform.parent = propStandAnchor;
-        propStand.transform.localPosition = Vector3.zero;
-        propStand.transform.localRotation = Quaternion.identity;
-        propStand.SetActive(false);
-
+        
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(deliveringTime, () => {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
@@ -335,20 +324,13 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnDelivering() {
-        if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
-            Debug.Log("Arrived");
-            
-            propStand.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
-            propStand.SetActive(true);
-            Sequence propStandRisingSequence = DOTween.Sequence();
-            
-            propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve)
-                .AppendCallback(() => {
-                    nextPropState = PropState.FETCHING;
-                    gun.gameObject.SetActive(true);
-                    });
-            propStandRisingSequence.Play();
+        if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            gunSupport.gameObject.SetActive(true);
+            gunSupport.Rise(() =>
+            {
+                nextPropState = PropState.FETCHING;
+                gun.gameObject.SetActive(true);
+            });
         }
     }
 
@@ -358,7 +340,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitFetching() {
         // fetchArea
         fetchTrigger.SetActive(true);
-        fetchText.gameObject.SetActive(true);
+        fetchText3d.gameObject.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = true;
         }
@@ -368,88 +350,78 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
-        Vector3 tmp = fetchText.transform.eulerAngles;
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            tmp.x = -tmp.x;
-            tmp.y += 180f;
-            fetchText.transform.eulerAngles = tmp;
-        }   
+        ClubUtil.LookAtAmend(fetchText3d, playerCamera.gameObject);
     }
 
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
-        fetchText.gameObject.SetActive(false);
+        fetchText3d.gameObject.SetActive(false);
     }
 
     public void InitReturning() {
-        DataManager.instance.isInReadyZone[(int)currentClub] = false;
+        DataManager.instance.isInReadyZone = false;
         readyArea.SetActive(true);
-        returnText.gameObject.SetActive(true);
+        returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
-                DataManager.instance.isInReadyZone[(int)currentClub] = true;
+                DataManager.instance.isInReadyZone = true;
             }));
         }
     }
 
     public void OnReturning() {
-        returnText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
-        Vector3 tmp = returnText.transform.eulerAngles;
-        if (GameManager.instance.gameMode == GameMode.QUEST)
-        {
-            tmp.x = -tmp.x;
-            tmp.y += 180f;
-            returnText.transform.eulerAngles = tmp;
-        }
-        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
+        ClubUtil.LookAtAmend(returnText3d, playerCamera.gameObject);
+        if(DataManager.instance.isInReadyZone) {
             ExitReturning();
         }
     }
 
     public void ExitReturning() {
         readyArea.SetActive(false);
-        returnText.gameObject.SetActive(false);
+        returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
         isPropStateMachineRunning = false;
     }
 
     public void InitPutBack() {
-        propStand.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
-        propStand.SetActive(true);
-        Sequence propStandRisingSequence = DOTween.Sequence();
-
-        propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
-            .SetEase(propStandAnimationCurve)
-            .AppendCallback(() =>
+        gunSupport.gameObject.SetActive(true);
+        gunSupport.Rise(() =>
             {
                 putBackTrigger.SetActive(true);
-                putBackText.gameObject.SetActive(true);
-                
+                putBackText3d.gameObject.SetActive(true);
             });
-        propStandRisingSequence.Play();
     }
 
     public void OnPutBack() {
+        ClubUtil.LookAtAmend(putBackText3d, playerCamera.gameObject);
+        
         if(DataManager.instance.isPropPutBack[(int)requiredDevice]) {
-            Debug.Log("On put back exit");
             ClientSend.ReleaseDevice();
             nextPropState = PropState.RETURNING;
         }
     }
 
     public void ExitPutBack() {
-        Debug.Log("Exit put back");
         putBackTrigger.SetActive(false);
-        putBackText.gameObject.SetActive(false);
-        Sequence propStandDropingSequence = DOTween.Sequence();
-        propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve)
-                .AppendCallback(()=>{ 
-                    propStand.SetActive(false);
-                });
-        propStandDropingSequence.Play();
+        putBackText3d.gameObject.SetActive(false);
+        gunSupport.Drop(() =>
+        {
+            gunSupport.gameObject.SetActive(false);
+        });
+    }
+
+    private void StartPropStateMachine(PropState initState, Action InitFunction) {
+        currentPropState = initState;
+        nextPropState = initState;
+        InitFunction();
+        isPropStateMachineRunning = true;
+        StartCoroutine(UpdatePropState());
+    }
+
+    private void StopPropStateMachine() {
+        isPropStateMachineRunning = false;
+        StopCoroutine(UpdatePropState());
     }
 
     /* Change State Functions */

@@ -106,6 +106,15 @@ public class DataManager : Singleton<DataManager> {
     public GameObject shiftyCartridgeTracker;
     public GameObject panelTracker;
 
+    /* Tracker Roots */
+    public GameObject playerRoot;
+    public GameObject hapticCenterRoot;
+    public GameObject controllerRoot;
+    public GameObject controllerCartridgeRoot;
+    public GameObject shiftyRoot;
+    public GameObject shiftyCartridgeRoot;
+    public GameObject panelRoot;
+
     /* Objects Relate to Different Trackers */
     public GameObject scenesObj;
     public GameObject ovrCameraObj;
@@ -123,8 +132,7 @@ public class DataManager : Singleton<DataManager> {
     public SceneState requestClub;
     public bool isClubReady;
     public bool[] isClubPlayed;
-    public bool[] isInReadyZone;
-    public bool[] isReadyTextShowed;
+    public bool isInReadyZone;
     public bool[] isStartTextShowed;
     public bool canShoot;
     public DeviceAppearance gunAppearance;
@@ -169,9 +177,6 @@ public class DataManager : Singleton<DataManager> {
         isDeviceFetched = new bool[3];
         //isClubReady = new bool[3];
         isClubPlayed = new bool[3];
-        isInReadyZone = new bool[3];
-        isReadyTextShowed = new bool[3];
-        isStartTextShowed = new bool[3];
         canShoot = true;
         gunAppearance = DeviceAppearance.REAL;
         isDeviceFollowHand = false;

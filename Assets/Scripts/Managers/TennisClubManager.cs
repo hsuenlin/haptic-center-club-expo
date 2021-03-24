@@ -53,6 +53,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     
     public Image completionImage;
     public GameObject senpai;
+
+    private bool isStartTextShowed;
+    private bool isReadyTextShowed;
     
     protected override void OnAwake() {
     //TODO:
@@ -173,13 +176,13 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
-                DataManager.instance.isInReadyZone[(int)currentClub] = true;
+                DataManager.instance.isInReadyZone = true;
             }));
         }
     }
 
     public void OnReturning() {
-        if(DataManager.instance.isInReadyZone[(int)currentClub]) {
+        if(DataManager.instance.isInReadyZone) {
             ExitReturning();
             //nextClubState = ClubState.READY;
         }
@@ -194,6 +197,10 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     {
         readyText.gameObject.SetActive(true);
         progressBar.gameObject.SetActive(true);
+
+        isReadyTextShowed = false;
+        isStartTextShowed = false;
+
         if (propStand.activeInHierarchy)
         {
             Sequence propStandDropingSequence = DOTween.Sequence();
@@ -206,7 +213,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void OnReady()
     {
-        if (DataManager.instance.isStartTextShowed[(int)currentClub])
+        if (isStartTextShowed)
         {
             nextClubState = ClubState.GAME;
         }
@@ -227,17 +234,17 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
             }
             if (Mathf.Approximately(1f, progressBar.fillAmount))
             {
-                DataManager.instance.isReadyTextShowed[(int)currentClub] = true;
+                isReadyTextShowed= true;
             }
 
-            if (readyText.IsActive() && DataManager.instance.isReadyTextShowed[(int)currentClub])
+            if (readyText.IsActive() && isReadyTextShowed)
             {
                 readyText.gameObject.SetActive(false);
                 progressBar.gameObject.SetActive(false);
                 startText.gameObject.SetActive(true);
                 StartCoroutine(Timer.StartTimer(startTextTime, () =>
                 {
-                    DataManager.instance.isStartTextShowed[(int)currentClub] = true;
+                    isStartTextShowed = true;
                 }));
             }
         }

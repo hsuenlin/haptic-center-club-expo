@@ -91,13 +91,13 @@ public class GameManager : Singleton<GameManager>
     }
 
     void Start() {
-        playerRoot = DataManager.instance.playerTracker.transform;
-        hapticCenterRoot = DataManager.instance.hapticCenterTracker.transform;
-        controllerRoot = DataManager.instance.controllerTracker.transform;
-        controllerCartridgeRoot = DataManager.instance.controllerCartridgeTracker.transform;
-        shiftyRoot = DataManager.instance.shiftyTracker.transform;
-        shiftyCartridgeRoot = DataManager.instance.shiftyCartridgeTracker.transform;
-        panelRoot = DataManager.instance.panelTracker.transform;
+        playerRoot = DataManager.instance.playerRoot.transform;
+        hapticCenterRoot = DataManager.instance.hapticCenterRoot.transform;
+        controllerRoot = DataManager.instance.controllerRoot.transform;
+        controllerCartridgeRoot = DataManager.instance.controllerCartridgeRoot.transform;
+        shiftyRoot = DataManager.instance.shiftyRoot.transform;
+        shiftyCartridgeRoot = DataManager.instance.shiftyCartridgeRoot.transform;
+        panelRoot = DataManager.instance.panelRoot.transform;
 
         forestIslandRoot = DataManager.instance.forestIslandRoot;
         ovrCameraRoot = DataManager.instance.ovrCameraObj.transform;
@@ -121,13 +121,13 @@ public class GameManager : Singleton<GameManager>
         if (gameMode == GameMode.HAPTIC_CENTER)
         {
             client.ConnectToServer();
-            AttachTransform(ovrCameraRoot, playerRoot);
-            AttachTransform(sceneRoot, hapticCenterRoot);
-            AttachTransform(gunRoot, controllerRoot);
-            AttachTransform(gunSupportRoot, controllerCartridgeRoot);
-            AttachTransform(racketRoot, shiftyRoot);
-            AttachTransform(racketSupportRoot, shiftyCartridgeRoot);
-            AttachTransform(djPanelRoot, panelRoot);
+            ClubUtil.Attach(ovrCameraRoot, playerRoot);
+            ClubUtil.Attach(sceneRoot, hapticCenterRoot);
+            ClubUtil.Attach(gunRoot, controllerRoot);
+            ClubUtil.Attach(gunSupportRoot, controllerCartridgeRoot);
+            ClubUtil.Attach(racketRoot, shiftyRoot);
+            ClubUtil.Attach(racketSupportRoot, shiftyCartridgeRoot);
+            ClubUtil.Attach(djPanelRoot, panelRoot);
         }
     }
 
@@ -186,10 +186,5 @@ public class GameManager : Singleton<GameManager>
         currentSceneState = nextSceneState;
     }
 
-    public void AttachTransform(Transform src, Transform dest)
-    {
-        src.parent = dest;
-        src.localPosition = Vector3.zero;
-        src.localRotation = Quaternion.identity;
-    }
+    
 }
