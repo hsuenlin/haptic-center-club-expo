@@ -6,14 +6,12 @@ using UnityEngine.Assertions;
 
 public class CalibrationManager : SceneManager<CalibrationManager>
 {
-    //public Transform toCalibrationTransform;
 
     public Image transparentBlack;
     public Text calibrationText;
     public float calibrationTime;
-    
-    public Quaternion negateRotation;
-    public Vector3 negatePosition;
+    private Vector3 negatePosition;
+    private Quaternion negateRotation;
     
     protected override void OnAwake() {
         Assert.IsNotNull(transparentBlack);
@@ -23,6 +21,9 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     public override void Init() {
         transparentBlack.gameObject.SetActive(true);
         calibrationText.gameObject.SetActive(true);
+        negatePosition = Vector3.zero;
+        negateRotation = Quaternion.identity;
+        
         StartCoroutine(CalibrationCountDown());
         DataManager.instance.ovrRig.GetComponent<OVRCameraRig>().UpdatedAnchors += NegateCameraTransform;
     }
@@ -40,7 +41,6 @@ public class CalibrationManager : SceneManager<CalibrationManager>
 
     void NegateCameraTransform(OVRCameraRig cameraRig)
     {
-        //Debug.Log("Update anchor callback");
         
         if(GameManager.instance.currentSceneState == SceneState.CALIBRATION) {
             Matrix4x4 m = cameraRig.centerEyeAnchor.parent.worldToLocalMatrix * cameraRig.centerEyeAnchor.localToWorldMatrix;
@@ -50,7 +50,6 @@ public class CalibrationManager : SceneManager<CalibrationManager>
             negatePosition.z = m.inverse.m23;
         }
         
-
         
         DataManager.instance.playerCamera.transform.parent.localRotation = negateRotation;
         DataManager.instance.playerCamera.transform.parent.localPosition = negatePosition;

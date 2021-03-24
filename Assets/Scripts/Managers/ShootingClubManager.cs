@@ -159,14 +159,14 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             //propStand.transform.position = new Vector3(0.15f, -1.5f, 0.15f);
             propStandAnchor = questPropStandAnchor;
             propStand.transform.parent = propStandAnchor;
-            DataManager.instance.gun.transform.parent = propStand.transform;
-            DataManager.instance.gun.transform.localPosition = Vector3.zero;
+            DataManager.instance.gunObj.transform.parent = propStand.transform;
+            DataManager.instance.gunObj.transform.localPosition = Vector3.zero;
             Assert.AreNotApproximatelyEqual(0f, deliveringTime);
             Assert.AreNotApproximatelyEqual(0f, returningTime);
             returningTime = 2f;
         }
 
-        gunScript = DataManager.instance.gun.GetComponent<GunScript>();
+        gunScript = DataManager.instance.gunObj.GetComponent<GunScript>();
 
     }
 
@@ -188,7 +188,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     /* Club States Methods */
 
     public void InitIdle() {
-        timer = 0f;
         welcomeText.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
@@ -272,7 +271,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitGame() {
         Debug.Log("Init Game");
-        DataManager.instance.player.SetActive(true);
+        DataManager.instance.playerTracker.SetActive(true);
         healthBarImage.gameObject.SetActive(true);
         StartCoroutine(TargetMachine.instance.StartShooting());
         if(GameManager.instance.gameMode == GameMode.QUEST) {

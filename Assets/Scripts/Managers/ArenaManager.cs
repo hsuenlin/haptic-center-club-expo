@@ -5,8 +5,6 @@ using UnityEngine.Assertions;
 
 public class ArenaManager : SceneManager<ArenaManager>
 {
-    public Transform toArenaTransform;
-
     public GameObject floatingGun;
     public GameObject floatingRacket;
     public GameObject floatingSpeaker;
@@ -15,8 +13,9 @@ public class ArenaManager : SceneManager<ArenaManager>
     public GameObject tennisClubSign;
     public GameObject musicGameClubSign;
 
+    public SceneState requestClub;
+
     protected override void OnAwake() {
-        Assert.IsNotNull(toArenaTransform);
 
         Assert.IsNotNull(floatingGun);
         Assert.IsNotNull(floatingRacket);
@@ -29,11 +28,13 @@ public class ArenaManager : SceneManager<ArenaManager>
         floatingGun.SetActive(false);
         floatingRacket.SetActive(false);
         floatingSpeaker.SetActive(false);
+
+        shootingClubSign.SetActive(false);
+        tennisClubSign.SetActive(false);
+        musicGameClubSign.SetActive(false);
     }
 
     public override void Init() {
-        DataManager.instance.forestIslandRoot.position = toArenaTransform.position;
-        DataManager.instance.forestIslandRoot.eulerAngles = toArenaTransform.eulerAngles;
 
         floatingGun.SetActive(true);
         floatingRacket.SetActive(true);
@@ -43,16 +44,17 @@ public class ArenaManager : SceneManager<ArenaManager>
         tennisClubSign.SetActive(true);
         musicGameClubSign.SetActive(true);
 
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
+        requestClub = SceneState.ARENA;
+
+        DataManager.instance.isRequestResultReady = false;
+        DataManager.instance.isClubReady = false;
+
+        if (GameManager.instance.gameMode == GameMode.QUEST)
+        {
             DataManager.instance.isDeviceFree[0] = true;
             DataManager.instance.isDeviceFree[1] = true;
             DataManager.instance.isDeviceFree[2] = true;
         }
-        DataManager.instance.handSDK.SetActive(true);
-        DataManager.instance.requestClub = SceneState.ARENA;
-        DataManager.instance.isClubReady[0] = false;
-        DataManager.instance.isClubReady[1] = false;
-        DataManager.instance.isClubReady[2] = false;
     }
 
     public override void Exit() {

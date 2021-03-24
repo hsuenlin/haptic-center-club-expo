@@ -4,25 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
 
-public enum ServerCommand
-{
-    Welcome = 1,
-    SendTrackerInfo = 2,
-    SendDeviceStatus = 3,
-    SendRequestIsSuccess = 4,
-    SendDeviceReady = 6,
-    SendControllerTriggerPress = 60,
-    SendPanelInfo = 50,
-    PlayerDisconnected = 100,
-}
 
-public enum ClientCommand
-{
-    SendWelcomeBack = 1,
-    NotifyServerStateChange = 2,
-    ReleaseDevice = 3,
-    RequestDevice = 5
-}
+
+
 
 public enum TrackerType
 {
@@ -109,26 +93,27 @@ public class PanelInfo {
 }
 
 public class DataManager : Singleton<DataManager> {
-    /* Updated by server */
     public Transform forestIslandRoot;
 
-    public GameObject player;
     public Camera playerCamera;
 
-    public GameObject handSDK;
-    
-    public GameObject hapticCenter;
-    public GameObject controller;
-    public GameObject controllerCartridge;
-    public GameObject shifty;
-    public GameObject shiftyCartridge;
-    public GameObject panel;
+    /* Tracker Object */
+    public GameObject playerTracker;
+    public GameObject hapticCenterTracker;
+    public GameObject controllerTracker;
+    public GameObject controllerCartridgeTracker;
+    public GameObject shiftyTracker;
+    public GameObject shiftyCartridgeTracker;
+    public GameObject panelTracker;
 
-    public GameObject gun;
-    public GameObject gunSupport;
-    public GameObject racket;
-    public GameObject racketSupport;
-    public GameObject djPanel;
+    /* Objects Relate to Different Trackers */
+    public GameObject scenesObj;
+    public GameObject ovrCameraObj;
+    public GameObject gunObj;
+    public GameObject gunSupportObj;
+    public GameObject racketObj;
+    public GameObject racketSupportObj;
+    public GameObject djPanelObj;
 
     public bool isCalibrated;
     public bool[] isDeviceFree;
@@ -136,7 +121,7 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isDeviceFetched;
     public Device requestDevice;
     public SceneState requestClub;
-    public bool[] isClubReady;
+    public bool isClubReady;
     public bool[] isClubPlayed;
     public bool[] isInReadyZone;
     public bool[] isReadyTextShowed;
@@ -164,15 +149,14 @@ public class DataManager : Singleton<DataManager> {
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
 
-        Assert.IsNotNull(hapticCenter);
-        Assert.IsNotNull(player);
+        Assert.IsNotNull(hapticCenterTracker);
+        Assert.IsNotNull(playerTracker);
         Assert.IsNotNull(playerCamera);
-        Assert.IsNotNull(handSDK);
-        Assert.IsNotNull(controller);
-        Assert.IsNotNull(controllerCartridge);
-        Assert.IsNotNull(shifty);
-        Assert.IsNotNull(shiftyCartridge);
-        Assert.IsNotNull(panel);
+        Assert.IsNotNull(controllerTracker);
+        Assert.IsNotNull(controllerCartridgeTracker);
+        Assert.IsNotNull(shiftyTracker);
+        Assert.IsNotNull(shiftyCartridgeTracker);
+        Assert.IsNotNull(panelTracker);
 
         Assert.IsNotNull(contactText);
         Assert.IsNotNull(clubPromptTransforms);
@@ -184,7 +168,6 @@ public class DataManager : Singleton<DataManager> {
         isDeviceReady = new bool[3];
         isDeviceFetched = new bool[3];
         //isClubReady = new bool[3];
-        isClubReady = new bool[3];
         isClubPlayed = new bool[3];
         isInReadyZone = new bool[3];
         isReadyTextShowed = new bool[3];
@@ -200,9 +183,9 @@ public class DataManager : Singleton<DataManager> {
         isPropPutBack = new bool[3];
 
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            gun.transform.parent = gunSupport.transform;
-            gun.transform.localPosition = Vector3.zero;
-            gun.transform.localRotation = Quaternion.identity;
+            gunObj.transform.parent = gunSupportObj.transform;
+            gunObj.transform.localPosition = Vector3.zero;
+            gunObj.transform.localRotation = Quaternion.identity;
 
             //racket
             //panel

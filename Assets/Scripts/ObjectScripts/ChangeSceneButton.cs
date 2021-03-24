@@ -22,7 +22,7 @@ namespace OculusSampleFramework
                 if(DataManager.instance.isRequestResultReady) {
                     DataManager.instance.isRequestResultReady = false;
                     DataManager.instance.contactText.SetActive(false);
-                    if(!DataManager.instance.isClubReady[(int)signifiedScene]) {
+                    if(signifiedScene == ArenaManager.instance.requestClub && !DataManager.instance.isClubReady) {
                         DataManager.instance.failedText.transform.parent = DataManager.instance.clubPromptTransforms[(int)signifiedScene];
                         DataManager.instance.failedText.transform.localPosition = Vector3.zero;
                         DataManager.instance.failedText.transform.localRotation = Quaternion.identity;
@@ -86,7 +86,7 @@ namespace OculusSampleFramework
                     StartCoroutine(PollingIsClubReady());
                 }
                 else if(GameManager.instance.gameMode == GameMode.QUEST) {
-                    DataManager.instance.isClubReady[(int)signifiedScene] = true;
+                    DataManager.instance.isClubReady = true;
                 }
             }
         }

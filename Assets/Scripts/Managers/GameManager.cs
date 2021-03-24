@@ -12,12 +12,11 @@ public enum GameMode {
 public class GameManager : Singleton<GameManager>
 {
 
-    public Client client;
-
+    public GameMode gameMode;
+    
     public SceneState currentSceneState;
     public SceneState nextSceneState;
-
-    public GameMode gameMode;
+    
 
     /* Scene Managers */
     public CalibrationManager calibrationManager;
@@ -26,38 +25,42 @@ public class GameManager : Singleton<GameManager>
     public TennisClubManager tennisClubManager;
     public MusicGameClubManager musicGameClubManager;
 
+
+    /* Scene Transforms */
     public Transform calibrationSceneTransform;
     public Transform arenaSceneTransform;
     public Transform shootingClubSceneTransform;
     public Transform tennisClubSceneTransform;
     public Transform musicGameClubSceneTransform;
 
+    
     private Dictionary<SceneState, IState> sceneManagers;
     private Dictionary<SceneState, Transform> sceneTransforms;
 
+    
+    /* Client */
+    private Client client;
+
     /* Tracker Roots */
-    public Transform playerRoot;
-    public Transform hapticCenterRoot;
-    public Transform controllerRoot;
-    public Transform controllerCartridgeRoot;
-    public Transform shiftyRoot;
-    public Transform shiftyCartridgeRoot;
-    public Transform panelRoot;
+    private Transform playerRoot;
+    private Transform hapticCenterRoot;
+    private Transform controllerRoot;
+    private Transform controllerCartridgeRoot;
+    private Transform shiftyRoot;
+    private Transform shiftyCartridgeRoot;
+    private Transform panelRoot;
     
     /* Game Roots */
-    public Transform ovrCameraRoot;
-    public Transform sceneRoot;
-    public Transform gunRoot;
-    public Transform gunSupportRoot;
-    public Transform racketRoot;
-    public Transform racketSupportRoot;
-    public Transform djPanelRoot;
+    private Transform forestIslandRoot;
+    private Transform ovrCameraRoot;
+    private Transform sceneRoot;
+    private Transform gunRoot;
+    private Transform gunSupportRoot;
+    private Transform racketRoot;
+    private Transform racketSupportRoot;
+    private Transform djPanelRoot;
 
-    // Start is called before the first frame update
     protected override void OnAwake() {
-
-        Assert.IsNotNull(client);
-
         Assert.IsNotNull(calibrationManager);
         Assert.IsNotNull(arenaManager);
         Assert.IsNotNull(shootingClubManager);
@@ -69,12 +72,6 @@ public class GameManager : Singleton<GameManager>
         Assert.IsNotNull(shootingClubSceneTransform);
         Assert.IsNotNull(tennisClubSceneTransform);
         Assert.IsNotNull(musicGameClubSceneTransform);
-
-        calibrationManager.gameObject.SetActive(true);
-        arenaManager.gameObject.SetActive(true);
-        shootingClubManager.gameObject.SetActive(true);
-        tennisClubManager.gameObject.SetActive(true);
-        musicGameClubManager.gameObject.SetActive(true);
 
         sceneManagers = new Dictionary<SceneState, IState>() {
             {SceneState.CALIBRATION, calibrationManager},
@@ -91,15 +88,39 @@ public class GameManager : Singleton<GameManager>
             {SceneState.TENNIS_CLUB, tennisClubSceneTransform},
             {SceneState.MUSICGAME_CLUB, musicGameClubSceneTransform}
         };
+    }
 
-        if(gameMode == GameMode.HAPTIC_CENTER) {
-            client.ConnectToServer();
-        }
+    void Start() {
+        playerRoot = DataManager.instance.playerTracker.transform;
+        hapticCenterRoot = DataManager.instance.hapticCenterTracker.transform;
+        controllerRoot = DataManager.instance.controllerTracker.transform;
+        controllerCartridgeRoot = DataManager.instance.controllerCartridgeTracker.transform;
+        shiftyRoot = DataManager.instance.shiftyTracker.transform;
+        shiftyCartridgeRoot = DataManager.instance.shiftyCartridgeTracker.transform;
+        panelRoot = DataManager.instance.panelTracker.transform;
+
+        forestIslandRoot = DataManager.instance.forestIslandRoot;
+        ovrCameraRoot = DataManager.instance.ovrCameraObj.transform;
+        sceneRoot = DataManager.instance.scenesObj.transform;
+        gunRoot = DataManager.instance.gunObj.transform;
+        gunSupportRoot = DataManager.instance.gunSupportObj.transform;
+        racketRoot = DataManager.instance.racketObj.transform;
+        racketSupportRoot = DataManager.instance.racketSupportObj.transform;
+        djPanelRoot = DataManager.instance.djPanelObj.transform;
         
+        calibrationManager.gameObject.SetActive(false);
+        arenaManager.gameObject.SetActive(false);
+        shootingClubManager.gameObject.SetActive(false);
+        tennisClubManager.gameObject.SetActive(false);
+        musicGameClubManager.gameObject.SetActive(false);
+
+        Component initSceneManager = (Component)sceneManagers[currentSceneState];
+        initSceneManager.gameObject.SetActive(true);
         sceneManagers[currentSceneState].Init();
 
-        if(gameMode == GameMode.HAPTIC_CENTER) {
-            
+        if (gameMode == GameMode.HAPTIC_CENTER)
+        {
+            client.ConnectToServer();
             AttachTransform(ovrCameraRoot, playerRoot);
             AttachTransform(sceneRoot, hapticCenterRoot);
             AttachTransform(gunRoot, controllerRoot);
@@ -125,11 +146,13 @@ public class GameManager : Singleton<GameManager>
                 }
                 break;
             case SceneState.ARENA:
-                for(int sceneIdx = 0; sceneIdx < 3; ++sceneIdx) {
-                    if(DataManager.instance.isClubReady[sceneIdx] && !DataManager.instance.isClubPlayed[sceneIdx]) {
-                        nextSceneState = (SceneState) sceneIdx;
+                for(int clubIdx = 0; clubIdx < 3; ++clubIdx) {
+                    int requestClubIdx = (int)ArenaManager.instance.requestClub;
+                    if(clubIdx == requestClubIdx && DataManager.instance.isClubReady && !DataManager.instance.isClubPlayed[clubIdx]) 
+                        {
+                        nextSceneState = (SceneState) clubIdx;
                         if(gameMode == GameMode.HAPTIC_CENTER) {
-                            ClientSend.NotifyServerStateChange((ServerState)sceneIdx);
+                            ClientSend.NotifyServerStateChange((ServerState)clubIdx);
                         }
                         break;
                     }
@@ -158,8 +181,8 @@ public class GameManager : Singleton<GameManager>
         currentSceneManager.gameObject.SetActive(false);
         nextSceneManager.gameObject.SetActive(true);
         sceneManagers[nextSceneState].Init();
-        DataManager.instance.forestIslandRoot.localPosition = sceneTransforms[nextSceneState].localPosition;
-        DataManager.instance.forestIslandRoot.localRotation = sceneTransforms[nextSceneState].localRotation;
+        forestIslandRoot.localPosition = sceneTransforms[nextSceneState].localPosition;
+        forestIslandRoot.localRotation = sceneTransforms[nextSceneState].localRotation;
         currentSceneState = nextSceneState;
     }
 

@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum ClientCommand
+{
+    SendWelcomeBack = 1,
+    NotifyServerStateChange = 2,
+    ReleaseDevice = 3,
+    RequestDevice = 5
+}
 public class ClientSend : MonoBehaviour
 {
     /// <summary>Sends a packet to the server via TCP.</summary>
