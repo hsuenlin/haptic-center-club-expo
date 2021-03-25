@@ -16,7 +16,8 @@ public class FairZone : MonoBehaviour
     public GameObject left;
     public GameObject right;
 
-    public Action OnGetPoint;
+    public Action OnBallIn;
+    public Action OnBallOut;
 
     void Awake() {
         left.SetActive(false);
@@ -36,7 +37,9 @@ public class FairZone : MonoBehaviour
 
     public void OnBallHitEnter(Half hitHalf, int ballId) {
         if(ballId == currentBallId && half == hitHalf) {
-            OnGetPoint();
+            OnBallIn();
+        } else {
+            OnBallOut();
         }
     }
 }

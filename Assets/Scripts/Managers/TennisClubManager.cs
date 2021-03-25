@@ -53,7 +53,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     
     public ServingMachine servingMachine;
     
-    public Image completionImage;
+
     public GameObject senpai;
 
     private bool isStartTextShowed;
@@ -72,6 +72,12 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     private GameObject shiftyRoot;
     private GameObject shiftyCartridgeRoot;
     public GameObject questRacketSupportAnchor;
+
+    private int remainBallNum;
+    public Text remainBallText;
+
+    public GameObject ballInText3d;
+    public GameObject ballOutText3d;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -122,7 +128,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         progressBarImage.gameObject.SetActive(false);
         startText2d.gameObject.SetActive(false);
         servingMachine.gameObject.SetActive(false);
-        completionImage.gameObject.SetActive(false);
+        
         senpai.SetActive(false);
         isReadyTextShowed = false;
         isStartTextShowed = false;
@@ -132,9 +138,11 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         finishText2d.gameObject.SetActive(false);
         pickBallMachine.gameObject.SetActive(false);
         servingMachine.gameObject.SetActive(false);
-        completionImage.gameObject.SetActive(false);
         shiftyRoot = DataManager.instance.shiftyRoot;
         shiftyCartridgeRoot = DataManager.instance.shiftyCartridgeRoot;
+        remainBallText.gameObject.SetActive(false);
+        ballInText3d.SetActive(false);
+        ballOutText3d.SetActive(false);
         if (GameManager.instance.gameMode == GameMode.QUEST)
         {
             ClubUtil.Attach(racket.gameObject, racketSupport.gameObject);
@@ -322,34 +330,45 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void InitGame() {
         Debug.Log("Game start, please wait for 3 sec.");
         StartCoroutine(Timer.StartTimer(3f, ()=>{ nextClubState = ClubState.RESULT; }));
-        /*
+        
         senpai.SetActive(true);
         servingMachine.gameObject.SetActive(true);
         servingMachine.Init();
-        completionImage.fillAmount = 0f;
-        completionImage.gameObject.SetActive(true);
-        servingMachine.fairZone.OnGetPoint = () => {
-            completionImage.fillAmount += (1f / servingMachine.serveNum);
+        remainBallNum = servingMachine.serveNum;
+        remainBallText.gameObject.SetActive(true);
+        servingMachine.OnServeEnd = () => {
+            remainBallNum--;
+            remainBallText.text = $"{remainBallNum}";
         };
-        */
+        servingMachine.fairZone.OnBallIn = () => {
+            // TODO: Ball in sound
+            ballInText3d.SetActive(true);
+            ballInText3d.GetComponent<Text3dAnimation>().RiseFadeInOut(()=>{ ballInText3d.SetActive(false); });
+            
+        };
+        servingMachine.fairZone.OnBallOut = () =>
+        {
+            // TODO: Ball out sound
+            ballOutText3d.SetActive(true);
+            ballOutText3d.GetComponent<Text3dAnimation>().RiseFadeInOut(() => { ballOutText3d.SetActive(false); });
+        };
     }
 
     public void OnGame() {
-        /*
+        
         if(servingMachine.isServeOver) {
             nextClubState = ClubState.RESULT;
         }
-        */
     }
 
     public void ExitGame() {
         Debug.Log("Game over");
-        /*
+        
         servingMachine.End();
         servingMachine.gameObject.SetActive(false);
-        completionImage.gameObject.SetActive(false);
+        remainBallText.gameObject.SetActive(false);
         senpai.SetActive(false);
-        */
+        
     }
 
     public void InitResult() {

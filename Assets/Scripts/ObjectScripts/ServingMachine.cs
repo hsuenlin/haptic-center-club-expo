@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,6 @@ public class ServingMachine : MonoBehaviour
 {
 
     public int serveNum;
-    
     public FairZone fairZone;
 
     public GameObject ballPrefab;
@@ -19,6 +19,8 @@ public class ServingMachine : MonoBehaviour
     public float maxAzimuth;// = 30;
 
     public bool isServeOver;
+
+    public Action OnServeEnd;
 
     void Awake() {
         isServeOver = false;
@@ -38,9 +40,9 @@ public class ServingMachine : MonoBehaviour
         Rigidbody rb = ball.GetComponent<Rigidbody>();
 
         Vector3 forwardToPlayer = new Vector3(0, 0, -1);
-        elevation += Random.Range(0, maxElevationDeviation);
-        thrust += Random.Range(0, maxThrustDeviation);
-        float azimuth = Random.Range(-maxAzimuth, maxAzimuth);
+        elevation += UnityEngine.Random.Range(0, maxElevationDeviation);
+        thrust += UnityEngine.Random.Range(0, maxThrustDeviation);
+        float azimuth = UnityEngine.Random.Range(-maxAzimuth, maxAzimuth);
         Vector3 direction = Quaternion.Euler(elevation, azimuth, 0) * forwardToPlayer;
         rb.AddForce(direction * thrust);
     }
@@ -51,6 +53,7 @@ public class ServingMachine : MonoBehaviour
                 yield return null;
             }
             Serve(i);
+            OnServeEnd();
             fairZone.ChangeFairZoneHalf();
             fairZone.currentBallId = i;
             yield return null;
