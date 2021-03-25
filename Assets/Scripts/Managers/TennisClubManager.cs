@@ -9,7 +9,8 @@ using OculusSampleFramework;
 public class TennisClubManager : SceneManager<TennisClubManager> {
     public SceneState currentClub;
     public Device requiredDevice;
-    public GameObject racket;
+    private RacketScript racket;
+    private Camera playerCamera; 
     
     public ClubState currentClubState;
     public ClubState nextClubState;
@@ -26,27 +27,27 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public float welcomeTextTime;
 
     public float deliveringTime;
-    public GameObject returnText;
+    public GameObject returnText3d;
     public float returningTime;
 
     public PickBallMachine pickBallMachine;
-    public GameObject propStand;
+    private PropSupport racketSupport;
 
-    public float propStandMaxHeight;
-    public float propStandMinHeight;
-    public float propStandAnimationTime;
-    public AnimationCurve propStandAnimationCurve;
+    public float propSupportMaxHeight;
+    public float propSupportMinHeight;
+    public float propSupportAnimationTime;
+    public AnimationCurve propSupportAnimationCurve;
 
     public GameObject fetchTrigger;
-    public GameObject fetchText;
+    public GameObject fetchText3d;
 
     public GameObject readyTrigger;
-    public Text readyText;
+    public Text readyText2d;
     public float readyTextTime;
 
-    public Image progressBar;
+    public Image progressBarImage;
 
-    public Text startText;
+    public Text startText2d;
     public float startTextTime;
     
     public ServingMachine servingMachine;
@@ -57,63 +58,110 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     private bool isStartTextShowed;
     private bool isReadyTextShowed;
     
+    private bool isPropStateMachineRunning;
+
+    public Image aimImage;
+
+    public GameObject arenaSign;
+    public Text finishText2d;
+    public float finishTextTime;
+
+    public GameObject putBackTrigger;
+    public GameObject putBackText3d;
     protected override void OnAwake() {
-    //TODO:
-    // Assert
-    // Dict init
 
      clubStateInits = new Dictionary<ClubState,Action>() {
-
+         {ClubState.IDLE, ()=> { InitIdle(); } },
+         {ClubState.WAITING, ()=>{ InitWaiting();} },
+         {ClubState.READY, ()=>{ InitReady(); } },
+         {ClubState.GAME, ()=>{ InitGame(); } },
+         {ClubState.RESULT, ()=>{ InitResult(); } }
      };
      clubStateExits = new Dictionary<ClubState,Action>() {
-
+         {ClubState.IDLE, ()=> { ExitIdle(); } },
+         {ClubState.WAITING, ()=>{ ExitWaiting();} },
+         {ClubState.READY, ()=>{ ExitReady(); } },
+         {ClubState.GAME, ()=>{ ExitGame(); } },
+         {ClubState.RESULT, ()=>{ ExitResult(); } }
      };
 
      propStateInits = new Dictionary<PropState,Action>() {
-
+         {PropState.DELIVERING, ()=>{ InitDelivering(); }},
+         {PropState.FETCHING, ()=>{ InitFetching(); }},
+         {PropState.RETURNING, ()=>{ InitReturning(); }},
+         {PropState.PUTBACK, ()=>{ InitPutBack(); }}
      };
      propStateExits = new Dictionary<PropState,Action>() {
+         {PropState.DELIVERING, ()=>{ ExitDelivering(); }},
+         {PropState.FETCHING, ()=>{ ExitFetching(); }},
+         {PropState.RETURNING, ()=>{ ExitReturning(); }},
+         {PropState.PUTBACK, ()=>{ ExitPutBack(); }}
 
      };
     }
 
     public override void Init() {
+        Debug.Log("Tennis Club Init");
+        playerCamera = DataManager.instance.playerCamera;
+        racket = DataManager.instance.racketObj.GetComponent<RacketScript>();
+        racketSupport = DataManager.instance.racketSupportObj.GetComponent<PropSupport>();
+        racketSupport.minHeight = propSupportMinHeight;
+        racketSupport.maxHeight = propSupportMaxHeight;
+        racketSupport.animationTime = propSupportAnimationTime;
+        racketSupport.curve = propSupportAnimationCurve;
+        fetchTrigger.SetActive(false);
+        fetchText3d.SetActive(false);
+        readyTrigger.SetActive(false);
+        readyText2d.gameObject.SetActive(false);
+        progressBarImage.gameObject.SetActive(false);
+        startText2d.gameObject.SetActive(false);
+        servingMachine.gameObject.SetActive(false);
+        completionImage.gameObject.SetActive(false);
+        senpai.SetActive(false);
+        isReadyTextShowed = false;
+        isStartTextShowed = false;
+        isPropStateMachineRunning = false;
+        aimImage.gameObject.SetActive(false);
+        arenaSign.SetActive(false);
+        finishText2d.gameObject.SetActive(false);
         InitIdle();
         StartCoroutine(UpdateClubState());
     }
     public override void Exit() {
+        Debug.Log("Tennis Club Exit");
         StopCoroutine(UpdateClubState());
-        Debug.Log("Tennis Club End");
     }
 
     public void InitIdle() {
-        Debug.Log("TennisClubStart");
-        DataManager.instance.isDeviceReady[(int)requiredDevice] = false;
-        //welcomeText.gameObject.SetActive(true);
-        //StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
+        welcomeText.gameObject.SetActive(true);
+        StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
 
     public void OnIdle() {
-        if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
-            Debug.Log("Rackey is ready");
-        }
     }
     
     public void ExitIdle() {
-        //welcomeText.gameObject.SetActive(false);
+        welcomeText.gameObject.SetActive(false);
     }
 
     public void InitWaiting() {
         pickBallMachine.gameObject.SetActive(true);
         pickBallMachine.Init();
-        InitDelivering();
-        StartCoroutine(UpdatePropState());
+        DataManager.instance.isInReadyZone = false;
+        StartPropStateMachine(PropState.DELIVERING, InitDelivering);
+    }
+
+    public void OnWaiting() {
+        if (DataManager.instance.isInReadyZone && !isPropStateMachineRunning)
+        {
+            nextClubState = ClubState.READY;
+        }
     }
 
     public void ExitWaiting() {
         pickBallMachine.End();
         pickBallMachine.gameObject.SetActive(false);
-        StopCoroutine(UpdatePropState());
+        StopPropStateMachine();
     }
 
     public void InitDelivering() {
@@ -125,16 +173,13 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void OnDelivering() {
-        if(DataManager.instance.isDeviceReady[(int)requiredDevice] && !propStand.activeInHierarchy) {
-            propStand.SetActive(true);
-            Sequence propStandRisingSequence = DOTween.Sequence();
-            propStandRisingSequence.Append(propStand.transform.DOLocalMoveY(propStandMaxHeight, propStandAnimationTime))
-                .SetEase(propStandAnimationCurve)
-                .AppendCallback(() => {
-                    nextPropState = PropState.FETCHING;
-                    racket.SetActive(true);
-                    });
-            propStandRisingSequence.Play();
+        if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            racketSupport.gameObject.SetActive(true);
+            racketSupport.Rise(() =>
+            {
+                nextPropState = PropState.FETCHING;
+                racket.gameObject.SetActive(true);
+            });
         }
     }
     
@@ -143,7 +188,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void InitFetching() {
         //TODO: Set trigger and text
         fetchTrigger.SetActive(true);
-        fetchText.gameObject.SetActive(true);
+        fetchText3d.gameObject.SetActive(true);
         // TODO: Do we need to change appearance?
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = true;
@@ -154,25 +199,20 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        fetchText.transform.LookAt(DataManager.instance.playerCamera.transform.position);
-        Vector3 tmp = fetchText.transform.eulerAngles;
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            tmp.x = -tmp.x;
-            tmp.y += 180f;
-            fetchText.transform.eulerAngles = tmp;
-        }   
+        ClubUtil.TextLookAt(fetchText3d, playerCamera.gameObject);
     }
 
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
-        fetchText.gameObject.SetActive(false);
+        fetchText3d.gameObject.SetActive(false);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = false;
         }
     }
 
     public void InitReturning() {
-        returnText.gameObject.SetActive(true);
+        DataManager.instance.isInReadyZone = false;
+        returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
@@ -182,33 +222,29 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void OnReturning() {
+        ClubUtil.TextLookAt(returnText3d, playerCamera.gameObject);
         if(DataManager.instance.isInReadyZone) {
             ExitReturning();
-            //nextClubState = ClubState.READY;
         }
     }
 
     public void ExitReturning() {
-        returnText.gameObject.SetActive(false);
+        returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+        isPropStateMachineRunning = false;
     }
 
     public void InitReady()
     {
-        readyText.gameObject.SetActive(true);
-        progressBar.gameObject.SetActive(true);
+        aimImage.gameObject.SetActive(true);
+        readyText2d.gameObject.SetActive(true);
+        progressBarImage.gameObject.SetActive(true);
+        progressBarImage.fillAmount = 0f;
 
         isReadyTextShowed = false;
         isStartTextShowed = false;
 
-        if (propStand.activeInHierarchy)
-        {
-            Sequence propStandDropingSequence = DOTween.Sequence();
-            propStandDropingSequence.Append(propStand.transform.DOLocalMoveY(propStandMinHeight, propStandAnimationTime))
-                    .SetEase(propStandAnimationCurve);
-            propStandDropingSequence.Play();
-        }
-        progressBar.fillAmount = 0f;
+        racketSupport.Drop(() => { racketSupport.gameObject.SetActive(false); });
     }
 
     public void OnReady()
@@ -225,23 +261,23 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
             {
                 if (hit.transform.gameObject.name == "GazeTrigger")
                 {
-                    progressBar.fillAmount += 1f / readyTextTime * Time.deltaTime;
+                    progressBarImage.fillAmount += 1f / readyTextTime * Time.deltaTime;
                 }
                 else
                 {
-                    progressBar.fillAmount = 0f;
+                    progressBarImage.fillAmount = 0f;
                 }
             }
-            if (Mathf.Approximately(1f, progressBar.fillAmount))
+            if (Mathf.Approximately(1f, progressBarImage.fillAmount))
             {
                 isReadyTextShowed= true;
             }
 
-            if (readyText.IsActive() && isReadyTextShowed)
+            if (readyText2d.IsActive() && isReadyTextShowed)
             {
-                readyText.gameObject.SetActive(false);
-                progressBar.gameObject.SetActive(false);
-                startText.gameObject.SetActive(true);
+                readyText2d.gameObject.SetActive(false);
+                progressBarImage.gameObject.SetActive(false);
+                startText2d.gameObject.SetActive(true);
                 StartCoroutine(Timer.StartTimer(startTextTime, () =>
                 {
                     isStartTextShowed = true;
@@ -252,10 +288,13 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void ExitReady()
     {
-        startText.gameObject.SetActive(false);
+        startText2d.gameObject.SetActive(false);
     }
 
     public void InitGame() {
+        Debug.Log("Game start, please wait for 3 sec.");
+        StartCoroutine(Timer.StartTimer(3f, ()=>{ nextClubState = ClubState.RESULT; }));
+        /*
         senpai.SetActive(true);
         servingMachine.gameObject.SetActive(true);
         servingMachine.Init();
@@ -264,25 +303,166 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         servingMachine.fairZone.OnGetPoint = () => {
             completionImage.fillAmount += (1f / servingMachine.serveNum);
         };
+        */
     }
 
     public void OnGame() {
+        /*
         if(servingMachine.isServeOver) {
             nextClubState = ClubState.RESULT;
         }
+        */
     }
 
     public void ExitGame() {
+        Debug.Log("Game over");
+        /*
         servingMachine.End();
         servingMachine.gameObject.SetActive(false);
         completionImage.gameObject.SetActive(false);
         senpai.SetActive(false);
+        */
     }
 
-    public IEnumerator UpdateClubState() {
-        yield return null;
+    public void InitResult() {
+        DataManager.instance.isInReadyZone = false;
+        arenaSign.SetActive(false);
+        finishText2d.gameObject.SetActive(true);
+        StartCoroutine(Timer.StartTimer(finishTextTime, () =>
+        {
+            finishText2d.gameObject.SetActive(false);
+            StartPropStateMachine(PropState.PUTBACK, InitPutBack);
+        }));
     }
-    public IEnumerator UpdatePropState() {
-        yield return null;
+    public void OnResult() {
+        if (DataManager.instance.isInReadyZone && !isPropStateMachineRunning)
+        {
+            StopPropStateMachine();
+            arenaSign.SetActive(true);
+        }
+    }
+    public void ExitResult() {
+    }
+    public void InitPutBack() {
+        racketSupport.gameObject.SetActive(true);
+        racketSupport.Rise(() =>
+            {
+                putBackTrigger.SetActive(true);
+                putBackText3d.gameObject.SetActive(true);
+            });
+        
+    }
+    public void OnPutBack() {
+        ClubUtil.TextLookAt(putBackText3d, playerCamera.gameObject);
+
+        if (DataManager.instance.isPropPutBack[(int)requiredDevice])
+        {
+            if (GameManager.instance.gameMode == GameMode.HAPTIC_CENTER)
+            {
+                ClientSend.ReleaseDevice();
+            }
+            nextPropState = PropState.RETURNING;
+        }
+    }
+    public void ExitPutBack() {
+        putBackTrigger.SetActive(false);
+        putBackText3d.gameObject.SetActive(false);
+        racketSupport.Drop(() =>
+        {
+            racketSupport.gameObject.SetActive(false);
+        });
+    }
+    private void StartPropStateMachine(PropState initState, Action InitFunction)
+    {
+        currentPropState = initState;
+        nextPropState = initState;
+        InitFunction();
+        isPropStateMachineRunning = true;
+        StartCoroutine(UpdatePropState());
+    }
+
+    private void StopPropStateMachine()
+    {
+        isPropStateMachineRunning = false;
+        StopCoroutine(UpdatePropState());
+    }
+
+    /* Change State Functions */
+
+    private void ChangeClubState()
+    {
+        clubStateExits[currentClubState]();
+        clubStateInits[nextClubState]();
+        currentClubState = nextClubState;
+    }
+
+    private void ChangePropState()
+    {
+        propStateExits[currentPropState]();
+        propStateInits[nextPropState]();
+        currentPropState = nextPropState;
+    }
+
+    /* Update State Functions */
+
+    private IEnumerator UpdateClubState()
+    {
+        while (true)
+        {
+            if (currentClubState != nextClubState)
+            {
+                ChangeClubState();
+            }
+            switch (currentClubState)
+            {
+                case ClubState.IDLE:
+                    OnIdle();
+                    break;
+                case ClubState.WAITING:
+                    OnWaiting();
+                    break;
+                case ClubState.READY:
+                    OnReady();
+                    break;
+                case ClubState.GAME:
+                    OnGame();
+                    break;
+                case ClubState.RESULT:
+                    OnResult();
+                    break;
+                default:
+                    break;
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator UpdatePropState()
+    {
+        while (true)
+        {
+            if (currentPropState != nextPropState)
+            {
+                ChangePropState();
+            }
+            switch (currentPropState)
+            {
+                case PropState.DELIVERING:
+                    OnDelivering();
+                    break;
+                case PropState.FETCHING:
+                    OnFetching();
+                    break;
+                case PropState.RETURNING:
+                    OnReturning();
+                    break;
+                case PropState.PUTBACK:
+                    OnPutBack();
+                    break;
+                default:
+                    break;
+            }
+            yield return null;
+        }
     }
 }

@@ -34,10 +34,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     private GameObject controllerRoot;
     private GameObject controllerCartridgeRoot;
-    public float propStandMinHeight;
-    public float propStandMaxHeight;
-    public float propStandAnimationTime;
-    public AnimationCurve propStandAnimationCurve;
+    public float propSupportMinHeight;
+    public float propSupportMaxHeight;
+    public float propSupportAnimationTime;
+    public AnimationCurve propSupportAnimationCurve;
     public GameObject fetchTrigger;
     public GameObject fetchText3d;
 
@@ -52,7 +52,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public Image healthBarImage;
 
-    public Text finishText;
+    public Text finishText2d;
     public float finishTextTime; // 2f
 
     /* Variables for Quest mode */
@@ -83,9 +83,9 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         
         Assert.IsNotNull(addTargetDemoBtn);
 
-        Assert.AreNotApproximatelyEqual(0f, propStandAnimationTime);
+        Assert.AreNotApproximatelyEqual(0f, propSupportAnimationTime);
         
-        Assert.IsNotNull(propStandAnimationCurve);
+        Assert.IsNotNull(propSupportAnimationCurve);
         Assert.IsNotNull(fetchTrigger);
         Assert.IsNotNull(fetchText3d);
     
@@ -100,7 +100,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
         Assert.IsNotNull(healthBarImage);
 
-        Assert.IsNotNull(finishText);
+        Assert.IsNotNull(finishText2d);
         Assert.AreNotApproximatelyEqual(0f, finishTextTime);
 
         Assert.IsNotNull(putBackTrigger);
@@ -117,7 +117,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         startText2d.gameObject.SetActive(false);
         progressBarImage.gameObject.SetActive(false);
         healthBarImage.gameObject.SetActive(false);
-        finishText.gameObject.SetActive(false);
+        finishText2d.gameObject.SetActive(false);
 
         putBackTrigger.SetActive(false);
         putBackText3d.SetActive(false);
@@ -161,13 +161,18 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public override void Init() {
+        // TODO: Init all variables
         playerCamera = DataManager.instance.playerCamera;
         //ReadyZone
         readyArea.SetActive(false);
         gun.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
         gunSupport.gameObject.SetActive(false);
-        gunSupport.gameObject.transform.localPosition = new Vector3(0f, propStandMinHeight, 0f);
+        gunSupport.gameObject.transform.localPosition = new Vector3(0f, propSupportMinHeight, 0f);
+        gunSupport.minHeight = propSupportMinHeight;
+        gunSupport.maxHeight = propSupportMaxHeight;
+        gunSupport.animationTime = propSupportAnimationTime;
+        gunSupport.curve = propSupportAnimationCurve;
 
         if (GameManager.instance.gameMode == GameMode.QUEST)
         {
@@ -207,6 +212,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitWaiting() {
         addTargetDemoBtn.SetActive(true);
         TargetMachine.instance.AddTargetDemo();
+        DataManager.instance.isInReadyZone = false;
         StartPropStateMachine(PropState.DELIVERING, InitDelivering);
     }
 
@@ -294,10 +300,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     public void InitResult() {
         DataManager.instance.isInReadyZone = false;
         arenaSign.SetActive(false);
-        finishText.gameObject.SetActive(true);
+        finishText2d.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(finishTextTime, () =>
         {
-            finishText.gameObject.SetActive(false);
+            finishText2d.gameObject.SetActive(false);
             StartPropStateMachine(PropState.PUTBACK, InitPutBack);
         }));
     }
@@ -360,7 +366,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitReturning() {
         DataManager.instance.isInReadyZone = false;
-        readyArea.SetActive(true);
+        //readyArea.SetActive(true);
         returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -378,8 +384,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitReturning() {
-        Debug.Log("Exit Returning");
-        readyArea.SetActive(false);
+        //readyArea.SetActive(false);
         returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
         isPropStateMachineRunning = false;
@@ -406,7 +411,6 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitPutBack() {
-        Debug.Log("Exit put back");
         putBackTrigger.SetActive(false);
         putBackText3d.gameObject.SetActive(false);
         gunSupport.Drop(() =>
