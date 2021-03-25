@@ -24,14 +24,12 @@ public class ClubUtil : MonoBehaviour {
         src.transform.localRotation = Quaternion.identity;
     }
 
-    public static void LookAtAmend(GameObject obj, GameObject target) {
-        obj.transform.LookAt(target.transform.position);
+    public static void TextLookAt(GameObject obj, GameObject target) {
+        obj.transform.LookAt(target.transform.position, Vector3.up);
+        
         Vector3 tmp = obj.transform.eulerAngles;
-        if (GameManager.instance.gameMode == GameMode.QUEST)
-        {
-            tmp.x = -tmp.x;
-            tmp.y += 180f;
-            obj.transform.eulerAngles = tmp;
-        }
+        tmp.x = -tmp.x;
+        tmp.y += 180f;
+        obj.transform.eulerAngles = tmp;
     }
 }

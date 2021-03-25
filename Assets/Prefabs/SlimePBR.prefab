@@ -384,7 +384,6 @@ GameObject:
   - component: {fileID: -2623718189634841730}
   - component: {fileID: -7725182794469695037}
   - component: {fileID: 8162714474321052402}
-  - component: {fileID: -1706816659456536106}
   m_Layer: 0
   m_Name: SlimePBR
   m_TagString: Target
@@ -470,32 +469,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack: 0
   hp: 0
---- !u!114 &-1706816659456536106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1919012471076396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2318c0e44c076004cb1391eaa9ffff16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pbGame: {fileID: 0}
-  missSound: {fileID: 0}
-  goodSound: {fileID: 0}
-  perfectSound: {fileID: 0}
-  missAnimation: {fileID: 0}
-  goodAnimation: {fileID: 0}
-  perfectAnimation: {fileID: 0}
-  audioSource: {fileID: 0}
-  missText: {fileID: 0}
-  goodText: {fileID: 0}
-  perfectText: {fileID: 0}
-  textRiseHeight: 0
-  textRiseTime: 0
-  textFadeTime: 0
 --- !u!1 &1989916952965676
 GameObject:
   m_ObjectHideFlags: 0

@@ -1161,7 +1161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &153737675
 Transform:
   m_ObjectHideFlags: 0
@@ -1417,36 +1417,6 @@ MonoBehaviour:
   - {fileID: -9205036688274478542, guid: ce913a4fbda514a2f9f64e4387496d56, type: 3}
   damageAnimationScript: {fileID: 718714024057917288}
   damageAnimationTime: 0.5
---- !u!1 &192766394
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 192766395}
-  m_Layer: 0
-  m_Name: PropStandAnchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &192766395
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 192766394}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1129786856}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &222377889
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2045,7 +2015,7 @@ GameObject:
   m_Component:
   - component: {fileID: 331078329}
   m_Layer: 0
-  m_Name: ControllerCatridge
+  m_Name: ControllerCatridgeTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2715,8 +2685,6 @@ MonoBehaviour:
   transparentBlack: {fileID: 466256310}
   calibrationText: {fileID: 1114148453}
   calibrationTime: 5
-  negateRotation: {x: 0, y: 0, z: 0, w: 0}
-  negatePosition: {x: 0, y: 0, z: 0}
 --- !u!4 &449782956 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4010205441359642, guid: 26790024c0a59a4459d89f66a856faa2,
@@ -3937,18 +3905,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &597424454 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6250878258688070190, guid: 68c46b4f8988d4330bb26ea698e30fea,
-    type: 3}
-  m_PrefabInstance: {fileID: 1085940790}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc814f919cc244f3781606fa6c93502d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &598601356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4016,7 +3972,7 @@ GameObject:
   m_Component:
   - component: {fileID: 602413339}
   m_Layer: 0
-  m_Name: ShiftyCatridge
+  m_Name: ShiftyCatridgeTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4424,7 +4380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680368505}
   m_Layer: 0
-  m_Name: Controller
+  m_Name: ControllerTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5038,7 +4994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 757767891}
   m_Layer: 0
-  m_Name: HapticCenter
+  m_Name: HapticCenterTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5945,30 +5901,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forestIslandRoot: {fileID: 2063252459}
-  player: {fileID: 1778087556}
   playerCamera: {fileID: 718714024057822365}
-  handSDK: {fileID: 1685300262}
-  hapticCenter: {fileID: 757767890}
-  controller: {fileID: 680368504}
-  controllerCartridge: {fileID: 331078328}
-  shifty: {fileID: 1438711208}
-  shiftyCartridge: {fileID: 602413338}
-  panel: {fileID: 2051268019}
-  gun: {fileID: 1144172645}
-  gunSupport: {fileID: 2046411553}
-  racket: {fileID: 1438711208}
-  racketSupport: {fileID: 602413338}
-  djPanel: {fileID: 2051268019}
+  playerTracker: {fileID: 1778087556}
+  hapticCenterTracker: {fileID: 757767890}
+  controllerTracker: {fileID: 680368504}
+  controllerCartridgeTracker: {fileID: 331078328}
+  shiftyTracker: {fileID: 1438711208}
+  shiftyCartridgeTracker: {fileID: 602413338}
+  panelTracker: {fileID: 2051268019}
+  playerRoot: {fileID: 1625083669}
+  hapticCenterRoot: {fileID: 1311308723}
+  controllerRoot: {fileID: 111008595}
+  controllerCartridgeRoot: {fileID: 1129786855}
+  shiftyRoot: {fileID: 1438711208}
+  shiftyCartridgeRoot: {fileID: 340706443}
+  panelRoot: {fileID: 67231538}
+  scenesObj: {fileID: 1235558139}
+  ovrCameraObj: {fileID: 718714024057917281}
+  gunObj: {fileID: 1144172645}
+  gunSupportObj: {fileID: 2046411553}
+  racketObj: {fileID: 1711279707}
+  racketSupportObj: {fileID: 2046411553}
+  djPanelObj: {fileID: 1711279707}
   isCalibrated: 0
   isDeviceFree: 
   isDeviceReady: 
   isDeviceFetched: 
   requestDevice: 0
-  requestClub: 0
-  isClubReady: 
+  isClubReady: 0
   isClubPlayed: 
-  isInReadyZone: 
-  isReadyTextShowed: 
+  isInReadyZone: 0
   isStartTextShowed: 
   canShoot: 0
   gunAppearance: 0
@@ -6804,8 +6766,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 192766395}
+  m_Children: []
   m_Father: {fileID: 1878790924}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7957,10 +7918,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eafa13665e77d464a82a7d512b14d8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  client: {fileID: 597424454}
+  gameMode: 0
   currentSceneState: -2
   nextSceneState: -2
-  gameMode: 1
   calibrationManager: {fileID: 446512360}
   arenaManager: {fileID: 235618658272809687}
   shootingClubManager: {fileID: 4355715245385055284}
@@ -7971,20 +7931,6 @@ MonoBehaviour:
   shootingClubSceneTransform: {fileID: 1140196449}
   tennisClubSceneTransform: {fileID: 1363668562}
   musicGameClubSceneTransform: {fileID: 1600312084}
-  playerRoot: {fileID: 1625083670}
-  hapticCenterRoot: {fileID: 1311308724}
-  controllerRoot: {fileID: 111008596}
-  controllerCartridgeRoot: {fileID: 1129786856}
-  shiftyRoot: {fileID: 1721882318}
-  shiftyCartridgeRoot: {fileID: 340706444}
-  panelRoot: {fileID: 67231539}
-  ovrCameraRoot: {fileID: 718714024058409793}
-  sceneRoot: {fileID: 1235558140}
-  gunRoot: {fileID: 1144172646}
-  gunSupportRoot: {fileID: 2046411554}
-  racketRoot: {fileID: 1711279708}
-  racketSupportRoot: {fileID: 2046411554}
-  djPanelRoot: {fileID: 2046411554}
 --- !u!1001 &1331237302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8262,7 +8208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438711209}
   m_Layer: 0
-  m_Name: Shifty
+  m_Name: ShiftyTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9587,12 +9533,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1657443904}
   m_CullTransparentMesh: 0
---- !u!1 &1685300262 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1099536711198800, guid: 2ced187cdc1b6b94da2fd30a37e8bc41,
-    type: 3}
-  m_PrefabInstance: {fileID: 979371690}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1701049143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9933,7 +9873,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1778087557}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11186,13 +11126,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2046411554}
+  - component: {fileID: 2046411555}
   m_Layer: 0
-  m_Name: PropStand
+  m_Name: PropSupport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2046411554
 Transform:
   m_ObjectHideFlags: 0
@@ -11211,6 +11152,45 @@ Transform:
   m_Father: {fileID: 956272684}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2046411555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046411553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e6e4eec733f31408e15921ede4cfd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minHeight: -1.5
+  maxHeight: 0
+  animationTime: 1
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2051268019
 GameObject:
   m_ObjectHideFlags: 0
@@ -11221,7 +11201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2051268020}
   m_Layer: 0
-  m_Name: Panel
+  m_Name: PanelTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11302,7 +11282,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063252458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.36, z: 65.65}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1146533515}
@@ -11971,13 +11951,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9974acf03b0441497bf0ba5a38c1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toArenaTransform: {fileID: 610057804}
   floatingGun: {fileID: 163878726}
   floatingRacket: {fileID: 1085557567}
   floatingSpeaker: {fileID: 1586073867}
   shootingClubSign: {fileID: 824494523}
   tennisClubSign: {fileID: 1085557567}
   musicGameClubSign: {fileID: 499262014}
+  requestClub: 0
 --- !u!4 &482986215039160381
 Transform:
   m_ObjectHideFlags: 0
@@ -13669,11 +13649,9 @@ MonoBehaviour:
   nextClubState: 0
   currentPropState: 0
   nextPropState: 0
-  welcomeText: {fileID: 1455630614}
+  welcomeText2d: {fileID: 1455630614}
   welcomeTextTime: 3
   addTargetDemoBtn: {fileID: 1780263646}
-  gun: {fileID: 1144172645}
-  propStand: {fileID: 2046411553}
   propStandMinHeight: -1.5
   propStandMaxHeight: 0
   propStandAnimationTime: 2
@@ -13702,25 +13680,24 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   fetchTrigger: {fileID: 130168894}
-  fetchText: {fileID: 153737674}
-  returnText: {fileID: 910334853}
+  fetchText3d: {fileID: 153737674}
+  returnText3d: {fileID: 910334853}
   readyTrigger: {fileID: 494148941}
-  readyText: {fileID: 1447398272}
-  startText: {fileID: 1525780808}
+  readyText2d: {fileID: 1447398272}
+  startText2d: {fileID: 1525780808}
   readyTextTime: 1
   startTextTime: 1.5
-  progressBar: {fileID: 1699510608250735595}
+  progressBarImage: {fileID: 1699510608250735595}
   healthBarImage: {fileID: 546432287}
   finishText: {fileID: 131891222}
   finishTextTime: 2
   deliveringTime: 3
   returningTime: 5
-  propStandAnchor: {fileID: 192766395}
-  questPropStandAnchor: {fileID: 805613549}
+  questGunSupportAnchor: {fileID: 956272683}
   readyArea: {fileID: 1637176892}
   aimImage: {fileID: 135765878}
   putBackTrigger: {fileID: 1714031747}
-  putBackText: {fileID: 1848325510}
+  putBackText3d: {fileID: 1848325510}
   arenaSign: {fileID: 505551291}
 --- !u!65 &5084863503506244723
 BoxCollider:

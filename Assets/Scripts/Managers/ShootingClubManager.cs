@@ -350,7 +350,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(DataManager.instance.isDeviceFetched[(int)requiredDevice]) {
             nextPropState = PropState.RETURNING;
         }
-        ClubUtil.LookAtAmend(fetchText3d, playerCamera.gameObject);
+        ClubUtil.TextLookAt(fetchText3d, playerCamera.gameObject);
     }
 
     public void ExitFetching() {
@@ -371,13 +371,14 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnReturning() {
-        ClubUtil.LookAtAmend(returnText3d, playerCamera.gameObject);
+        ClubUtil.TextLookAt(returnText3d, playerCamera.gameObject);
         if(DataManager.instance.isInReadyZone) {
             ExitReturning();
         }
     }
 
     public void ExitReturning() {
+        Debug.Log("Exit Returning");
         readyArea.SetActive(false);
         returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
@@ -394,15 +395,18 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void OnPutBack() {
-        ClubUtil.LookAtAmend(putBackText3d, playerCamera.gameObject);
+        ClubUtil.TextLookAt(putBackText3d, playerCamera.gameObject);
         
         if(DataManager.instance.isPropPutBack[(int)requiredDevice]) {
-            ClientSend.ReleaseDevice();
+            if(GameManager.instance.gameMode == GameMode.HAPTIC_CENTER) {
+                ClientSend.ReleaseDevice();
+            }
             nextPropState = PropState.RETURNING;
         }
     }
 
     public void ExitPutBack() {
+        Debug.Log("Exit put back");
         putBackTrigger.SetActive(false);
         putBackText3d.gameObject.SetActive(false);
         gunSupport.Drop(() =>
@@ -491,10 +495,5 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
             }
             yield return null;
         }
-    }
-
-    void Update()
-    {
-        //UpdateClubState();
     }
 }

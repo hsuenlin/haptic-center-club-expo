@@ -12,6 +12,8 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     public float calibrationTime;
     private Vector3 negatePosition;
     private Quaternion negateRotation;
+
+    private GameObject scenesObj;
     
     protected override void OnAwake() {
         Assert.IsNotNull(transparentBlack);
@@ -19,13 +21,16 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     }
 
     public override void Init() {
+        scenesObj = DataManager.instance.scenesObj;
         transparentBlack.gameObject.SetActive(true);
         calibrationText.gameObject.SetActive(true);
         negatePosition = Vector3.zero;
         negateRotation = Quaternion.identity;
         
         StartCoroutine(CalibrationCountDown());
-        DataManager.instance.ovrRig.GetComponent<OVRCameraRig>().UpdatedAnchors += NegateCameraTransform;
+        if(GameManager.instance.gameMode == GameMode.HAPTIC_CENTER) {
+            DataManager.instance.ovrRig.GetComponent<OVRCameraRig>().UpdatedAnchors += NegateCameraTransform;
+        }
     }
 
     private IEnumerator CalibrationCountDown()

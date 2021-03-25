@@ -50,7 +50,7 @@ namespace OculusSampleFramework
         }
 
         public override void OnPrimaryInputUp() {
-            DataManager.instance.requestClub = signifiedScene;
+            ArenaManager.instance.requestClub = signifiedScene;
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
 
             if(signifiedScene == SceneState.ARENA) {
@@ -86,6 +86,7 @@ namespace OculusSampleFramework
                     StartCoroutine(PollingIsClubReady());
                 }
                 else if(GameManager.instance.gameMode == GameMode.QUEST) {
+                    Debug.Log("Club is ready");
                     DataManager.instance.isClubReady = true;
                 }
             }

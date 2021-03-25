@@ -15,6 +15,7 @@ public class PropSupport : MonoBehaviour {
     
     public AnimationCurve curve;
     public void Rise(TweenCallback CallBack) {
+        gameObject.transform.localPosition = new Vector3(0f, minHeight, 0f);
         Sequence seq = DOTween.Sequence();
         seq.Append(gameObject.transform.DOLocalMoveY(maxHeight, animationTime))
             .SetEase(curve)
@@ -23,6 +24,7 @@ public class PropSupport : MonoBehaviour {
     }
 
     public void Drop(TweenCallback CallBack) {
+        gameObject.transform.localPosition = new Vector3(0f, maxHeight, 0f);
         Sequence seq = DOTween.Sequence();
         seq.Append(gameObject.transform.DOLocalMoveY(minHeight, animationTime))
             .SetEase(curve)

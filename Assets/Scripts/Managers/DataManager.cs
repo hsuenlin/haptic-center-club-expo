@@ -129,7 +129,6 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isDeviceReady;
     public bool[] isDeviceFetched;
     public Device requestDevice;
-    public SceneState requestClub;
     public bool isClubReady;
     public bool[] isClubPlayed;
     public bool isInReadyZone;
@@ -187,21 +186,6 @@ public class DataManager : Singleton<DataManager> {
 
         isPropPutBack = new bool[3];
 
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            gunObj.transform.parent = gunSupportObj.transform;
-            gunObj.transform.localPosition = Vector3.zero;
-            gunObj.transform.localRotation = Quaternion.identity;
-
-            //racket
-            //panel
-        } else {
-            // Put props under tracker anchor
-        }
-
         rayTools = new List<GameObject>();
     }
-}
-
-public class UIFunc {
-    
 }

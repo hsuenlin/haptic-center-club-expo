@@ -16,11 +16,14 @@ public class GunScript : MonoBehaviour {
     public GameObject viveModel;
     public GameObject gunModel;
 
+    private bool isFetched;
+
     void Awake() {
         Assert.IsNotNull(muzzle);
         Assert.IsNotNull(lineRenderer);
         lineRenderer.enabled = false;
         appearance = DeviceAppearance.REAL;
+        isFetched = false;
     }
 
     private IEnumerator StartColdDown() {
@@ -80,8 +83,8 @@ public class GunScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Hand") {
             //DataManager.instance.handSDK.SetActive(false);
-            if(DataManager.instance.isDeviceFollowHand) {
-                Debug.Log("Start follow hand");
+            if(DataManager.instance.isDeviceFollowHand && !isFetched) {
+                isFetched = true;
                 transform.parent = other.transform;
                 transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);
                 transform.localEulerAngles = new Vector3(0f, -65f, 90f);
