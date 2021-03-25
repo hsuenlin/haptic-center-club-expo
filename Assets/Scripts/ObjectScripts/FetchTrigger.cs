@@ -14,7 +14,7 @@ public class FetchTrigger : MonoBehaviour
                 rayToolObj.SetActive(false);
             }
         }
-        if (other.name == "Gun" || other.name == "Racket") {
+        if (other.name == "Gun") {
             other.gameObject.GetComponent<GunScript>().appearance = DeviceAppearance.VIRTUAL;
         }
         switch(other.name) {

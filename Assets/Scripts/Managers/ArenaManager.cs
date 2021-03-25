@@ -45,6 +45,7 @@ public class ArenaManager : SceneManager<ArenaManager>
         musicGameClubSign.SetActive(true);
 
         requestClub = SceneState.ARENA;
+        Debug.Log(requestClub);
 
         DataManager.instance.isRequestResultReady = false;
         DataManager.instance.isClubReady = false;

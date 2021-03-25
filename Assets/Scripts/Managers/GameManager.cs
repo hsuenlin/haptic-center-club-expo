@@ -139,6 +139,7 @@ public class GameManager : Singleton<GameManager>
         {
             case SceneState.CALIBRATION:
                 if(DataManager.instance.isCalibrated) {
+                    Debug.Log("Change scene to arena");
                     nextSceneState = SceneState.ARENA;
                     if(gameMode == GameMode.HAPTIC_CENTER) {
                         ClientSend.NotifyServerStateChange(ServerState.ARENA);

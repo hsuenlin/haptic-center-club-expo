@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using OculusSampleFramework;
+using UnityEngine.Assertions;
 
 public class TennisClubManager : SceneManager<TennisClubManager> {
     public SceneState currentClub;
@@ -68,6 +69,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public GameObject putBackTrigger;
     public GameObject putBackText3d;
+    private GameObject shiftyRoot;
+    private GameObject shiftyCartridgeRoot;
+    public GameObject questRacketSupportAnchor;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -104,7 +108,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         Debug.Log("Tennis Club Init");
         playerCamera = DataManager.instance.playerCamera;
         racket = DataManager.instance.racketObj.GetComponent<RacketScript>();
+        racket.gameObject.SetActive(false);
         racketSupport = DataManager.instance.racketSupportObj.GetComponent<PropSupport>();
+        racketSupport.gameObject.SetActive(false);
         racketSupport.minHeight = propSupportMinHeight;
         racketSupport.maxHeight = propSupportMaxHeight;
         racketSupport.animationTime = propSupportAnimationTime;
@@ -124,6 +130,25 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         aimImage.gameObject.SetActive(false);
         arenaSign.SetActive(false);
         finishText2d.gameObject.SetActive(false);
+        pickBallMachine.gameObject.SetActive(false);
+        servingMachine.gameObject.SetActive(false);
+        completionImage.gameObject.SetActive(false);
+        shiftyRoot = DataManager.instance.shiftyRoot;
+        shiftyCartridgeRoot = DataManager.instance.shiftyCartridgeRoot;
+        if (GameManager.instance.gameMode == GameMode.QUEST)
+        {
+            ClubUtil.Attach(racket.gameObject, racketSupport.gameObject);
+            racket.gameObject.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+            ClubUtil.Attach(racketSupport.gameObject, questRacketSupportAnchor);
+            Assert.AreNotApproximatelyEqual(0f, deliveringTime);
+            Assert.AreNotApproximatelyEqual(0f, returningTime);
+            returningTime = 2f;
+        }
+        else
+        {
+            ClubUtil.Attach(racket.gameObject, shiftyRoot);
+            ClubUtil.Attach(racketSupport.gameObject, shiftyCartridgeRoot);
+        }
         InitIdle();
         StartCoroutine(UpdateClubState());
     }
@@ -145,8 +170,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitWaiting() {
-        pickBallMachine.gameObject.SetActive(true);
-        pickBallMachine.Init();
+        //pickBallMachine.gameObject.SetActive(true);
+        //pickBallMachine.Init();
+        Debug.Log("Inits waiting");
         DataManager.instance.isInReadyZone = false;
         StartPropStateMachine(PropState.DELIVERING, InitDelivering);
     }
@@ -159,8 +185,9 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void ExitWaiting() {
-        pickBallMachine.End();
-        pickBallMachine.gameObject.SetActive(false);
+        Debug.Log("Exit waiting");
+        //pickBallMachine.End();
+        //pickBallMachine.gameObject.SetActive(false);
         StopPropStateMachine();
     }
 
@@ -191,7 +218,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         fetchText3d.gameObject.SetActive(true);
         // TODO: Do we need to change appearance?
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            DataManager.instance.isDeviceFollowHand = true;
+            DataManager.instance.isDeviceFollowHand = false;
         }
     }
 
@@ -205,9 +232,6 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
         fetchText3d.gameObject.SetActive(false);
-        if(GameManager.instance.gameMode == GameMode.QUEST) {
-            DataManager.instance.isDeviceFollowHand = false;
-        }
     }
 
     public void InitReturning() {
@@ -255,10 +279,12 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         }
         else
         {
+            //LayerMask layerMask = 1;
             Ray ray = DataManager.instance.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
-            {
+            {   
+                Debug.Log(hit.transform.gameObject.name);
                 if (hit.transform.gameObject.name == "GazeTrigger")
                 {
                     progressBarImage.fillAmount += 1f / readyTextTime * Time.deltaTime;
@@ -270,13 +296,14 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
             }
             if (Mathf.Approximately(1f, progressBarImage.fillAmount))
             {
-                isReadyTextShowed= true;
+                isReadyTextShowed = true;
             }
 
             if (readyText2d.IsActive() && isReadyTextShowed)
             {
                 readyText2d.gameObject.SetActive(false);
                 progressBarImage.gameObject.SetActive(false);
+                aimImage.gameObject.SetActive(false);
                 startText2d.gameObject.SetActive(true);
                 StartCoroutine(Timer.StartTimer(startTextTime, () =>
                 {
@@ -288,6 +315,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void ExitReady()
     {
+        
         startText2d.gameObject.SetActive(false);
     }
 

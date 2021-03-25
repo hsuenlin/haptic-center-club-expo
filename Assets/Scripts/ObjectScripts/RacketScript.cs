@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class RacketScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public HandleTrigger handleTrigger;
     
 }

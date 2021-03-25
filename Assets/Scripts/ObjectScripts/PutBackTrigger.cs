@@ -38,9 +38,8 @@ public class PutBackTrigger : MonoBehaviour
             if (timer > waitingTime)
             {
                 DataManager.instance.isPropPutBack[(int)requiredDevice] = true;
-                if (DataManager.instance.isDeviceFollowHand)
+                if (GameManager.instance.gameMode == GameMode.QUEST)
                 {
-                    Debug.Log("Not follow hand");
                     DataManager.instance.isDeviceFollowHand = false;
                     if(other.name == "Gun" || other.name == "Racket") {
                         other.gameObject.transform.parent = propStand.transform;

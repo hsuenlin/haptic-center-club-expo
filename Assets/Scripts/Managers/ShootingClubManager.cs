@@ -154,16 +154,17 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         };
 
         
-        gun = DataManager.instance.gunObj.GetComponent<GunScript>();
-        gunSupport = DataManager.instance.gunSupportObj.GetComponent<PropSupport>();
-        controllerRoot = DataManager.instance.controllerRoot;
-        controllerCartridgeRoot = DataManager.instance.controllerCartridgeRoot;
+        
     }
 
     public override void Init() {
         // TODO: Init all variables
         playerCamera = DataManager.instance.playerCamera;
         //ReadyZone
+        gun = DataManager.instance.gunObj.GetComponent<GunScript>();
+        gunSupport = DataManager.instance.gunSupportObj.GetComponent<PropSupport>();
+        controllerRoot = DataManager.instance.controllerRoot;
+        controllerCartridgeRoot = DataManager.instance.controllerCartridgeRoot;
         readyArea.SetActive(false);
         gun.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
@@ -348,7 +349,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         fetchTrigger.SetActive(true);
         fetchText3d.gameObject.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
-            DataManager.instance.isDeviceFollowHand = true;
+            DataManager.instance.isDeviceFollowHand = false;
         }
     }
 

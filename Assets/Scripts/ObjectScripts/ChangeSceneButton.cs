@@ -50,6 +50,7 @@ namespace OculusSampleFramework
         }
 
         public override void OnPrimaryInputUp() {
+            Debug.Log(ArenaManager.instance.requestClub);
             ArenaManager.instance.requestClub = signifiedScene;
             selectionCylinder.CurrSelectionState = SelectionCylinder.SelectionState.Selected;
 

@@ -41,6 +41,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
             timer += Time.deltaTime;
             yield return null;
         }
+        Debug.Log("Is calibrated");
         DataManager.instance.isCalibrated = true;
     }
 
