@@ -20,12 +20,15 @@ public class PickBallRegion : HandsInteractable
     void Awake()
     {
         ballStack = new Stack<GameObject>();
-
-        for(int i = 0; i < maxBallNum; ++i) {
-            ballStack.Push(InstantiateBall());
-        }
         isSpawning = false;
         isThrowing = false;
+    }
+
+    public void Init() {
+        for (int i = 0; i < maxBallNum; ++i)
+        {
+            ballStack.Push(InstantiateBall());
+        }
     }
 
     private GameObject InstantiateBall() {
@@ -45,7 +48,8 @@ public class PickBallRegion : HandsInteractable
         while(true) {
             if(ballStack.Count > 0) {
                 GameObject ball = ballStack.Pop();
-                ball.GetComponent<BallScript>().Track(ballContainer);
+                Debug.Log("THROW!!!");
+                StartCoroutine(ball.GetComponent<BallScript>().Track(ballContainer));
             }
             yield return new WaitForSeconds(throwTime);
         }
@@ -82,6 +86,7 @@ public class PickBallRegion : HandsInteractable
             isSpawning = false;
         }
         if(!isThrowing) {
+            Debug.Log("Throw start");
             StartCoroutine(Throw());
             isThrowing = true;
         }

@@ -28,7 +28,7 @@ public class AudioTest : MonoBehaviour {
 
     void OnAudioFilterRead(float[] data, int channels)
     {
-        Debug.Log(AudioSettings.dspTime);
+        
         if (!running)
             return;
 

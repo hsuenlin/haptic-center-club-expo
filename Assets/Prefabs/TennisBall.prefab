@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8670648890323249601}
   - component: {fileID: -1002223928732339118}
   - component: {fileID: 8536191103294419910}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TennisBall
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,6 +49,7 @@ MonoBehaviour:
   trackSpeed: 0.01
   racketName: 
   id: 0
+  isHit: 0
 --- !u!54 &-1002223928732339118
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -59,7 +60,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -88,6 +89,10 @@ PrefabInstance:
     - target: {fileID: 1292343902680748, guid: 7ca3e8e40aad13142908e805c49530dc, type: 3}
       propertyPath: m_Name
       value: SM_Prop_Tennis_Ball_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1292343902680748, guid: 7ca3e8e40aad13142908e805c49530dc, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4510389743230788, guid: 7ca3e8e40aad13142908e805c49530dc, type: 3}
       propertyPath: m_RootOrder

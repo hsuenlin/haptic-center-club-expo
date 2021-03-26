@@ -9,8 +9,10 @@ public class PunchBeatAnimationMetro : Metronome {
     public bool isActivated;
     public float minAlpha;
     public Dictionary<Half, PunchBeatScript> punchBeatDict;
+    private int[] beatScore;
+    private int beatIdx;
     
-    public PunchBeatAnimationMetro(PunchBeatGame pbGame) {
+    public void Init(PunchBeatGame pbGame) {
 
         beatTime = pbGame.beatTime;
         firstBeatTime = pbGame.firstBeatTime;
@@ -18,35 +20,45 @@ public class PunchBeatAnimationMetro : Metronome {
         halfWidth = beatWidth / 2;
 
         punchBeatDict = pbGame.punchBeatDict;
-        activatedHalf = Half.NONE;
+        //activatedHalf = Half.NONE;
         isActivated = false;
         minAlpha = 0.2f;
+
+        beatScore = pbGame.beatScore;
+        beatIdx = 0;
+        activatedHalf = (Half)beatScore[beatIdx];
     }
 
     public override void OnBeatEnter() {
         //activatedHalf = (Half)(int)Random.Range(0, 3);
-        activatedHalf = Half.LEFT;
-        if(activatedHalf < Half.WHOLE) {
+        //activatedHalf = Half.LEFT;
+        activatedHalf = (Half)beatScore[beatIdx];
+        if (activatedHalf < Half.WHOLE)
+        {
             punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
         }
-        else if(activatedHalf == Half.WHOLE){
+        else if (activatedHalf == Half.WHOLE)
+        {
             punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
             punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
         }
         isActivated = true;
     }
     public override void OnBeat() {
+        
+
         if (activatedHalf < Half.WHOLE)
         {
             punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth);
         }
-        else if(activatedHalf == Half.WHOLE)
+        else if (activatedHalf == Half.WHOLE)
         {
-            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth);
-            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth);
+            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth*2);
+            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth*2);
         }
     }
     public override void OnBeatExit() {
         isActivated = false;
+        beatIdx++;
     }
 }

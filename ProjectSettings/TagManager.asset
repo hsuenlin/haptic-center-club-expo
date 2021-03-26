@@ -7,6 +7,9 @@ TagManager:
   - Target
   - Hand
   - Gun
+  - Ball
+  - RacketFace
+  - BallContainer
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - TrackBall
   - 
   - 
   - 

@@ -22,8 +22,12 @@ public class ServingMachine : MonoBehaviour
 
     public Action OnServeEnd;
 
+    private List<GameObject> balls;
+    public GameObject ballsAnchor;
+
     void Awake() {
         isServeOver = false;
+        balls = new List<GameObject>();
     }
 
     public void Init() {
@@ -33,22 +37,23 @@ public class ServingMachine : MonoBehaviour
 
     public void Serve(int id) {
         GameObject ball = Instantiate(ballPrefab);
+        balls.Add(ball);
         ball.GetComponent<BallScript>().id = id;
-        ball.transform.parent = ballOrigin;
-        ball.transform.localPosition = Vector3.zero;
-        ball.transform.localRotation = Quaternion.identity;
+        ClubUtil.Attach(ball.transform, ballOrigin);
+        ball.gameObject.transform.parent = ballsAnchor.transform;
         Rigidbody rb = ball.GetComponent<Rigidbody>();
 
         Vector3 forwardToPlayer = new Vector3(0, 0, -1);
         elevation += UnityEngine.Random.Range(0, maxElevationDeviation);
         thrust += UnityEngine.Random.Range(0, maxThrustDeviation);
-        float azimuth = UnityEngine.Random.Range(-maxAzimuth, maxAzimuth);
+        float azimuth = UnityEngine.Random.Range(-maxAzimuth, 2*maxAzimuth);
+        Debug.Log($"azimuth: {azimuth}");
         Vector3 direction = Quaternion.Euler(elevation, azimuth, 0) * forwardToPlayer;
         rb.AddForce(direction * thrust);
     }
     
     public IEnumerator ServeBalls() {
-        for(int i = 0; i < serveNum; --i) {
+        for(int i = 0; i < serveNum; ++i) {
             while(!DataManager.instance.isSenpaiSwing) {
                 yield return null;
             }
@@ -64,5 +69,10 @@ public class ServingMachine : MonoBehaviour
     public void End() {
         StopCoroutine(ServeBalls());
         fairZone.gameObject.SetActive(false);
+        foreach(var ball in balls) {
+            if(ball != null) {
+                Destroy(ball);
+            }
+        }
     }
 }

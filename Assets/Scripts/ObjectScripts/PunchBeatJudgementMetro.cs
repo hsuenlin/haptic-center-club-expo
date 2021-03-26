@@ -5,8 +5,9 @@ using UnityEngine;
 public class PunchBeatJudgementMetro : Metronome {
 
     public bool isPerfact;
+    private int[] beatScore;
     Dictionary<Half, PunchBeatScript> punchBeatDict;
-    public PunchBeatJudgementMetro(PunchBeatGame pbGame)
+    public void Init(PunchBeatGame pbGame)
     {
         beatTime = pbGame.beatTime;
         firstBeatTime = pbGame.firstBeatTime;

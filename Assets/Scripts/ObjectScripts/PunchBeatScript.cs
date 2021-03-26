@@ -70,7 +70,7 @@ public class PunchBeatScript : MonoBehaviour {
     void PlayHitTextAnimation(GameObject text) {
         Debug.Log("Text Start");
         text.SetActive(true);
-        text.transform.parent = pbGame.punchBeatDict[pbGame.pbAnimationMetro.activatedHalf].transform;
+        text.transform.parent = pbGame.punchBeatDict[half].transform;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);
@@ -87,7 +87,7 @@ public class PunchBeatScript : MonoBehaviour {
         Debug.Log("Trigger");
         if(other.tag == "Hand") {
             Debug.Log("Hit");
-            HitType hitResult = pbGame.JudgeHit();
+            HitType hitResult = pbGame.JudgeHit(half);
             audioSource.clip = hitSoundDict[hitResult];
             audioSource.PlayOneShot(hitSoundDict[hitResult]);
             //hitAnimationDict[hitResult].Play(); // May not work

@@ -20,22 +20,23 @@ public class FairZone : MonoBehaviour
     public Action OnBallOut;
 
     void Awake() {
-        left.SetActive(false);
-        right.SetActive(false);
+        left.GetComponent<Renderer>().enabled = false;
+        right.GetComponent<Renderer>().enabled = false;
     }
     public void ChangeFairZoneHalf() {
         if(UnityEngine.Random.Range(0f, 1f) > 0.5f) {
-            left.SetActive(true);
-            right.SetActive(false);
+            left.GetComponent<Renderer>().enabled = true;
+            right.GetComponent<Renderer>().enabled = false;
             half = Half.LEFT;
         } else {
-            left.SetActive(false);
-            right.SetActive(true);
+            left.GetComponent<Renderer>().enabled = false;
+            right.GetComponent<Renderer>().enabled = true;
             half = Half.RIGHT;
         }
     }
 
     public void OnBallHitEnter(Half hitHalf, int ballId) {
+        Debug.Log("BALL HIT");
         if(ballId == currentBallId && half == hitHalf) {
             OnBallIn();
         } else {

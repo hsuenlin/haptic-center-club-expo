@@ -21,37 +21,98 @@ public abstract class Metronome : MonoBehaviour
         idleTime = beatTime - beatWidth;
         halfWidth = beatWidth / 2;
     }
-
     public IEnumerator Tick(int beatNum, Action OnTickEnd) {
-        yield return new WaitForSecondsRealtime(firstBeatTime - halfWidth);
+        yield return new WaitForSeconds(firstBeatTime - halfWidth);
         for(int i = 0; i < beatNum; ++i) {
             OnBeatEnter();
-            yield return new WaitForSecondsRealtime(halfWidth);
+            yield return new WaitForSeconds(halfWidth);
             OnBeat();
-            yield return new WaitForSecondsRealtime(halfWidth);
+            yield return new WaitForSeconds(halfWidth);
             OnBeatExit();
-            yield return new WaitForSecondsRealtime(idleTime);
+            yield return new WaitForSeconds(idleTime);
         }
         OnTickEnd();
     }
 
     public IEnumerator InfTick() {
         float idleTime = beatTime - beatWidth;
-        yield return new WaitForSecondsRealtime(firstBeatTime - halfWidth);
+        yield return new WaitForSeconds(firstBeatTime - halfWidth);
         while(true) {
             OnBeatEnter();
-            yield return new WaitForSecondsRealtime(halfWidth);
+            yield return new WaitForSeconds(halfWidth);
             OnBeat();
-            yield return new WaitForSecondsRealtime(halfWidth);
+            yield return new WaitForSeconds(halfWidth);
             OnBeatExit();
-            yield return new WaitForSecondsRealtime(idleTime);
+            yield return new WaitForSeconds(idleTime);
         }
     }
+    public IEnumerator DspTick(int beatNum, Action OnTickEnd) {
+        double startTime = AudioSettings.dspTime;
+        double onBeatEnterTime = startTime + firstBeatTime - halfWidth;
+        double onBeatTime = onBeatEnterTime + halfWidth;
+        double onBeatExitTime = onBeatTime + halfWidth;
+        double timer;
 
-    public IEnumerator RecordTick() {
-        List<int> beatList = new List<int>();
-        while(true) {
-            
+        for(int i = 0; i < beatNum; ++i) {
+            timer = AudioSettings.dspTime;
+            while(timer < onBeatEnterTime) { 
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatEnter();
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatTime) {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeat();
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatExitTime) {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatExit();
+            onBeatEnterTime = onBeatExitTime += idleTime;
+            onBeatTime = onBeatEnterTime + halfWidth;
+            onBeatExitTime = onBeatTime + halfWidth;
+        }
+        OnTickEnd();       
+    }
+
+    public IEnumerator InfDspTick()
+    {
+        double startTime = AudioSettings.dspTime;
+        double onBeatEnterTime = startTime + firstBeatTime - halfWidth;
+        double onBeatTime = onBeatEnterTime + halfWidth;
+        double onBeatExitTime = onBeatTime + halfWidth;
+        double timer;
+
+        while(true)
+        {
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatEnterTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatEnter();
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeat();
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatExitTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatExit();
+            onBeatEnterTime = onBeatExitTime + idleTime;
+            onBeatTime = onBeatEnterTime + halfWidth;
+            onBeatExitTime = onBeatTime + halfWidth;
         }
     }
 }

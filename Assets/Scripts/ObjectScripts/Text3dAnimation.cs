@@ -10,7 +10,7 @@ public class Text3dAnimation : MonoBehaviour {
     public float riseTime;
     public AnimationCurve curve;
     
-    public void RiseFadeInOut(Action CallBack) {
+    public void RiseFadeInOut(TweenCallback CallBack) {
         gameObject.transform.DOLocalMoveY(gameObject.transform.localPosition.y - riseY, 0f);
         Sequence seq = DOTween.Sequence();
         gameObject.transform.GetComponent<Renderer>().material.DOFade(0f, 0f);
@@ -18,6 +18,7 @@ public class Text3dAnimation : MonoBehaviour {
         seq.Append(gameObject.transform.DOLocalMoveY(riseY, riseTime))
            .Append(gameObject.transform.GetComponent<Renderer>().material.DOFade(0f, 2*riseTime))
            .SetEase(curve)
-           .AppendCallBack(CallBack);
+           .AppendCallback(CallBack);
+        seq.Play();
     }
 }

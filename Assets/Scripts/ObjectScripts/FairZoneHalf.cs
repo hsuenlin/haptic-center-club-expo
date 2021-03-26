@@ -12,8 +12,11 @@ public class FairZoneHalf : MonoBehaviour
         Assert.IsNotNull(parentFairZone);
     }
     void OnTriggerEnter(Collider other) {
-        if(other.name == "TennisBall") {
-            parentFairZone.OnBallHitEnter(half, other.gameObject.GetComponent<BallScript>().id);
+        Debug.Log($"Fair {other.name}");
+        if(other.tag == "Ball") {
+            if(other.gameObject.GetComponent<BallScript>().isHit) {
+                parentFairZone.OnBallHitEnter(half, other.gameObject.GetComponent<BallScript>().id);
+            }
         }
     }
 }

@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DJPanelScript : MonoBehaviour
+public class DjPanelScript : MonoBehaviour
 {
-
     public PanelInfo panelInfo;
-    // Start is called before the first frame update
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Awake() {
+        panelInfo = new PanelInfo();
     }
 }
+
+public class PanelInfo
+{
+    public PanelInfo()
+    {
+        sliders = new int[4];
+    }
+    // Only use red, blue and sliders
+    public int red, blue;
+    public int[] sliders;
+
+    public int x, y;
+    public int deg;
+}
+

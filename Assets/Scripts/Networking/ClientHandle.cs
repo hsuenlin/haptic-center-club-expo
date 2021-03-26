@@ -126,15 +126,15 @@ public class ClientHandle : MonoBehaviour
     }
     public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.red = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.blue = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.sliders[0] = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.sliders[1] = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.sliders[2] = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.sliders[3] = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.x = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.y = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DJPanelScript>().panelInfo.deg = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.red = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.blue = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[0] = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[1] = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[2] = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[3] = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.x = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.y = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.deg = _packet.ReadInt();
     }
     public void PlayerDisconnected(Packet _packet)
     {

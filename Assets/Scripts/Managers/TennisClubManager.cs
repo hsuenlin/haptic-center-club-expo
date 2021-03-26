@@ -78,6 +78,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public GameObject ballInText3d;
     public GameObject ballOutText3d;
+    public float serveEndWaitingTime;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -178,8 +179,8 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitWaiting() {
-        //pickBallMachine.gameObject.SetActive(true);
-        //pickBallMachine.Init();
+        pickBallMachine.gameObject.SetActive(true);
+        pickBallMachine.Init();
         Debug.Log("Inits waiting");
         DataManager.instance.isInReadyZone = false;
         StartPropStateMachine(PropState.DELIVERING, InitDelivering);
@@ -194,8 +195,8 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void ExitWaiting() {
         Debug.Log("Exit waiting");
-        //pickBallMachine.End();
-        //pickBallMachine.gameObject.SetActive(false);
+        pickBallMachine.End();
+        pickBallMachine.gameObject.SetActive(false);
         StopPropStateMachine();
     }
 
@@ -328,13 +329,14 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitGame() {
-        Debug.Log("Game start, please wait for 3 sec.");
-        StartCoroutine(Timer.StartTimer(3f, ()=>{ nextClubState = ClubState.RESULT; }));
+        //Debug.Log("Game start, please wait for 3 sec.");
+        //StartCoroutine(Timer.StartTimer(3f, ()=>{ nextClubState = ClubState.RESULT; }));
         
         senpai.SetActive(true);
         servingMachine.gameObject.SetActive(true);
         servingMachine.Init();
         remainBallNum = servingMachine.serveNum;
+        remainBallText.text = $"{remainBallNum}";
         remainBallText.gameObject.SetActive(true);
         servingMachine.OnServeEnd = () => {
             remainBallNum--;
@@ -344,7 +346,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
             // TODO: Ball in sound
             ballInText3d.SetActive(true);
             ballInText3d.GetComponent<Text3dAnimation>().RiseFadeInOut(()=>{ ballInText3d.SetActive(false); });
-            
+
         };
         servingMachine.fairZone.OnBallOut = () =>
         {
@@ -357,13 +359,18 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void OnGame() {
         
         if(servingMachine.isServeOver) {
-            nextClubState = ClubState.RESULT;
+            DataManager.instance.OnServeStateEnd += () => {
+                senpai.SetActive(false);
+                StartCoroutine(Timer.StartTimer(serveEndWaitingTime, ()=>{
+                    nextClubState = ClubState.RESULT;
+                    DataManager.instance.OnServeStateEnd = null;
+                }));
+            };
         }
     }
 
     public void ExitGame() {
         Debug.Log("Game over");
-        
         servingMachine.End();
         servingMachine.gameObject.SetActive(false);
         remainBallText.gameObject.SetActive(false);

@@ -18,6 +18,7 @@ public class PickBallMachine : MonoBehaviour
     public float throwTime;
 
     public GameObject ballContainerPrefab;
+    public GameObject ballContainerAnchor;
 
     void Awake()
     {
@@ -32,6 +33,10 @@ public class PickBallMachine : MonoBehaviour
 
     public void Init() {
         regions = new PickBallRegion[8];
+        GameObject ballContainer = Instantiate(ballContainerPrefab);
+        ClubUtil.Attach(ballContainer, ballContainerAnchor);
+        //ballContainer.transform.localPosition = new Vector3(0f, -0.5f, 0.5f);
+        
 
         // Regions are generated clockwise
         float d = sideLength / 2;
@@ -41,19 +46,17 @@ public class PickBallMachine : MonoBehaviour
             GameObject regionObj = Instantiate(regionPrefab);
             PickBallRegion region = regionObj.GetComponent<PickBallRegion>();
             region.transform.parent = transform;
-            region.transform.localPosition = new Vector3(xs[i], 0f, zs[i]);
+            region.transform.localPosition = new Vector3(xs[i], 1f, zs[i]);
             region.transform.localRotation = Quaternion.identity;
             region.maxBallNum = maxBallNum;
             region.sideLength = sideLength;
             region.throwTime = throwTime;
             region.spawnThreshold = spawnThreshold;
             region.spawnNum = spawnNum;
-            GameObject ballContainer = Instantiate(ballContainerPrefab, DataManager.instance.playerCamera.gameObject.transform);
-            ballContainer.transform.localPosition = new Vector3(0f, -0.5f, 0.5f);
             region.ballContainer = ballContainer;
             regions[i] = region;
+            region.Init();
         }
-
     }
     public void End() {
         foreach(PickBallRegion region in regions) {

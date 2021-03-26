@@ -22,7 +22,7 @@ public class TestMusicGameScript : MonoBehaviour
     }
 
     void OnDisable() {
-        //pbGame.End();
+        pbGame.End();
     }
 
 }

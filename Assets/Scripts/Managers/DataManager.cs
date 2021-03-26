@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,16 +83,6 @@ public enum ServerDevice
     Shield = 80
 }
 
-public class PanelInfo {
-    public PanelInfo() {
-        sliders = new int[4];
-    }
-    public int red, blue;
-    public int[] sliders;
-    public int x, y;
-    public int deg;
-}
-
 public class DataManager : Singleton<DataManager> {
     public Transform forestIslandRoot;
 
@@ -123,6 +114,7 @@ public class DataManager : Singleton<DataManager> {
     public GameObject racketObj;
     public GameObject racketSupportObj;
     public GameObject djPanelObj;
+    public GameObject djPanelSupportObj;
 
     public bool isCalibrated;
     public bool[] isDeviceFree;
@@ -152,6 +144,7 @@ public class DataManager : Singleton<DataManager> {
     public List<GameObject> rayTools;
 
     public bool[] isPropPutBack;
+    public Action OnServeStateEnd;
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
