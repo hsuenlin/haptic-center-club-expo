@@ -80,6 +80,7 @@ public class GunScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Hand") {
             //DataManager.instance.handSDK.SetActive(false);
+            
             if(GameManager.instance.gameMode == GameMode.QUEST && !DataManager.instance.isDeviceFollowHand) {
                 transform.parent = other.transform;
                 transform.localPosition = new Vector3(-0.15f, -0.02f, 0.03f);

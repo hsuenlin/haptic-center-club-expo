@@ -31,6 +31,11 @@ public class Tracker {
 public class ClientHandle : MonoBehaviour
 {
     public static ClientHandle instance;
+    public float calibrationTime = 0f;
+
+    public bool[] isCalibrationStart;
+    public bool[] isCalibrationEnd;
+
 
     private void Awake() {
         if (instance == null) {
@@ -41,6 +46,9 @@ public class ClientHandle : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+
+        isCalibrationStart = new bool[7];
+        isCalibrationEnd = new bool[7];
     }
     public void WelcomeHandle(Packet _packet)
     {
@@ -63,37 +71,91 @@ public class ClientHandle : MonoBehaviour
 
             switch(type) {
                 case TrackerType.HC_Origin:
-                    if(GameManager.instance.currentSceneState == SceneState.CALIBRATION) {
-                        DataManager.instance.hapticCenterTracker.transform.position = pos;
-                        DataManager.instance.hapticCenterTracker.transform.rotation = rot;
+                    if(!isCalibrationStart[0]) {
+                        isCalibrationStart[0] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, ()=>{ isCalibrationEnd[0] = true; }));
+                    }
+                    else if(!isCalibrationEnd[0]) { 
+                        if(GameManager.instance.currentSceneState == SceneState.CALIBRATION) {
+                            DataManager.instance.hapticCenterTracker.transform.position = pos;
+                            DataManager.instance.hapticCenterTracker.transform.rotation = rot;
+                        }
                     }
                     break;
                 case TrackerType.Player1:
-                    if (GameManager.instance.currentSceneState == SceneState.CALIBRATION)
+                    if (!isCalibrationStart[1])
                     {
-                        DataManager.instance.playerTracker.transform.position = pos;
-                        DataManager.instance.playerTracker.transform.rotation = rot;
+                        isCalibrationStart[1] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[1])
+                    {
+                        if (GameManager.instance.currentSceneState == SceneState.CALIBRATION)
+                        {
+                            DataManager.instance.playerTracker.transform.position = pos;
+                            DataManager.instance.playerTracker.transform.rotation = rot;
+                        }
                     }
                     break;
                 case TrackerType.Vive_Controller_Right:
-                    DataManager.instance.controllerTracker.transform.position = pos;
-                    DataManager.instance.controllerTracker.transform.rotation = rot;
+                    if (!isCalibrationStart[2])
+                    {
+                        isCalibrationStart[2] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[2])
+                    {
+                        DataManager.instance.controllerTracker.transform.position = pos;
+                        DataManager.instance.controllerTracker.transform.rotation = rot;
+                    }
                     break;
                 case TrackerType.Controller_Cartridge:
-                    DataManager.instance.controllerCartridgeTracker.transform.position = pos;
-                    DataManager.instance.controllerCartridgeTracker.transform.rotation = rot;
+                    if (!isCalibrationStart[3])
+                    {
+                        isCalibrationStart[3] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[3])
+                    {
+                        DataManager.instance.controllerCartridgeTracker.transform.position = pos;
+                        DataManager.instance.controllerCartridgeTracker.transform.rotation = rot;
+                    }
                     break;
                 case TrackerType.Shifty:
-                    DataManager.instance.shiftyTracker.transform.position = pos;
-                    DataManager.instance.shiftyTracker.transform.rotation = rot;
+                    if (!isCalibrationStart[4])
+                    {
+                        isCalibrationStart[4] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[4])
+                    {
+                        DataManager.instance.shiftyTracker.transform.position = pos;
+                        DataManager.instance.shiftyTracker.transform.rotation = rot;
+                    }
                     break;
                 case TrackerType.Shifty_Cartridge:
-                    DataManager.instance.shiftyCartridgeTracker.transform.position = pos;
-                    DataManager.instance.shiftyCartridgeTracker.transform.rotation = rot;
+                    if (!isCalibrationStart[5])
+                    {
+                        isCalibrationStart[5] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[5])
+                    {
+                        DataManager.instance.shiftyCartridgeTracker.transform.position = pos;
+                        DataManager.instance.shiftyCartridgeTracker.transform.rotation = rot;
+                    }
                     break;
                 case TrackerType.Panel:
-                    DataManager.instance.panelTracker.transform.position = pos;
-                    DataManager.instance.panelTracker.transform.rotation = rot;
+                    if (!isCalibrationStart[6])
+                    {
+                        isCalibrationStart[6] = true;
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
+                    }
+                    else if (!isCalibrationEnd[6])
+                    {
+                        DataManager.instance.panelTracker.transform.position = pos;
+                        DataManager.instance.panelTracker.transform.rotation = rot;
+                    }
                     break;
                 default:
                     Debug.Log($"Not handle tracker type {type}");

@@ -296,6 +296,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StopCoroutine(gun.StartAutoShooting());
         }
+        gun.appearance = DeviceAppearance.REAL;
     }
 
     public void InitResult() {
@@ -332,22 +333,26 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            gun.gameObject.SetActive(false);
+            nextPropState = PropState.FETCHING;
             gunSupport.gameObject.SetActive(true);
-            gunSupport.Rise(() =>
-            {
-                nextPropState = PropState.FETCHING;
-                gun.gameObject.SetActive(true);
-            });
+            gunSupport.Rise(()=>{});
         }
     }
 
     public void ExitDelivering() {
+        
     }
 
     public void InitFetching() {
         // fetchArea
-        fetchTrigger.SetActive(true);
-        fetchText3d.gameObject.SetActive(true);
+        StartCoroutine(Timer.StartTimer(1.5f, () =>
+        {
+            fetchTrigger.SetActive(true);
+            fetchText3d.gameObject.SetActive(true);
+            gun.gameObject.SetActive(true);
+        }));
+        
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = false;
         }
@@ -367,7 +372,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitReturning() {
         DataManager.instance.isInReadyZone = false;
-        //readyArea.SetActive(true);
+        readyArea.SetActive(true);
         returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
@@ -385,7 +390,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitReturning() {
-        //readyArea.SetActive(false);
+        readyArea.SetActive(false);
         returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
         isPropStateMachineRunning = false;

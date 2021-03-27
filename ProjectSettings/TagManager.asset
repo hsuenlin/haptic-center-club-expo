@@ -10,6 +10,7 @@ TagManager:
   - Ball
   - RacketFace
   - BallContainer
+  - Racket
   layers:
   - Default
   - TransparentFX

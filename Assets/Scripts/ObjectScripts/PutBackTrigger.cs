@@ -12,27 +12,25 @@ public class PutBackTrigger : MonoBehaviour
     private float timer = 0f;
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Enter: {other.name}");
+        Debug.Log($"Enter: {other.tag}");
         if(GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB && other.name == "Gun"
-            || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.name == "Racket"
+            || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.tag == "Racket"
             || GameManager.instance.currentSceneState == SceneState.MUSICGAME_CLUB && other.tag == "Hand") 
         {
             timer = 0f;
-            foreach (GameObject rayToolObj in DataManager.instance.rayTools)
-            {
-                rayToolObj.SetActive(true);
-            }
         }
-        if (other.name == "Gun" || other.name == "Racket")
+        /*
+        if (other.tag == "Gun" || other.tag == "Racket")
         {
             other.gameObject.GetComponent<GunScript>().appearance = DeviceAppearance.REAL;
         }
+        */
     }
     public void OnTriggerStay(Collider other) {
-        Debug.Log($"Stay: {other.name}, {timer}");
+        Debug.Log($"Stay: {other.tag}, {timer}");
         
-        if (GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB && other.name == "Gun"
-            || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.name == "Racket"
+        if (GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB && other.tag == "Gun"
+            || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.tag == "Racket"
             || GameManager.instance.currentSceneState == SceneState.MUSICGAME_CLUB && other.tag == "Hand")
         {
             if (timer > waitingTime)
@@ -41,9 +39,16 @@ public class PutBackTrigger : MonoBehaviour
                 if (GameManager.instance.gameMode == GameMode.QUEST)
                 {
                     DataManager.instance.isDeviceFollowHand = false;
-                    if(other.name == "Gun" || other.name == "Racket") {
-                        other.gameObject.transform.parent = propStand.transform;
-                    }
+                }
+                if (other.tag == "Gun" || other.tag == "Racket")
+                {
+                    other.gameObject.transform.parent = propStand.transform;
+                }
+                DataManager.instance.leftHandPrefab.SetActive(true);
+                DataManager.instance.rightHandPrefab.SetActive(true);
+                foreach (GameObject rayToolObj in DataManager.instance.rayTools)
+                {
+                    rayToolObj.SetActive(true);
                 }
             }
             timer += Time.deltaTime;

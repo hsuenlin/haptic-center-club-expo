@@ -8,16 +8,18 @@ public class FetchTrigger : MonoBehaviour
     public void OnTriggerEnter(Collider other) {
         Debug.Log(other.name);
         Debug.Log(other.tag);
-        if(other.name == "Gun" || other.name == "Racket" || other.tag == "Hand") {
+        if(other.tag == "Gun" || other.tag == "Racket" || other.tag == "Hand") {
+            DataManager.instance.leftHandPrefab.SetActive(false);
+            DataManager.instance.rightHandPrefab.SetActive(false);
             foreach (GameObject rayToolObj in DataManager.instance.rayTools)
             {
                 rayToolObj.SetActive(false);
             }
         }
-        if (other.name == "Gun") {
+        if (other.tag == "Gun") {
             other.gameObject.GetComponent<GunScript>().appearance = DeviceAppearance.VIRTUAL;
         }
-        switch(other.name) {
+        switch(other.tag) {
             case "Gun":
                 DataManager.instance.isDeviceFetched[(int)SceneState.SHOOTING_CLUB] = true;
                 break;

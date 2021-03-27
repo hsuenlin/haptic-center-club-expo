@@ -1147,7 +1147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &130168895
 Transform:
   m_ObjectHideFlags: 0
@@ -1156,7 +1156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130168894}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.15, z: 0}
+  m_LocalPosition: {x: 0, y: 0.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 421753487}
@@ -2832,6 +2832,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7850392431684552197, guid: f99af3c0ad1e40d43bd544d573e1bc40,
+        type: 3}
+      propertyPath: m_TagString
+      value: Gun
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f99af3c0ad1e40d43bd544d573e1bc40, type: 3}
 --- !u!4 &326677048 stripped
@@ -2987,11 +2992,11 @@ MonoBehaviour:
   coldDownTime: 0.1
   shotDuration: 0.1
   autoShootingTime: 0.2
-  muzzle: {fileID: 0}
-  lineRenderer: {fileID: 0}
+  muzzle: {fileID: 1307289489}
+  lineRenderer: {fileID: 326677050}
   appearance: 0
-  viveModel: {fileID: 0}
-  gunModel: {fileID: 0}
+  viveModel: {fileID: 573085515}
+  gunModel: {fileID: 1830112545}
 --- !u!1 &331078328
 GameObject:
   m_ObjectHideFlags: 0
@@ -3979,7 +3984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transparentBlack: {fileID: 466256310}
   calibrationText: {fileID: 1114148453}
-  calibrationTime: 5
+  calibrationTime: 3
 --- !u!4 &449782956 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4010205441359642, guid: 26790024c0a59a4459d89f66a856faa2,
@@ -5267,6 +5272,12 @@ MonoBehaviour:
   _makeSureToolIsOnPositiveSide: 0
   _localButtonDirection: {x: 0, y: -1, z: 0}
   _allValidToolsTags: 01000000
+--- !u!1 &573085515 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7509967190551997841, guid: f99af3c0ad1e40d43bd544d573e1bc40,
+    type: 3}
+  m_PrefabInstance: {fileID: 326677047}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &575176565
 GameObject:
   m_ObjectHideFlags: 0
@@ -8723,6 +8734,8 @@ MonoBehaviour:
   isSenpaiSwing: 0
   rayTools: []
   isPropPutBack: 
+  leftHandPrefab: {fileID: 718714023525120086}
+  rightHandPrefab: {fileID: 718714023595678775}
 --- !u!1 &974050358
 GameObject:
   m_ObjectHideFlags: 0
@@ -10981,6 +10994,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _selectionMeshRenderer: {fileID: 1294685457}
+--- !u!4 &1307289489 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7838048678341312389, guid: f99af3c0ad1e40d43bd544d573e1bc40,
+    type: 3}
+  m_PrefabInstance: {fileID: 326677047}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1311308723
 GameObject:
   m_ObjectHideFlags: 0
@@ -13210,7 +13229,7 @@ GameObject:
   - component: {fileID: 1711279709}
   m_Layer: 0
   m_Name: Racket
-  m_TagString: Untagged
+  m_TagString: Racket
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14394,6 +14413,12 @@ Transform:
   m_Father: {fileID: 2063252459}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1830112545 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5057721998209993905, guid: f99af3c0ad1e40d43bd544d573e1bc40,
+    type: 3}
+  m_PrefabInstance: {fileID: 326677047}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1836976510
 PrefabInstance:
   m_ObjectHideFlags: 0

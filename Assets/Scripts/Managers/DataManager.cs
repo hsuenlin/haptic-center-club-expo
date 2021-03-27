@@ -147,6 +147,9 @@ public class DataManager : Singleton<DataManager> {
     public bool[] isPropPutBack;
     public Action OnServeStateEnd;
     
+    public GameObject leftHandPrefab;
+    public GameObject rightHandPrefab;
+    
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);
 
