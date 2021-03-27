@@ -61,11 +61,14 @@ public class ClientHandle : MonoBehaviour
     }
 
     public void TrackerInfoHandle(Packet _packet) {
+        Debug.Log("Call TrackerInfoHandle");
         int trackerNum = _packet.ReadInt();
         
         for (int i = 0; i < trackerNum; ++i)
         {
+            
             TrackerType type = (TrackerType)_packet.ReadInt();
+            Debug.Log(type);
             Vector3 pos = _packet.ReadVector3();
             Quaternion rot = _packet.ReadQuaternion();
 
@@ -98,16 +101,18 @@ public class ClientHandle : MonoBehaviour
                     }
                     break;
                 case TrackerType.Vive_Controller_Right:
+                    /*
                     if (!isCalibrationStart[2])
                     {
                         isCalibrationStart[2] = true;
                         StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
                     }
-                    else if (!isCalibrationEnd[2])
-                    {
-                        DataManager.instance.controllerTracker.transform.position = pos;
-                        DataManager.instance.controllerTracker.transform.rotation = rot;
-                    }
+                    */
+                    //else if (!isCalibrationEnd[2])
+                    //{
+                    DataManager.instance.controllerTracker.transform.position = pos;
+                    DataManager.instance.controllerTracker.transform.rotation = rot;
+                    //}
                     break;
                 case TrackerType.Controller_Cartridge:
                     if (!isCalibrationStart[3])
@@ -122,18 +127,21 @@ public class ClientHandle : MonoBehaviour
                     }
                     break;
                 case TrackerType.Shifty:
+                    /*
                     if (!isCalibrationStart[4])
                     {
                         isCalibrationStart[4] = true;
                         StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[0] = true; }));
                     }
-                    else if (!isCalibrationEnd[4])
-                    {
-                        DataManager.instance.shiftyTracker.transform.position = pos;
-                        DataManager.instance.shiftyTracker.transform.rotation = rot;
-                    }
+                    */
+                    //else if (!isCalibrationEnd[4])
+                    //{
+                    DataManager.instance.shiftyTracker.transform.position = pos;
+                    DataManager.instance.shiftyTracker.transform.rotation = rot;
+                    //}
                     break;
                 case TrackerType.Shifty_Cartridge:
+                    Debug.Log("Get Shifty Cartridge");
                     if (!isCalibrationStart[5])
                     {
                         isCalibrationStart[5] = true;

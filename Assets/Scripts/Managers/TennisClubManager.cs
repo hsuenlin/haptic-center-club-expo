@@ -113,6 +113,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public override void Init() {
         Debug.Log("Tennis Club Init");
+        DataManager.instance.requestDevice = Device.SHIFTY;
         playerCamera = DataManager.instance.playerCamera;
         racket = DataManager.instance.racketObj.GetComponent<RacketScript>();
         racket.gameObject.SetActive(false);
@@ -206,16 +207,16 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
                 DataManager.instance.isDeviceReady[(int)requiredDevice] = true;
             }));
         }
+        Debug.Log("Init Delivering");
     }
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            Debug.Log("Shifty is ready");
+            nextPropState = PropState.FETCHING;
+            racket.gameObject.SetActive(false);
             racketSupport.gameObject.SetActive(true);
-            racketSupport.Rise(() =>
-            {
-                nextPropState = PropState.FETCHING;
-                racket.gameObject.SetActive(true);
-            });
+            racketSupport.Rise(() => {});
         }
     }
     
@@ -223,8 +224,14 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void InitFetching() {
         //TODO: Set trigger and text
-        fetchTrigger.SetActive(true);
-        fetchText3d.gameObject.SetActive(true);
+        fetchTrigger.SetActive(false);
+        fetchText3d.SetActive(false);
+        Debug.Log("Init Fetching");
+        StartCoroutine(Timer.StartTimer(2.5f, ()=>{
+            racket.gameObject.SetActive(true);
+            fetchTrigger.SetActive(true);
+            fetchText3d.gameObject.SetActive(true);
+        }));
         // TODO: Do we need to change appearance?
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             DataManager.instance.isDeviceFollowHand = false;
@@ -375,7 +382,6 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         servingMachine.gameObject.SetActive(false);
         remainBallText.gameObject.SetActive(false);
         senpai.SetActive(false);
-        
     }
 
     public void InitResult() {

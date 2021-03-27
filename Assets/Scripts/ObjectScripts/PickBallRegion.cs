@@ -9,7 +9,7 @@ public class PickBallRegion : HandsInteractable
     public GameObject ballPrefab;
     public int maxBallNum;
     public float sideLength;
-    public Stack<GameObject> ballStack;
+    public Queue<GameObject> ballQueue;
     public float throwTime;
     public float spawnTime;
     public float spawnThreshold;
@@ -19,7 +19,7 @@ public class PickBallRegion : HandsInteractable
     private bool isThrowing;
     void Awake()
     {
-        ballStack = new Stack<GameObject>();
+        ballQueue = new Queue<GameObject>();
         isSpawning = false;
         isThrowing = false;
     }
@@ -27,7 +27,7 @@ public class PickBallRegion : HandsInteractable
     public void Init() {
         for (int i = 0; i < maxBallNum; ++i)
         {
-            ballStack.Push(InstantiateBall());
+            ballQueue.Enqueue(InstantiateBall());
         }
     }
 
@@ -46,9 +46,8 @@ public class PickBallRegion : HandsInteractable
     }
     public IEnumerator Throw() {
         while(true) {
-            if(ballStack.Count > 0) {
-                GameObject ball = ballStack.Pop();
-                Debug.Log("THROW!!!");
+            if(ballQueue.Count > 0) {
+                GameObject ball = ballQueue.Dequeue();
                 StartCoroutine(ball.GetComponent<BallScript>().Track(ballContainer));
             }
             yield return new WaitForSeconds(throwTime);
@@ -57,18 +56,19 @@ public class PickBallRegion : HandsInteractable
 
     public IEnumerator Spawn(int nSpawn) {
         while(true) {
-            if (ballStack.Count / maxBallNum < spawnThreshold) {
-                if(ballStack.Count + nSpawn >= maxBallNum) {
-                    nSpawn = maxBallNum - ballStack.Count;
+            if (ballQueue.Count / maxBallNum < spawnThreshold) {
+                if(ballQueue.Count + nSpawn >= maxBallNum) {
+                    nSpawn = maxBallNum - ballQueue.Count;
                 }
                 for(int i = 0; i < nSpawn; ++i) {
-                    ballStack.Push(InstantiateBall());
+                    ballQueue.Enqueue(InstantiateBall());
                 }
             }
             yield return new WaitForSeconds(spawnTime);
         }
     }
 
+    
     public override void OnNoInput() {
         if (isThrowing)
         {
@@ -79,6 +79,7 @@ public class PickBallRegion : HandsInteractable
             StartCoroutine(Spawn(spawnNum));
             isSpawning = true;
         }
+
     }
     public override void OnPrimaryInputDown() {
         if(isSpawning) {
@@ -98,8 +99,8 @@ public class PickBallRegion : HandsInteractable
         if(isSpawning) {
             StopCoroutine(Spawn(spawnNum));
         }
-        while(ballStack.Count != 0) {
-            GameObject ball = ballStack.Pop();
+        while(ballQueue.Count != 0) {
+            GameObject ball = ballQueue.Dequeue();
             Destroy(ball);
         }
         Destroy(ballContainer);

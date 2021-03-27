@@ -25,6 +25,8 @@ public class ServingMachine : MonoBehaviour
     private List<GameObject> balls;
     public GameObject ballsAnchor;
 
+    public GameObject playerHitBallAnchor;
+
     void Awake() {
         isServeOver = false;
         balls = new List<GameObject>();
@@ -37,18 +39,21 @@ public class ServingMachine : MonoBehaviour
 
     public void Serve(int id) {
         GameObject ball = Instantiate(ballPrefab);
+        ball.layer = 10;
         balls.Add(ball);
         ball.GetComponent<BallScript>().id = id;
+        ballOrigin.transform.LookAt(playerHitBallAnchor.transform);
         ClubUtil.Attach(ball.transform, ballOrigin);
         ball.gameObject.transform.parent = ballsAnchor.transform;
         Rigidbody rb = ball.GetComponent<Rigidbody>();
 
-        Vector3 forwardToPlayer = new Vector3(0, 0, -1);
-        elevation += UnityEngine.Random.Range(0, maxElevationDeviation);
-        thrust += UnityEngine.Random.Range(0, maxThrustDeviation);
-        float azimuth = UnityEngine.Random.Range(-maxAzimuth, 2*maxAzimuth);
-        Debug.Log($"azimuth: {azimuth}");
-        Vector3 direction = Quaternion.Euler(elevation, azimuth, 0) * forwardToPlayer;
+        //Vector3 forwardToPlayer = new Vector3(0, 0, -1);
+        
+        //elevation += UnityEngine.Random.Range(0, maxElevationDeviation);
+        //thrust += UnityEngine.Random.Range(0, maxThrustDeviation);
+        //float azimuth = UnityEngine.Random.Range(-maxAzimuth, 2*maxAzimuth);
+        //Debug.Log($"azimuth: {azimuth}");
+        Vector3 direction = Quaternion.Euler(elevation, 0, 0) * ballOrigin.transform.forward;
         rb.AddForce(direction * thrust);
     }
     

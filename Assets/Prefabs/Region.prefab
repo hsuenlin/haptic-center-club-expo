@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8029692146643101863}
   - component: {fileID: 7183422772682453970}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Region
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,10 +116,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2444729818776743447, guid: 37557ba0371a230449b0131caeb24dc8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4854469617095579228, guid: 37557ba0371a230449b0131caeb24dc8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485620939116029791, guid: 37557ba0371a230449b0131caeb24dc8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6898623270977653982, guid: 37557ba0371a230449b0131caeb24dc8,
         type: 3}
       propertyPath: m_Name
       value: ButtonController
+      objectReference: {fileID: 0}
+    - target: {fileID: 6898623270977653982, guid: 37557ba0371a230449b0131caeb24dc8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8601424066408826716, guid: 37557ba0371a230449b0131caeb24dc8,
         type: 3}

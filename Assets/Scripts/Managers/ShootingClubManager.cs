@@ -161,6 +161,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         // TODO: Init all variables
         playerCamera = DataManager.instance.playerCamera;
         //ReadyZone
+        DataManager.instance.requestDevice = Device.CONTROLLER;
         gun = DataManager.instance.gunObj.GetComponent<GunScript>();
         gunSupport = DataManager.instance.gunSupportObj.GetComponent<PropSupport>();
         controllerRoot = DataManager.instance.controllerRoot;

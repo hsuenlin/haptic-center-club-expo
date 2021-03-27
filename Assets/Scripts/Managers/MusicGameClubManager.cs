@@ -100,6 +100,8 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
 
     public override void Init() {
         Debug.Log("Music Game Club Init");
+
+        DataManager.instance.requestDevice = Device.PANEL;
         
         playerCamera = DataManager.instance.playerCamera;
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
