@@ -125,7 +125,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
         aimImage.gameObject.SetActive(false);
         arenaSign.SetActive(false);
         finishText2d.gameObject.SetActive(false);
-        panelRoot = DataManager.instance.shiftyRoot;
+        panelRoot = DataManager.instance.panelRoot;
         if (GameManager.instance.gameMode == GameMode.QUEST)
         {
             ClubUtil.Attach(djPanel.gameObject, panelSupport.gameObject);
@@ -196,20 +196,22 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
+            nextPropState = PropState.FETCHING;
+            djPanel.gameObject.transform.parent = panelSupport.gameObject.transform;
+            djPanel.gameObject.SetActive(false);
             panelSupport.gameObject.SetActive(true);
-            panelSupport.Rise(() =>
-            {
-                nextPropState = PropState.FETCHING;
-                djPanel.gameObject.SetActive(true);
-            });
+            panelSupport.Rise(()=>{});
         }
     }
     
     public void ExitDelivering() {}
 
     public void InitFetching() {
-        fetchTrigger.SetActive(true);
-        fetchText3d.gameObject.SetActive(true);
+        StartCoroutine(Timer.StartTimer(1.5f, ()=>{
+            djPanel.gameObject.SetActive(true);
+            fetchTrigger.SetActive(true);
+            fetchText3d.gameObject.SetActive(true);
+        }));
     }
 
     public void OnFetching() {

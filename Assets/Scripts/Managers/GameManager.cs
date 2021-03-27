@@ -59,6 +59,7 @@ public class GameManager : Singleton<GameManager>
     private Transform racketRoot;
     private Transform racketSupportRoot;
     private Transform djPanelRoot;
+    private Transform djPanelSupportRoot;
 
     protected override void OnAwake() {
         Assert.IsNotNull(calibrationManager);
@@ -107,6 +108,7 @@ public class GameManager : Singleton<GameManager>
         racketRoot = DataManager.instance.racketObj.transform;
         racketSupportRoot = DataManager.instance.racketSupportObj.transform;
         djPanelRoot = DataManager.instance.djPanelObj.transform;
+        djPanelSupportRoot = DataManager.instance.djPanelSupportObj.transform;
         
         calibrationManager.gameObject.SetActive(false);
         arenaManager.gameObject.SetActive(false);
@@ -129,6 +131,7 @@ public class GameManager : Singleton<GameManager>
             ClubUtil.Attach(racketRoot, shiftyRoot);
             ClubUtil.Attach(racketSupportRoot, shiftyCartridgeRoot);
             ClubUtil.Attach(djPanelRoot, panelRoot);
+            ClubUtil.Attach(djPanelSupportRoot, panelRoot);
         }
     }
 

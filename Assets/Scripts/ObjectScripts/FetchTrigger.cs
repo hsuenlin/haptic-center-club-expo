@@ -8,7 +8,7 @@ public class FetchTrigger : MonoBehaviour
     public void OnTriggerEnter(Collider other) {
         Debug.Log(other.name);
         Debug.Log(other.tag);
-        if(other.tag == "Gun" || other.tag == "Racket" || other.tag == "Hand") {
+        if(other.tag == "Gun" || other.tag == "Racket") {
             DataManager.instance.leftHandPrefab.SetActive(false);
             DataManager.instance.rightHandPrefab.SetActive(false);
             foreach (GameObject rayToolObj in DataManager.instance.rayTools)
@@ -26,8 +26,7 @@ public class FetchTrigger : MonoBehaviour
             case "Racket":
                 DataManager.instance.isDeviceFetched[(int)SceneState.TENNIS_CLUB] = true;
                 break;
-            case "LeftHandAnchor":
-            case "RightHandAnchor":
+            case "Hand":
                 DataManager.instance.isDeviceFetched[(int)SceneState.MUSICGAME_CLUB] = true;
                 break;
         }       
