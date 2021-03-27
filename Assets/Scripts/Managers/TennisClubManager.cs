@@ -43,6 +43,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public GameObject fetchText3d;
 
     public GameObject readyTrigger;
+    public GameObject readyAnchor;
     public Text readyText2d;
     public float readyTextTime;
 
@@ -126,6 +127,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         fetchTrigger.SetActive(false);
         fetchText3d.SetActive(false);
         readyTrigger.SetActive(false);
+        readyAnchor.SetActive(false);
         readyText2d.gameObject.SetActive(false);
         progressBarImage.gameObject.SetActive(false);
         startText2d.gameObject.SetActive(false);
@@ -254,6 +256,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         DataManager.instance.isInReadyZone = false;
         returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
+        readyAnchor.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
                 DataManager.instance.isInReadyZone = true;
@@ -271,6 +274,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitReturning() {
         returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+        readyAnchor.SetActive(false);
         isPropStateMachineRunning = false;
     }
 

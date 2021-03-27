@@ -4497,7 +4497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &494148942
 Transform:
   m_ObjectHideFlags: 0
@@ -7786,7 +7786,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &835487830
 Transform:
   m_ObjectHideFlags: 0
@@ -10359,7 +10359,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1148602842
 Transform:
   m_ObjectHideFlags: 0
@@ -15099,10 +15099,10 @@ MonoBehaviour:
     type: 3}
   regions: []
   maxBallNum: 10
-  spawnThreshold: 0.5
-  spawnNum: 2
+  spawnThreshold: 0.1
+  spawnNum: 1
   sideLength: 3.067
-  throwTime: 0.2
+  throwTime: 0.5
   ballContainerPrefab: {fileID: 47145601483537661, guid: 9a0110979092a884bbf91a6698a63412,
     type: 3}
   ballContainerAnchor: {fileID: 290818860}
@@ -18606,6 +18606,7 @@ MonoBehaviour:
   fetchTrigger: {fileID: 739518032}
   fetchText3d: {fileID: 1721935167}
   readyTrigger: {fileID: 494148941}
+  readyAnchor: {fileID: 1314549107}
   readyText2d: {fileID: 304136628}
   readyTextTime: 1
   progressBarImage: {fileID: 38546253}
@@ -18908,6 +18909,7 @@ MonoBehaviour:
   fetchTrigger: {fileID: 1243611421}
   fetchText3d: {fileID: 914293377}
   readyTrigger: {fileID: 494148941}
+  readyAnchor: {fileID: 1314549107}
   readyText2d: {fileID: 1629173001}
   readyTextTime: 1
   progressBarImage: {fileID: 1927756020}
@@ -19318,6 +19320,7 @@ MonoBehaviour:
   fetchText3d: {fileID: 153737674}
   returnText3d: {fileID: 910334853}
   readyTrigger: {fileID: 494148941}
+  readyAnchor: {fileID: 1314549107}
   readyText2d: {fileID: 1447398272}
   startText2d: {fileID: 1525780808}
   readyTextTime: 1

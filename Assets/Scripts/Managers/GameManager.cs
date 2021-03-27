@@ -143,7 +143,6 @@ public class GameManager : Singleton<GameManager>
         {
             case SceneState.CALIBRATION:
                 if(DataManager.instance.isCalibrated) {
-                    Debug.Log("Change scene to arena");
                     nextSceneState = SceneState.ARENA;
                     if(gameMode == GameMode.HAPTIC_CENTER) {
                         ClientSend.NotifyServerStateChange(ServerState.ARENA);
@@ -153,6 +152,8 @@ public class GameManager : Singleton<GameManager>
             case SceneState.ARENA:
                 for(int clubIdx = 0; clubIdx < 3; ++clubIdx) {
                     int requestClubIdx = (int)ArenaManager.instance.requestClub;
+                    if(DataManager.instance.isClubReady) {
+                    }
                     if(clubIdx == requestClubIdx && DataManager.instance.isClubReady && !DataManager.instance.isClubPlayed[clubIdx]) 
                         {
                         nextSceneState = (SceneState) clubIdx;

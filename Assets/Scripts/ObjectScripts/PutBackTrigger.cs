@@ -12,7 +12,6 @@ public class PutBackTrigger : MonoBehaviour
     private float timer = 0f;
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Enter: {other.tag}");
         if(GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB && other.name == "Gun"
             || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.tag == "Racket"
             || GameManager.instance.currentSceneState == SceneState.MUSICGAME_CLUB && other.tag == "Hand") 
@@ -27,7 +26,6 @@ public class PutBackTrigger : MonoBehaviour
         */
     }
     public void OnTriggerStay(Collider other) {
-        Debug.Log($"Stay: {other.tag}, {timer}");
         
         if (GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB && other.tag == "Gun"
             || GameManager.instance.currentSceneState == SceneState.TENNIS_CLUB && other.tag == "Racket"

@@ -6,8 +6,6 @@ using UnityEngine.Assertions;
 public class FetchTrigger : MonoBehaviour
 {
     public void OnTriggerEnter(Collider other) {
-        Debug.Log(other.name);
-        Debug.Log(other.tag);
         if(other.tag == "Gun" || other.tag == "Racket") {
             DataManager.instance.leftHandPrefab.SetActive(false);
             DataManager.instance.rightHandPrefab.SetActive(false);

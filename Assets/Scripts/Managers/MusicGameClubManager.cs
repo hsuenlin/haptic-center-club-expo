@@ -42,6 +42,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     public GameObject fetchText3d;
 
     public GameObject readyTrigger;
+    public GameObject readyAnchor;
     public Text readyText2d;
     public float readyTextTime;
 
@@ -102,6 +103,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
         Debug.Log("Music Game Club Init");
 
         DataManager.instance.requestDevice = Device.PANEL;
+
         
         playerCamera = DataManager.instance.playerCamera;
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
@@ -115,6 +117,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
         fetchTrigger.SetActive(false);
         fetchText3d.SetActive(false);
         readyTrigger.SetActive(false);
+        readyAnchor.SetActive(false);
         readyText2d.gameObject.SetActive(false);
         progressBarImage.gameObject.SetActive(false);
         startText2d.gameObject.SetActive(false);
@@ -162,8 +165,6 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void InitWaiting() {
-        Debug.Log("Init waiting");
-        
         DataManager.instance.isInReadyZone = false;
         StartPropStateMachine(PropState.DELIVERING, InitDelivering);
         pbGame.gameObject.SetActive(true);
@@ -174,13 +175,12 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     public void OnWaiting() {
         if (DataManager.instance.isInReadyZone && !isPropStateMachineRunning)
         {
-            ExitWaiting();
             nextClubState = ClubState.READY;
+            //ExitWaiting();
         }
     }
 
     public void ExitWaiting() {
-        Debug.Log("Exit waiting");
         StopPropStateMachine();
         pbGame.End();
         pbGame.gameObject.SetActive(false);
@@ -197,7 +197,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
             nextPropState = PropState.FETCHING;
-            djPanel.gameObject.transform.parent = panelSupport.gameObject.transform;
+            //djPanel.gameObject.transform.parent = panelSupport.gameObject.transform;
             djPanel.gameObject.SetActive(false);
             panelSupport.gameObject.SetActive(true);
             panelSupport.Rise(()=>{});
@@ -233,6 +233,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
         DataManager.instance.isInReadyZone = false;
         returnText3d.gameObject.SetActive(true);
         readyTrigger.SetActive(true);
+        readyAnchor.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
                 DataManager.instance.isInReadyZone = true;
@@ -248,9 +249,9 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void ExitReturning() {
-        
         returnText3d.gameObject.SetActive(false);
         readyTrigger.SetActive(false);
+        readyAnchor.SetActive(false);
         isPropStateMachineRunning = false;
     }
 
@@ -281,7 +282,6 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {   
-                Debug.Log(hit.transform.gameObject.name);
                 if (hit.transform.gameObject.name == "GazeTrigger")
                 {
                     progressBarImage.fillAmount += 1f / readyTextTime * Time.deltaTime;
@@ -316,7 +316,6 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void InitGame() {
-        Debug.Log("Init game");
         StartCoroutine(Timer.StartTimer(3f, ()=>{
             nextClubState = ClubState.RESULT;
         }));
@@ -348,7 +347,10 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
             panelSupport.Drop(() =>
                 {
                     panelSupport.gameObject.SetActive(false);
-
+                    if (GameManager.instance.gameMode == GameMode.HAPTIC_CENTER)
+                    {
+                        ClientSend.ReleaseDevice();
+                    }
                 });
             arenaSign.SetActive(true);
             foreach (GameObject rayToolObj in DataManager.instance.rayTools)

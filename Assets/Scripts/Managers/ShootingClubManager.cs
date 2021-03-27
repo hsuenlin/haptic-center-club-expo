@@ -43,6 +43,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public GameObject returnText3d;
     public GameObject readyTrigger;
+    public GameObject readyAnchor;
 
     public Text readyText2d;
     public Text startText2d;
@@ -166,8 +167,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         gunSupport = DataManager.instance.gunSupportObj.GetComponent<PropSupport>();
         controllerRoot = DataManager.instance.controllerRoot;
         controllerCartridgeRoot = DataManager.instance.controllerCartridgeRoot;
-        readyArea.SetActive(false);
         gun.gameObject.SetActive(false);
+        readyAnchor.SetActive(false);
         readyTrigger.SetActive(false);
         gunSupport.gameObject.SetActive(false);
         gunSupport.gameObject.transform.localPosition = new Vector3(0f, propSupportMinHeight, 0f);
@@ -373,8 +374,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void InitReturning() {
         DataManager.instance.isInReadyZone = false;
-        readyArea.SetActive(true);
         returnText3d.gameObject.SetActive(true);
+        readyAnchor.SetActive(true);
         readyTrigger.SetActive(true);
         if(GameManager.instance.gameMode == GameMode.QUEST) {
             StartCoroutine(Timer.StartTimer(returningTime, ()=>{
@@ -391,8 +392,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
     }
 
     public void ExitReturning() {
-        readyArea.SetActive(false);
         returnText3d.gameObject.SetActive(false);
+        readyAnchor.SetActive(false);
         readyTrigger.SetActive(false);
         isPropStateMachineRunning = false;
     }
