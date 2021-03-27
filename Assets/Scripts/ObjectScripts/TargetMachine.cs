@@ -156,8 +156,8 @@ public class TargetMachine : Singleton<TargetMachine>
         targetDemo = Instantiate(targetPrefab, Vector3.one, Quaternion.identity);
         targetDemo.transform.parent = handbookCenter;
         targetDemo.transform.localPosition = new Vector3(-0.35f, 0f, 0f);
-        targetDemo.transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -1f), Vector3.up);
-        //targetDemo.transform.LookAt(Camera.main.transform);
+        //targetDemo.transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, -1f), Vector3.up);
+        targetDemo.transform.LookAt(Camera.main.transform);
         targetDemoList.Add(targetDemo);
         
         float hue = Random.Range(0f, 1f);

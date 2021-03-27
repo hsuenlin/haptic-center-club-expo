@@ -18,7 +18,7 @@ public class BallScript : MonoBehaviour
         trackTargetTag = "BallContainer";
         racketName = "Racket";
         isTracking = false;
-        isHit = false;
+        isHit = false;   
         gameObject.tag = "Ball";
     }
     public IEnumerator Track(GameObject target) {

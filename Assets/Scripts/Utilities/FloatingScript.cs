@@ -23,7 +23,7 @@ public class FloatingScript : MonoBehaviour
             .SetLoops(-1);
         
         infRotation = DOTween.Sequence();
-        infRotation.Append(transform.DORotate(new Vector3(0, 360, 0), 2.5f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear))
+        infRotation.Append(transform.DOLocalRotate(new Vector3(0, 360, 0), 2.5f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear))
             .SetLoops(-1);
         infRotation.Play();
     }

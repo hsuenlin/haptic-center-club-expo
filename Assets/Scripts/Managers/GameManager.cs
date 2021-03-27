@@ -39,7 +39,7 @@ public class GameManager : Singleton<GameManager>
 
     
     /* Client */
-    private Client client;
+    public Client client;
 
     /* Tracker Roots */
     private Transform playerRoot;
@@ -120,6 +120,7 @@ public class GameManager : Singleton<GameManager>
 
         if (gameMode == GameMode.HAPTIC_CENTER)
         {
+            Debug.Log("Connect to server.");
             client.ConnectToServer();
             ClubUtil.Attach(ovrCameraRoot, playerRoot);
             ClubUtil.Attach(sceneRoot, hapticCenterRoot);

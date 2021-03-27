@@ -84,6 +84,7 @@ public enum ServerDevice
 }
 
 public class DataManager : Singleton<DataManager> {
+    
     public Transform forestIslandRoot;
 
     public Camera playerCamera;
