@@ -4722,7 +4722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24be017afa5744b9eb1d7418e0dc2c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serveNum: 20
+  serveNum: 15
   fairZone: {fileID: 108216843}
   ballPrefab: {fileID: 8456389880260725475, guid: 5b3df68e89951a240b7680146fd96898,
     type: 3}
