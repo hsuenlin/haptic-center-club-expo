@@ -196,20 +196,11 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
-            ClientHandle.instance.isCalibrationEnd[0] = false;
-            ClientHandle.instance.isCalibrationEnd[1] = false;
-            ClientHandle.instance.isCalibrationEnd[6] = false;
-            StartCoroutine(Timer.StartTimer(3f, () =>
-            {
-                ClientHandle.instance.isCalibrationEnd[0] = true;
-                ClientHandle.instance.isCalibrationEnd[1] = true;
-                ClientHandle.instance.isCalibrationEnd[6] = true;
-                nextPropState = PropState.FETCHING;
-                //djPanel.gameObject.transform.parent = panelSupport.gameObject.transform;
-                djPanel.gameObject.SetActive(false);
-                panelSupport.gameObject.SetActive(true);
-                panelSupport.Rise(()=>{});
-            }));
+            nextPropState = PropState.FETCHING;
+            //djPanel.gameObject.transform.parent = panelSupport.gameObject.transform;
+            djPanel.gameObject.SetActive(false);
+            panelSupport.gameObject.SetActive(true);
+            panelSupport.Rise(()=>{});
         }
     }
     

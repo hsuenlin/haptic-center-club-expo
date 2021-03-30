@@ -335,18 +335,10 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
-            ClientHandle.instance.isCalibrationEnd[0] = false;
-            ClientHandle.instance.isCalibrationEnd[1] = false;
-            ClientHandle.instance.isCalibrationEnd[3] = false;
-            StartCoroutine(Timer.StartTimer(3f, ()=>{
-                ClientHandle.instance.isCalibrationEnd[0] = true;
-                ClientHandle.instance.isCalibrationEnd[1] = true;
-                ClientHandle.instance.isCalibrationEnd[3] = true;
-                gun.gameObject.SetActive(false);
-                nextPropState = PropState.FETCHING;
-                gunSupport.gameObject.SetActive(true);
-                gunSupport.Rise(() => { });
-            }));
+            gun.gameObject.SetActive(false);
+            nextPropState = PropState.FETCHING;
+            gunSupport.gameObject.SetActive(true);
+            gunSupport.Rise(() => { });
         }
     }
 

@@ -217,20 +217,11 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
 
     public void OnDelivering() {
         if(DataManager.instance.isDeviceReady[(int)requiredDevice]) {
-            ClientHandle.instance.isCalibrationEnd[0] = false;
-            ClientHandle.instance.isCalibrationEnd[1] = false;
-            ClientHandle.instance.isCalibrationEnd[5] = false;
-            StartCoroutine(Timer.StartTimer(3f, () =>
-            {
-                ClientHandle.instance.isCalibrationEnd[0] = true;
-                ClientHandle.instance.isCalibrationEnd[1] = true;
-                ClientHandle.instance.isCalibrationEnd[5] = true;
-                Debug.Log("Shifty is ready");
-                nextPropState = PropState.FETCHING;
-                racket.gameObject.SetActive(false);
-                racketSupport.gameObject.SetActive(true);
-                racketSupport.Rise(() => { });
-            }));
+            Debug.Log("Shifty is ready");
+            nextPropState = PropState.FETCHING;
+            racket.gameObject.SetActive(false);
+            racketSupport.gameObject.SetActive(true);
+            racketSupport.Rise(() => { });
         }
     }
     
