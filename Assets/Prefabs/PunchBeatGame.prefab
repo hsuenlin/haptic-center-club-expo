@@ -43,6 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936b52fa18de8d64591641d642f14457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beatTime: 0
+  firstBeatTime: 0
   beatWidth: 0
   activatedHalf: 0
   isActivated: 0
@@ -120,6 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16ec55c79a5c5f419b5a654e191efdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beatTime: 0
+  firstBeatTime: 0
   beatWidth: 0
   isPerfact: 0
 --- !u!1 &7144079313027588502
@@ -185,6 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e2c11f38f82a64faca76ebdfdd1f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 7144079313027588497}
   gameAudio: {fileID: 8300000, guid: 6bf08a6a75bcc79458ca29a60cc96ac0, type: 3}
   punchBeatPrefab: {fileID: 749885446256034032, guid: 2cc66c678cf3e4a41900e10b5838a32b,
     type: 3}
@@ -192,17 +197,16 @@ MonoBehaviour:
   punchBeatRightTransform: {fileID: 7144079312581655774}
   pbAnimationMetro: {fileID: 0}
   pbJudgementMetro: {fileID: 0}
-  beatTime: 1.07
-  firstBeatTime: 3.14
-  animationBeatWidth: 0.535
-  judgementBeatWidth: 0.2675
+  beatTime: 0.54545456
+  firstBeatTime: 2.1818182
+  animationBeatWidth: 0.5454546
+  judgementBeatWidth: 0.2727273
   missSound: {fileID: 8300000, guid: c2195ac16a435e341b4aab4e3396d055, type: 3}
   goodSound: {fileID: 8300000, guid: c2195ac16a435e341b4aab4e3396d055, type: 3}
   perfectSound: {fileID: 8300000, guid: c2195ac16a435e341b4aab4e3396d055, type: 3}
   missAnimation: {fileID: 0}
   goodAnimation: {fileID: 0}
   perfectAnimation: {fileID: 0}
-  audioSource: {fileID: 7144079313027588497}
   missText: {fileID: 5400767912929879252, guid: b13f1fb695f38b34ea7dc215ef34e386,
     type: 3}
   goodText: {fileID: 1434607509436119558, guid: f4838def4721cf14393d8304b6be584c,
@@ -226,7 +230,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6bf08a6a75bcc79458ca29a60cc96ac0, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
