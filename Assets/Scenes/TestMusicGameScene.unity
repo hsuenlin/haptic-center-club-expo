@@ -1782,12 +1782,12 @@ PrefabInstance:
     - target: {fileID: 7144079313027588496, guid: 470721dd953f57742a1c899535b9419a,
         type: 3}
       propertyPath: animationBeatWidth
-      value: 0.27272728
+      value: 0.5454546
       objectReference: {fileID: 0}
     - target: {fileID: 7144079313027588496, guid: 470721dd953f57742a1c899535b9419a,
         type: 3}
       propertyPath: judgementBeatWidth
-      value: 0.13636364
+      value: 0.2727273
       objectReference: {fileID: 0}
     - target: {fileID: 7144079313027588502, guid: 470721dd953f57742a1c899535b9419a,
         type: 3}

@@ -17,7 +17,7 @@ public class PunchBeatAnimationMetro : Metronome {
         punchBeatDict = pbGame.punchBeatDict;
         activatedHalf = Half.NONE;
         isActivated = false;
-        minAlpha = 0.2f;
+        minAlpha = 0f;
 
         beatScore = pbGame.beatScore;
         beatIdx = 0;
@@ -29,11 +29,14 @@ public class PunchBeatAnimationMetro : Metronome {
         if (activatedHalf < Half.WHOLE)
         {
             punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
+            punchBeatDict[activatedHalf].transform.DOScale(0.2f, (float)halfWidth);
         }
         else if (activatedHalf == Half.WHOLE)
         {
             punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
             punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
+            punchBeatDict[Half.LEFT].transform.DOScale(0.2f, (float)halfWidth);
+            punchBeatDict[Half.RIGHT].transform.DOScale(0.2f, (float)halfWidth);
         }
         isActivated = true;
     }
@@ -41,15 +44,20 @@ public class PunchBeatAnimationMetro : Metronome {
         if (activatedHalf < Half.WHOLE)
         {
             punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
+            //punchBeatDict[activatedHalf].transform.DOScale(0.05f, (float)halfWidth);
         }
         else if (activatedHalf == Half.WHOLE)
         {
-            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth*2);
-            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth*2);
+            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
+            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
+            //punchBeatDict[Half.LEFT].transform.DOScale(0.05f, (float)halfWidth);
+            //punchBeatDict[Half.RIGHT].transform.DOScale(0.05f, (float)halfWidth);
         }
     }
     public override void OnBeatExit() {
         isActivated = false;
         beatIdx++;
+        punchBeatDict[Half.LEFT].transform.DOScale(0.05f, 0f);
+        punchBeatDict[Half.RIGHT].transform.DOScale(0.05f, 0f);
     }
 }

@@ -3,15 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+public class DjPanelGame : MonoBehaviour {
 
-public enum HitType {
-    MISS = 0,
-    GOOD = 1,
-    PERFECT = 2
-}
-
-public class PunchBeatGame : MonoBehaviour {
-
+    /*
     public AudioSource audioSource;
     public AudioClip gameAudio;
     public GameObject punchBeatPrefab;
@@ -43,7 +37,8 @@ public class PunchBeatGame : MonoBehaviour {
 
     public GameObject pbAnimationMetroObj;
     public GameObject pbJudgementMetroObj;
-    
+
+    private DjPanelScript djPanel;
     public int[] beatScore = {
         3, 1, 3, 0, 3, 1, 3, 0,
         3, 1, 3, 0, 3, 1, 3, 0,
@@ -80,47 +75,32 @@ public class PunchBeatGame : MonoBehaviour {
     };
 
     public void Init() {
-        GameObject punchBeatLeft = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatLeftTransform);
-        punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform, Half.LEFT);
-        punchBeatLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        punchBeatLeft.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
-        punchBeatLeft.transform.DOScale(0.05f, 0f);
+        djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
 
-        GameObject punchBeatRight = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatRightTransform);
-        punchBeatRight.GetComponent<PunchBeatScript>().Init(this, punchBeatRightTransform, Half.RIGHT);
-        punchBeatRight.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        punchBeatRight.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
-        punchBeatRight.transform.DOScale(0.05f, 0f);
+        dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();
+        dpJudgementMetro = dpJudgementMetroObj.GetComponent<DjPanelJudgementMetro>();
 
-        punchBeatDict = new Dictionary<Half, PunchBeatScript>() {
-            {Half.LEFT, punchBeatLeft.GetComponent<PunchBeatScript>()},
-            {Half.RIGHT, punchBeatRight.GetComponent<PunchBeatScript>()},
-        };
-
-        pbAnimationMetro = pbAnimationMetroObj.GetComponent<PunchBeatAnimationMetro>();
-        pbJudgementMetro = pbJudgementMetroObj.GetComponent<PunchBeatJudgementMetro>();
-
-        pbAnimationMetro.Init(this);
-        pbJudgementMetro.Init(this);
+        dpAnimationMetro.Init(this);
+        dpJudgementMetro.Init(this);
 
     }
     public void Run() {
         audioSource.clip = gameAudio;
         audioSource.PlayScheduled(AudioSettings.dspTime + 1.0);
-        StartCoroutine(DelayStart(pbAnimationMetro.InfDspTick(), 1.0f));
-        StartCoroutine(DelayStart(pbJudgementMetro.InfDspTick(), 1.0f));
+        StartCoroutine(DelayStart(dpAnimationMetro.InfDspTick(), 1.0f));
+        StartCoroutine(DelayStart(dpJudgementMetro.InfDspTick(), 1.0f));
     }
 
     public void End() {
-        StopCoroutine(pbAnimationMetro.InfDspTick());
-        StopCoroutine(pbJudgementMetro.InfDspTick());
+        StopCoroutine(dpAnimationMetro.InfDspTick());
+        StopCoroutine(dpJudgementMetro.InfDspTick());
         audioSource.Pause();
     }
 
     public HitType JudgeHit(Half half) {
-        if(half == pbAnimationMetro.activatedHalf || pbAnimationMetro.activatedHalf == Half.WHOLE) {
-            if(pbAnimationMetro.isActivated) {
-                return pbJudgementMetro.isPerfact ? HitType.PERFECT : HitType.GOOD;
+        if(half == dpAnimationMetro.activatedHalf || dpAnimationMetro.activatedHalf == Half.WHOLE) {
+            if(dpAnimationMetro.isActivated) {
+                return dpJudgementMetro.isPerfact ? HitType.PERFECT : HitType.GOOD;
             }
             else {
                 return HitType.MISS;
@@ -132,8 +112,13 @@ public class PunchBeatGame : MonoBehaviour {
         }
     }
 
+    public HitType JudgeSlide() {
+        
+    }
+
     public IEnumerator DelayStart(IEnumerator task, float delay) {
         yield return new WaitForSecondsRealtime(delay);
         StartCoroutine(task);
     }
+    */
 }
