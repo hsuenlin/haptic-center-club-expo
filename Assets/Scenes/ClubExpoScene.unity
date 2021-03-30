@@ -15224,9 +15224,9 @@ MonoBehaviour:
   regions: []
   maxBallNum: 10
   spawnThreshold: 0.1
-  spawnNum: 1
+  spawnNum: 3
   sideLength: 3.067
-  throwTime: 0.5
+  throwTime: 1.5
   ballContainerPrefab: {fileID: 47145601483537661, guid: 9a0110979092a884bbf91a6698a63412,
     type: 3}
   ballContainerAnchor: {fileID: 290818860}

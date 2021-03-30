@@ -5,16 +5,16 @@ using UnityEngine;
 using DG.Tweening;
 public class DjPanelGame : MonoBehaviour {
 
-    /*
+    
     public AudioSource audioSource;
     public AudioClip gameAudio;
     public GameObject punchBeatPrefab;
     public Transform punchBeatLeftTransform;
     public Transform punchBeatRightTransform;
-    public Dictionary<Half, PunchBeatScript> punchBeatDict;
+    public Dictionary<Half, DjPanelScript> djPanelDict;
 
-    public PunchBeatAnimationMetro pbAnimationMetro;
-    public PunchBeatJudgementMetro pbJudgementMetro;
+    public DjPanelAnimationMetro dpAnimationMetro;
+    public DjPanelJudgementMetro dpJudgementMetro;
 
     public float beatTime;
     public float firstBeatTime;
@@ -35,8 +35,8 @@ public class DjPanelGame : MonoBehaviour {
     public float textRiseTime;
     public float textFadeTime;
 
-    public GameObject pbAnimationMetroObj;
-    public GameObject pbJudgementMetroObj;
+    public GameObject dpAnimationMetroObj;
+    public GameObject dpJudgementMetroObj;
 
     private DjPanelScript djPanel;
     public int[] beatScore = {
@@ -112,7 +112,7 @@ public class DjPanelGame : MonoBehaviour {
         }
     }
 
-    public HitType JudgeSlide() {
+    public void JudgeSlide() {
         
     }
 
@@ -120,5 +120,5 @@ public class DjPanelGame : MonoBehaviour {
         yield return new WaitForSecondsRealtime(delay);
         StartCoroutine(task);
     }
-    */
+    
 }
