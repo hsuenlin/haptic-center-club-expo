@@ -4,7 +4,6 @@ using UnityEngine;
 using DG.Tweening;
 
 public class PunchBeatAnimationMetro : Metronome {
-
     public Half activatedHalf;
     public bool isActivated;
     public float minAlpha;
@@ -13,14 +12,10 @@ public class PunchBeatAnimationMetro : Metronome {
     private int beatIdx;
     
     public void Init(PunchBeatGame pbGame) {
-
-        beatTime = pbGame.beatTime;
-        firstBeatTime = pbGame.firstBeatTime;
-        beatWidth = pbGame.animationBeatWidth;
-        halfWidth = beatWidth / 2;
+        InitMetro(pbGame.beatTime, pbGame.firstBeatTime, pbGame.animationBeatWidth);
 
         punchBeatDict = pbGame.punchBeatDict;
-        //activatedHalf = Half.NONE;
+        activatedHalf = Half.NONE;
         isActivated = false;
         minAlpha = 0.2f;
 
@@ -30,8 +25,6 @@ public class PunchBeatAnimationMetro : Metronome {
     }
 
     public override void OnBeatEnter() {
-        //activatedHalf = (Half)(int)Random.Range(0, 3);
-        //activatedHalf = Half.LEFT;
         activatedHalf = (Half)beatScore[beatIdx];
         if (activatedHalf < Half.WHOLE)
         {
@@ -45,8 +38,6 @@ public class PunchBeatAnimationMetro : Metronome {
         isActivated = true;
     }
     public override void OnBeat() {
-        
-
         if (activatedHalf < Half.WHOLE)
         {
             punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth);
