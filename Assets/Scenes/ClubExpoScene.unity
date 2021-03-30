@@ -17226,6 +17226,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9974acf03b0441497bf0ba5a38c1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingArenas:
+  - {fileID: 505551291}
+  - {fileID: 784607294}
+  - {fileID: 2130095760}
   floatingGun: {fileID: 163878726}
   floatingRacket: {fileID: 1085557567}
   floatingSpeaker: {fileID: 1586073867}

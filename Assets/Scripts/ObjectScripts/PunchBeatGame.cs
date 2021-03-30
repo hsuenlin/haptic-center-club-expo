@@ -61,24 +61,6 @@ public class PunchBeatGame : MonoBehaviour {
         1, 0, 0, 1, 1, 0, 1, 2
     };
 
-    // Slider on the beginning
-    public int[] sliderScore = {
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 1, 2, 3, // 1 beat
-
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-    };
-
     public void Init() {
         GameObject punchBeatLeft = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatLeftTransform);
         punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform, Half.LEFT);

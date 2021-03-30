@@ -11,7 +11,7 @@ public class DjPanelGame : MonoBehaviour {
     public GameObject punchBeatPrefab;
     public Transform punchBeatLeftTransform;
     public Transform punchBeatRightTransform;
-    public Dictionary<Half, DjPanelScript> djPanelDict;
+    public Dictionary<Half, GameObject> djPanelButtonDict;
 
     public DjPanelAnimationMetro dpAnimationMetro;
     public DjPanelJudgementMetro dpJudgementMetro;
@@ -39,6 +39,7 @@ public class DjPanelGame : MonoBehaviour {
     public GameObject dpJudgementMetroObj;
 
     private DjPanelScript djPanel;
+    private GameObject sliderIndicator;
     public int[] beatScore = {
         3, 1, 3, 0, 3, 1, 3, 0,
         3, 1, 3, 0, 3, 1, 3, 0,
@@ -66,7 +67,7 @@ public class DjPanelGame : MonoBehaviour {
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 1, 2, 3, // 1 beat
+        0, 0, 0, 0, 3, 0, 0, 0,
 
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -76,13 +77,16 @@ public class DjPanelGame : MonoBehaviour {
 
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
+        djPanelButtonDict = new Dictionary<Half, GameObject>();
+        djPanelButtonDict[Half.LEFT] = djPanel.panelInfo.red;
+        djPanelButtonDict[Half.RIGHT] = djPanel.panelInfo.blue;
+        sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
 
         dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();
         dpJudgementMetro = dpJudgementMetroObj.GetComponent<DjPanelJudgementMetro>();
 
         dpAnimationMetro.Init(this);
         dpJudgementMetro.Init(this);
-
     }
     public void Run() {
         audioSource.clip = gameAudio;

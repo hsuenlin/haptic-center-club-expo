@@ -5,6 +5,8 @@ using UnityEngine.Assertions;
 
 public class ArenaManager : SceneManager<ArenaManager>
 {
+    public GameObject[] floatingArenas;
+    
     public GameObject floatingGun;
     public GameObject floatingRacket;
     public GameObject floatingSpeaker;
@@ -35,6 +37,9 @@ public class ArenaManager : SceneManager<ArenaManager>
     }
 
     public override void Init() {
+        floatingArenas[0].SetActive(false);
+        floatingArenas[1].SetActive(false);
+        floatingArenas[2].SetActive(false);
 
         floatingGun.SetActive(true);
         floatingRacket.SetActive(true);
