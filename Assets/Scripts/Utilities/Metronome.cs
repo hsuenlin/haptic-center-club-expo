@@ -83,8 +83,8 @@ public abstract class Metronome : MonoBehaviour
     {
         double startTime = AudioSettings.dspTime;
         double onBeatEnterTime = startTime + firstBeatTime - halfWidth;
-        double onBeatTime = onBeatEnterTime + halfWidth;
-        double onBeatExitTime = onBeatTime + halfWidth;
+        double onBeatTime = startTime + firstBeatTime;
+        double onBeatExitTime = startTime + firstBeatTime + halfWidth;
         double timer;
 
         while(true)
@@ -93,7 +93,6 @@ public abstract class Metronome : MonoBehaviour
             while (timer < onBeatEnterTime)
             {
                 yield return null;
-                timer = AudioSettings.dspTime;
             }
             OnBeatEnter();
             timer = AudioSettings.dspTime;

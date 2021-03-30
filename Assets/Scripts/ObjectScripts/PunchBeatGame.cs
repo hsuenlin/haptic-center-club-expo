@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public enum HitType {
 
 public class PunchBeatGame : MonoBehaviour {
 
+    public AudioSource audioSource;
     public AudioClip gameAudio;
     public GameObject punchBeatPrefab;
     public Transform punchBeatLeftTransform;
@@ -31,7 +33,6 @@ public class PunchBeatGame : MonoBehaviour {
     public Animation missAnimation;
     public Animation goodAnimation;
     public Animation perfectAnimation;
-    public AudioSource audioSource;
     public GameObject missText;
     public GameObject goodText;
     public GameObject perfectText;
@@ -82,11 +83,13 @@ public class PunchBeatGame : MonoBehaviour {
         punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform, Half.LEFT);
         punchBeatLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         punchBeatLeft.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
+        punchBeatLeft.transform.DOScale(0.5f, 0f);
 
         GameObject punchBeatRight = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatRightTransform);
         punchBeatRight.GetComponent<PunchBeatScript>().Init(this, punchBeatRightTransform, Half.RIGHT);
         punchBeatRight.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         punchBeatRight.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
+        punchBeatRight.transform.DOScale(0.5f, 0f);
 
         punchBeatDict = new Dictionary<Half, PunchBeatScript>() {
             {Half.LEFT, punchBeatLeft.GetComponent<PunchBeatScript>()},
@@ -102,17 +105,14 @@ public class PunchBeatGame : MonoBehaviour {
     }
     public void Run() {
         audioSource.clip = gameAudio;
-        audioSource.PlayScheduled(AudioSettings.dspTime + 1.07);
-        //audioSource.PlayOneShot(gameAudio);
-        StartCoroutine(pbAnimationMetro.InfDspTick());
-        StartCoroutine(pbJudgementMetro.InfDspTick());
-        //audioSource.PlayOneShot(gameAudio);
-        Debug.Log("Hi");
+        audioSource.PlayScheduled(AudioSettings.dspTime + 1.0);
+        DelayStart(pbAnimationMetro.InfDspTick(), 1.0f);
+        DelayStart(pbJudgementMetro.InfDspTick(), 1.0f);
     }
 
     public void End() {
-        StopCoroutine(pbAnimationMetro.InfTick());
-        StopCoroutine(pbJudgementMetro.InfTick());
+        StopCoroutine(pbAnimationMetro.InfDspTick());
+        StopCoroutine(pbJudgementMetro.InfDspTick());
         audioSource.Pause();
     }
 
@@ -129,5 +129,10 @@ public class PunchBeatGame : MonoBehaviour {
         {
             return HitType.MISS;
         }
+    }
+
+    public IEnumerator DelayStart(IEnumerator task, float delay) {
+        yield return new WaitForSecondsRealtime(delay);
+        StartCoroutine(task);
     }
 }
