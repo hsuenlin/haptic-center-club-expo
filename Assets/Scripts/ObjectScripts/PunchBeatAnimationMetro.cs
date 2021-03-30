@@ -28,24 +28,24 @@ public class PunchBeatAnimationMetro : Metronome {
         activatedHalf = (Half)beatScore[beatIdx];
         if (activatedHalf < Half.WHOLE)
         {
-            punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
+            punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
         }
         else if (activatedHalf == Half.WHOLE)
         {
-            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
-            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, halfWidth);
+            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
+            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
         }
         isActivated = true;
     }
     public override void OnBeat() {
         if (activatedHalf < Half.WHOLE)
         {
-            punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth);
+            punchBeatDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
         }
         else if (activatedHalf == Half.WHOLE)
         {
-            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth*2);
-            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, halfWidth*2);
+            punchBeatDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth*2);
+            punchBeatDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth*2);
         }
     }
     public override void OnBeatExit() {

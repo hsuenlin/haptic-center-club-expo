@@ -6,18 +6,18 @@ using System;
 public abstract class Metronome : MonoBehaviour
 {
     
-    public float beatTime;
-    public float firstBeatTime;
-    public float beatWidth;
+    public double beatTime;
+    public double firstBeatTime;
+    public double beatWidth;
 
-    protected float idleTime;
-    protected float halfWidth;
+    protected double idleTime;
+    protected double halfWidth;
     
     public virtual void OnBeatEnter() {}
     public virtual void OnBeat() {}
     public virtual void OnBeatExit() {}
 
-    public InitMetro(double _beatTime, double _firstBeatTime, double _beatWidth) {
+    public void InitMetro(double _beatTime, double _firstBeatTime, double _beatWidth) {
         beatTime = _beatTime;
         firstBeatTime = _firstBeatTime;
         beatWidth = _beatWidth;
@@ -25,6 +25,7 @@ public abstract class Metronome : MonoBehaviour
         idleTime = _beatTime - _beatWidth;
     }
 
+    /*
     public IEnumerator Tick(int beatNum, Action OnTickEnd) {
         yield return new WaitForSeconds(firstBeatTime - halfWidth);
         for(int i = 0; i < beatNum; ++i) {
@@ -37,9 +38,11 @@ public abstract class Metronome : MonoBehaviour
         }
         OnTickEnd();
     }
+    */
 
+    /*
     public IEnumerator InfTick() {
-        float idleTime = beatTime - beatWidth;
+        double idleTime = beatTime - beatWidth;
         yield return new WaitForSeconds(firstBeatTime - halfWidth);
         while(true) {
             OnBeatEnter();
@@ -82,6 +85,7 @@ public abstract class Metronome : MonoBehaviour
         }
         OnTickEnd();       
     }
+    */
 
     public IEnumerator InfDspTick()
     {

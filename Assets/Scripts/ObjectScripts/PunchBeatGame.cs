@@ -83,13 +83,13 @@ public class PunchBeatGame : MonoBehaviour {
         punchBeatLeft.GetComponent<PunchBeatScript>().Init(this, punchBeatLeftTransform, Half.LEFT);
         punchBeatLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         punchBeatLeft.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
-        punchBeatLeft.transform.DOScale(0.5f, 0f);
+        punchBeatLeft.transform.DOScale(0.05f, 0f);
 
         GameObject punchBeatRight = ClubUtil.InstantiateOn(punchBeatPrefab, punchBeatRightTransform);
         punchBeatRight.GetComponent<PunchBeatScript>().Init(this, punchBeatRightTransform, Half.RIGHT);
         punchBeatRight.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         punchBeatRight.GetComponent<Renderer>().material.DOFade(0.2f, 0f);
-        punchBeatRight.transform.DOScale(0.5f, 0f);
+        punchBeatRight.transform.DOScale(0.05f, 0f);
 
         punchBeatDict = new Dictionary<Half, PunchBeatScript>() {
             {Half.LEFT, punchBeatLeft.GetComponent<PunchBeatScript>()},
@@ -106,8 +106,8 @@ public class PunchBeatGame : MonoBehaviour {
     public void Run() {
         audioSource.clip = gameAudio;
         audioSource.PlayScheduled(AudioSettings.dspTime + 1.0);
-        DelayStart(pbAnimationMetro.InfDspTick(), 1.0f);
-        DelayStart(pbJudgementMetro.InfDspTick(), 1.0f);
+        StartCoroutine(DelayStart(pbAnimationMetro.InfDspTick(), 1.0f));
+        StartCoroutine(DelayStart(pbJudgementMetro.InfDspTick(), 1.0f));
     }
 
     public void End() {
