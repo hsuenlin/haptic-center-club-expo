@@ -16,6 +16,8 @@ public class DjPanelScript : MonoBehaviour
     }
 
     public void Init(DjPanelGame _dpGame) {
+        OnButtonPressDown = new Action[2];
+        buttonScripts = new DjPanelButtonScript[2];
         buttonScripts[0] = _dpGame.buttonScripts[0];
         buttonScripts[1] = _dpGame.buttonScripts[1];
         buttonScripts[0].Init(_dpGame, this, gameObject.transform, Half.LEFT); // Register OnButtonPressDown

@@ -76,6 +76,9 @@ public class DjPanelGame : MonoBehaviour {
 
     public Action OnGameOver;
 
+    private bool isAnimationMetroEnd;
+    private bool isJudgementMetroEnd;
+
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
         djPanel.Init(this);
@@ -93,8 +96,15 @@ public class DjPanelGame : MonoBehaviour {
     public void Run() {
         audioSource.clip = gameAudio;
         audioSource.PlayScheduled(AudioSettings.dspTime + 1.0);
-        StartCoroutine(DelayStart(dpAnimationMetro.DspTick(beatScore.Length, OnGameOver), 1.0f));
-        StartCoroutine(DelayStart(dpJudgementMetro.DspTick(beatScore.Length, OnGameOver), 1.0f));
+        StartCoroutine(DelayStart(dpAnimationMetro.DspTick(beatScore.Length, ()=>{ isAnimationMetroEnd = true; }), 1.0f));
+        StartCoroutine(DelayStart(dpJudgementMetro.DspTick(beatScore.Length, ()=>{ isJudgementMetroEnd = true; }), 1.0f));
+        StartCoroutine(Game());
+    }
+
+    public IEnumerator Game() {
+        while(!isAnimationMetroEnd && !isJudgementMetroEnd) {yield return null;}
+        OnGameOver();
+        yield return null;
     }
 
     public void End() {

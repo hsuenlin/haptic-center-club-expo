@@ -9588,8 +9588,8 @@ Transform:
   m_Children:
   - {fileID: 670514684}
   - {fileID: 1834133512}
-  - {fileID: 1928845638}
   - {fileID: 2041420074}
+  - {fileID: 1928845638}
   m_Father: {fileID: 1824289939}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14655,7 +14655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1711279708
 Transform:
   m_ObjectHideFlags: 0
@@ -17233,10 +17233,10 @@ RectTransform:
   m_LocalScale: {x: 0.009999997, y: 0.01, z: 0.009999997}
   m_Children:
   - {fileID: 64602549}
-  - {fileID: 1294685459}
   - {fileID: 2130095761}
+  - {fileID: 1294685459}
   m_Father: {fileID: 974050359}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 54.5, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -18095,7 +18095,7 @@ Transform:
   - {fileID: 132730250}
   - {fileID: 856307880}
   m_Father: {fileID: 2041420074}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
 --- !u!114 &2130095762
 MonoBehaviour:
@@ -18423,7 +18423,7 @@ MonoBehaviour:
   shootingClubSign: {fileID: 824494523}
   tennisClubSign: {fileID: 2139346622}
   musicGameClubSign: {fileID: 499262014}
-  requestClub: 0
+  requestClub: -1
   audioSource: {fileID: 4185851916462963553}
 --- !u!4 &482986215039160381
 Transform:

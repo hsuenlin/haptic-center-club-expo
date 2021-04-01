@@ -11,6 +11,7 @@ namespace OculusSampleFramework
         public SceneState signifiedScene;
 
         private bool isRequesting;
+        public int hackcnt = 0;
         
         void Awake() {
             Assert.IsNotNull(selectionCylinder);
@@ -64,8 +65,6 @@ namespace OculusSampleFramework
             
             int sceneIndex = (int)signifiedScene;
             if(!DataManager.instance.isClubPlayed[sceneIndex]) {
-                
-            
                 // Pinched && DeviceReady
                 if (GameManager.instance.gameMode == GameMode.HAPTIC_CENTER && DataManager.instance.isDeviceFree[sceneIndex] && !isRequesting) {
                     isRequesting = true;
