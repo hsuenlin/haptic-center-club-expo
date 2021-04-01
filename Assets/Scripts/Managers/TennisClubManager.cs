@@ -84,6 +84,8 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public GameObject tennisField;
 
     public GameObject racketHookObj;
+
+    public GameObject turnRightText3d;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -175,6 +177,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public void InitIdle() {
+        turnRightText3d.SetActive(true);
         welcomeText.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
@@ -183,6 +186,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
     
     public void ExitIdle() {
+        turnRightText3d.SetActive(false);
         welcomeText.gameObject.SetActive(false);
     }
 

@@ -67,6 +67,9 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     private GameObject panelRoot;
     public GameObject questDjPanelSupportAnchor;
     public PunchBeatGame pbGame;
+    public DjPanelGame djPanelGame;
+
+    public GameObject turnLeftText3d;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -153,6 +156,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void InitIdle() {
+        turnLeftText3d.SetActive(true);
         welcomeText.gameObject.SetActive(true);
         StartCoroutine(Timer.StartTimer(welcomeTextTime, ()=>{ nextClubState = ClubState.WAITING; }));
     }
@@ -161,6 +165,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
     
     public void ExitIdle() {
+        turnLeftText3d.SetActive(false);
         welcomeText.gameObject.SetActive(false);
     }
 
@@ -316,18 +321,18 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void InitGame() {
-        DjPanelGame.gameObject.SetActive(true);
-        DjPanelGame.Init();
-        DjPanelGame.Run();
-        DjPanelGame.OnGameOver += () => { nextClubState = ClubState.RESULT; };
+        djPanelGame.gameObject.SetActive(true);
+        djPanelGame.Init();
+        djPanelGame.Run();
+        djPanelGame.OnGameOver += () => { nextClubState = ClubState.RESULT; };
     }
 
     public void OnGame() {
     }
 
     public void ExitGame() {
-        DjPanelGame.End();
-        DjPanelGame.gameObject.SetActive(false);
+        djPanelGame.End();
+        djPanelGame.gameObject.SetActive(false);
     }
 
     public void InitResult() {
