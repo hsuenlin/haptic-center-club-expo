@@ -86,6 +86,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public GameObject racketHookObj;
 
     public GameObject turnRightText3d;
+    public AudioSource audioSource;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -119,6 +120,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     }
 
     public override void Init() {
+        audioSource.Play();
         Debug.Log("Tennis Club Init");
         DataManager.instance.requestDevice = Device.SHIFTY;
         playerCamera = DataManager.instance.playerCamera;
@@ -172,6 +174,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         Debug.Log($"{tennisField.transform.position}, {tennisField.transform.rotation}");
     }
     public override void Exit() {
+        audioSource.Stop();
         Debug.Log("Tennis Club Exit");
         StopCoroutine(UpdateClubState());
     }
@@ -243,6 +246,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
             racketHookObj.SetActive(true);
             fetchTrigger.SetActive(true);
             fetchText3d.gameObject.SetActive(true);
+            DataManager.instance.PlayArrivedSound();
         }));
         // TODO: Do we need to change appearance?
         if(GameManager.instance.gameMode == GameMode.QUEST) {

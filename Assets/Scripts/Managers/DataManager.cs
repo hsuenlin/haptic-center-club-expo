@@ -149,6 +149,13 @@ public class DataManager : Singleton<DataManager> {
     
     public GameObject leftHandPrefab;
     public GameObject rightHandPrefab;
+
+    public AudioClip arrivedSound;
+    public AudioSource audioSource;
+
+    public void PlayArrivedSound() {
+        audioSource.PlayOneShot(arrivedSound);
+    }
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);

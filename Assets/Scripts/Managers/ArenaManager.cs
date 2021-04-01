@@ -17,6 +17,8 @@ public class ArenaManager : SceneManager<ArenaManager>
 
     public SceneState requestClub;
 
+    public AudioSource audioSource;
+
     protected override void OnAwake() {
 
         Assert.IsNotNull(floatingGun);
@@ -37,6 +39,8 @@ public class ArenaManager : SceneManager<ArenaManager>
     }
 
     public override void Init() {
+        audioSource.Play();
+
         floatingArenas[0].SetActive(false);
         floatingArenas[1].SetActive(false);
         floatingArenas[2].SetActive(false);
@@ -63,6 +67,7 @@ public class ArenaManager : SceneManager<ArenaManager>
     }
 
     public override void Exit() {
+        audioSource.Stop();
         floatingGun.SetActive(false);
         floatingRacket.SetActive(false);
         floatingSpeaker.SetActive(false);

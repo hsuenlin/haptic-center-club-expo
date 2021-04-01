@@ -213,6 +213,7 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
 
     public void InitFetching() {
         StartCoroutine(Timer.StartTimer(1.5f, ()=>{
+            DataManager.instance.PlayArrivedSound();
             djPanel.gameObject.SetActive(true);
             fetchTrigger.SetActive(true);
             fetchText3d.gameObject.SetActive(true);

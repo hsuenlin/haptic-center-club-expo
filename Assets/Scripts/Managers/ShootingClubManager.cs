@@ -76,6 +76,8 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     private Camera playerCamera;
 
+    public AudioSource audioSource;
+
     protected override void OnAwake()
     {
 
@@ -160,6 +162,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
 
     public override void Init() {
         // TODO: Init all variables
+        audioSource.Play();
         playerCamera = DataManager.instance.playerCamera;
         //ReadyZone
         DataManager.instance.requestDevice = Device.CONTROLLER;
@@ -194,6 +197,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         StartCoroutine(UpdateClubState());
     }
     public override void Exit() {
+        audioSource.Stop();
         StopCoroutine(UpdateClubState());
         Debug.Log("Shooting Club End");
     }
@@ -350,6 +354,7 @@ public class ShootingClubManager : SceneManager<ShootingClubManager>
         // fetchArea
         StartCoroutine(Timer.StartTimer(1.5f, () =>
         {
+            DataManager.instance.PlayArrivedSound();
             fetchTrigger.SetActive(true);
             fetchText3d.gameObject.SetActive(true);
             gun.gameObject.SetActive(true);
