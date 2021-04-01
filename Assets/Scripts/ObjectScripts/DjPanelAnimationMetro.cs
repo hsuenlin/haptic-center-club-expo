@@ -22,7 +22,7 @@ public class DjPanelAnimationMetro : Metronome {
         //slider = dpGame.slider;
         activatedHalf = Half.NONE;
         isActivated = false;
-        minAlpha = 0.1f;
+        minAlpha = 0.5f;
 
         beatScore = dpGame.beatScore;
         //sliderScore = dpGame.sliderScore;
@@ -30,6 +30,8 @@ public class DjPanelAnimationMetro : Metronome {
         activatedHalf = (Half)beatScore[beatIdx];
 
         //isSliderShowed = false;
+
+        
     }
 
     public override void OnBeatEnter() {
@@ -37,12 +39,18 @@ public class DjPanelAnimationMetro : Metronome {
         activatedHalf = (Half)beatScore[beatIdx];
         if (activatedHalf < Half.WHOLE)
         {
-            buttonDict[activatedHalf].GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
+            buttonDict[activatedHalf].GetComponent<Renderer>().material.DOFade(minAlpha, 0f);
+            buttonDict[activatedHalf].gameObject.transform.DOScale(2f, 0f);
+            buttonDict[activatedHalf].gameObject.transform.DOScale(1.3f, (float)halfWidth);
         }
         else if (activatedHalf == Half.WHOLE)
         {
-            buttonDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
-            buttonDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
+            buttonDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, 0f);
+            buttonDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, 0f);
+            buttonDict[Half.LEFT].gameObject.transform.DOScale(2f, 0f);
+            buttonDict[Half.RIGHT].gameObject.transform.DOScale(2f, 0f);
+            buttonDict[Half.LEFT].gameObject.transform.DOScale(1.3f, (float)halfWidth);
+            buttonDict[Half.RIGHT].gameObject.transform.DOScale(1.3f, (float)halfWidth);
         }
         isActivated = true;
         
@@ -58,12 +66,16 @@ public class DjPanelAnimationMetro : Metronome {
         // Button
         if (activatedHalf < Half.WHOLE)
         {
-            buttonDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
+            buttonDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(1f, 0f);
+            buttonDict[activatedHalf].gameObject.GetComponent<Renderer>().material.DOFade(0f, (float)halfWidth);
+
         }
         else if (activatedHalf == Half.WHOLE)
         {
-            buttonDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
-            buttonDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(minAlpha, (float)halfWidth);
+            buttonDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(1f, 0f);
+            buttonDict[Half.LEFT].gameObject.GetComponent<Renderer>().material.DOFade(0f, (float)halfWidth);
+            buttonDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(1f, 0f);
+            buttonDict[Half.RIGHT].gameObject.GetComponent<Renderer>().material.DOFade(0f, (float)halfWidth);
         }
 
         // Slider
