@@ -71,12 +71,15 @@ public class DjPanelGame : MonoBehaviour {
         0, 0, 0, 0, 0, 0, 0, 0,
     };
 
+    public DjPanelButtonScript[] buttonScripts;
+    public GameObject[] buttons;
+
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
         djPanel.Init(this);
         djPanelButtonDict = new Dictionary<Half, GameObject>();
-        djPanelButtonDict[Half.LEFT] = djPanel.panelInfo.buttons[0];
-        djPanelButtonDict[Half.RIGHT] = djPanel.panelInfo.buttons[1];
+        djPanelButtonDict[Half.LEFT] = buttons[0];
+        djPanelButtonDict[Half.RIGHT] = buttons[1];
         //sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
 
         dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();

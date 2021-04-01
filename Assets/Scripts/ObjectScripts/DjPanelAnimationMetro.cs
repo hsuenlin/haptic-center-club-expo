@@ -13,23 +13,23 @@ public class DjPanelAnimationMetro : Metronome {
     private int[] sliderScore;
     private int beatIdx;
 
-    private bool isSliderShowed;
+    //private bool isSliderShowed;
     
     public void Init(DjPanelGame dpGame) {
         InitMetro(dpGame.beatTime, dpGame.firstBeatTime, dpGame.animationBeatWidth);
 
         buttonDict = dpGame.djPanelButtonDict;
-        slider = dpGame.slider;
+        //slider = dpGame.slider;
         activatedHalf = Half.NONE;
         isActivated = false;
         minAlpha = 0.1f;
 
         beatScore = dpGame.beatScore;
-        sliderScore = dpGame.sliderScore;
+        //sliderScore = dpGame.sliderScore;
         beatIdx = 0;
         activatedHalf = (Half)beatScore[beatIdx];
 
-        isSliderShowed = false;
+        //isSliderShowed = false;
     }
 
     public override void OnBeatEnter() {
@@ -47,10 +47,12 @@ public class DjPanelAnimationMetro : Metronome {
         isActivated = true;
         
         // Slider
+        /*
         if(sliderScore[beatIdx] != 0) {
             sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(1f, (float)halfWidth);
             isSliderShowed = true;
         }
+        */
     }
     public override void OnBeat() {
         // Button
@@ -65,11 +67,13 @@ public class DjPanelAnimationMetro : Metronome {
         }
 
         // Slider
+        /*
         if(isSliderShowed) {
             //isNext
         } else {
 
         }
+        */
     }
     public override void OnBeatExit() {
         isActivated = false;

@@ -67,12 +67,13 @@ public class DjPanelButtonScript : MonoBehaviour {
             {HitType.PERFECT, perfectText}
         };
 
-        djPanel.OnButtonPressDown = OnPressDown;
+        int idx = _half == Half.LEFT ? 0 : 1;
+        _djPanel.OnButtonPressDown[idx] = OnPressDown;
     }
     void PlayHitTextAnimation(GameObject text) {
         Debug.Log("Text Start");
         text.SetActive(true);
-        text.transform.parent = dpGame.punchBeatDict[half].transform;
+        text.transform.parent = dpGame.djPanelButtonDict[half].transform;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);

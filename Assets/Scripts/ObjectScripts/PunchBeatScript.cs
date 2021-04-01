@@ -94,5 +94,4 @@ public class PunchBeatScript : MonoBehaviour {
             PlayHitTextAnimation(hitTextDict[hitResult]);
         }
     }
-    
 }
