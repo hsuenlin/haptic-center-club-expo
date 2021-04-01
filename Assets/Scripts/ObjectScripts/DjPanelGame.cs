@@ -5,12 +5,8 @@ using UnityEngine;
 using DG.Tweening;
 public class DjPanelGame : MonoBehaviour {
 
-    
     public AudioSource audioSource;
     public AudioClip gameAudio;
-    public GameObject punchBeatPrefab;
-    public Transform punchBeatLeftTransform;
-    public Transform punchBeatRightTransform;
     public Dictionary<Half, GameObject> djPanelButtonDict;
 
     public DjPanelAnimationMetro dpAnimationMetro;
@@ -77,10 +73,11 @@ public class DjPanelGame : MonoBehaviour {
 
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
+        djPanel.Init(this);
         djPanelButtonDict = new Dictionary<Half, GameObject>();
-        djPanelButtonDict[Half.LEFT] = djPanel.panelInfo.red;
-        djPanelButtonDict[Half.RIGHT] = djPanel.panelInfo.blue;
-        sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
+        djPanelButtonDict[Half.LEFT] = djPanel.panelInfo.buttons[0];
+        djPanelButtonDict[Half.RIGHT] = djPanel.panelInfo.buttons[1];
+        //sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
 
         dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();
         dpJudgementMetro = dpJudgementMetroObj.GetComponent<DjPanelJudgementMetro>();

@@ -191,8 +191,8 @@ public class ClientHandle : MonoBehaviour
     }
     public void PanelInfoHandle(Packet _packet) {
         // RedBtn, BlueBtn, Slider1, Slider2, Slider3, Slider4, x, y, degree
-        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.red = _packet.ReadInt();
-        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.blue = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.buttons[0] = _packet.ReadInt();
+        DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.buttons[1] = _packet.ReadInt();
         DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[0] = _packet.ReadInt();
         DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[1] = _packet.ReadInt();
         DataManager.instance.djPanelObj.GetComponent<DjPanelScript>().panelInfo.sliders[2] = _packet.ReadInt();
