@@ -82,6 +82,8 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public float serveEndWaitingTime;
 
     public GameObject tennisField;
+
+    public GameObject racketHookObj;
     protected override void OnAwake() {
 
      clubStateInits = new Dictionary<ClubState,Action>() {
@@ -234,6 +236,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
         Debug.Log("Init Fetching");
         StartCoroutine(Timer.StartTimer(2.5f, ()=>{
             racket.gameObject.SetActive(true);
+            racketHookObj.SetActive(true);
             fetchTrigger.SetActive(true);
             fetchText3d.gameObject.SetActive(true);
         }));
@@ -253,6 +256,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitFetching() {
         fetchTrigger.SetActive(false);
         fetchText3d.gameObject.SetActive(false);
+        racketHookObj.SetActive(false);
     }
 
     public void InitReturning() {
@@ -411,6 +415,7 @@ public class TennisClubManager : SceneManager<TennisClubManager> {
     public void ExitResult() {
     }
     public void InitPutBack() {
+        racketHookObj.SetActive(true);
         racketSupport.gameObject.SetActive(true);
         racketSupport.Rise(() =>
             {
