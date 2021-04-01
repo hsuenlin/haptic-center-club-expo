@@ -74,6 +74,8 @@ public class DjPanelGame : MonoBehaviour {
     public DjPanelButtonScript[] buttonScripts;
     public GameObject[] buttons;
 
+    public Action OnGameOver;
+
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
         djPanel.Init(this);
@@ -91,13 +93,13 @@ public class DjPanelGame : MonoBehaviour {
     public void Run() {
         audioSource.clip = gameAudio;
         audioSource.PlayScheduled(AudioSettings.dspTime + 1.0);
-        StartCoroutine(DelayStart(dpAnimationMetro.InfDspTick(), 1.0f));
-        StartCoroutine(DelayStart(dpJudgementMetro.InfDspTick(), 1.0f));
+        StartCoroutine(DelayStart(dpAnimationMetro.DspTick(beatScore.Length, OnGameOver), 1.0f));
+        StartCoroutine(DelayStart(dpJudgementMetro.DspTick(beatScore.Length, OnGameOver), 1.0f));
     }
 
     public void End() {
-        StopCoroutine(dpAnimationMetro.InfDspTick());
-        StopCoroutine(dpJudgementMetro.InfDspTick());
+        //StopCoroutine(DelayStart(dpAnimationMetro.DspTick(beatNum, OnGameOver), 1.0f));
+        //StopCoroutine(DelayStart(dpJudgementMetro.DspTick(beatNum, OnGameOver), 1.0f));
         audioSource.Pause();
     }
 

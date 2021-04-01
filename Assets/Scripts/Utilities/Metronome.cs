@@ -121,4 +121,40 @@ public abstract class Metronome : MonoBehaviour
             onBeatExitTime = onBeatTime + halfWidth;
         }
     }
+
+    public IEnumerator DspTick(int beatNum, Action Callback)
+    {
+        double startTime = AudioSettings.dspTime;
+        double onBeatEnterTime = startTime + firstBeatTime - halfWidth;
+        double onBeatTime = startTime + firstBeatTime;
+        double onBeatExitTime = startTime + firstBeatTime + halfWidth;
+        double timer;
+
+        for(int i = 0; i < beatNum; i++)
+        {
+            timer = AudioSettings.dspTime;
+            while (timer < onBeatEnterTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatEnter();
+            while (timer < onBeatTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeat();
+            while (timer < onBeatExitTime)
+            {
+                yield return null;
+                timer = AudioSettings.dspTime;
+            }
+            OnBeatExit();
+            onBeatEnterTime = onBeatExitTime + idleTime;
+            onBeatTime = onBeatEnterTime + halfWidth;
+            onBeatExitTime = onBeatTime + halfWidth;
+        }
+        Callback();
+    }
 }

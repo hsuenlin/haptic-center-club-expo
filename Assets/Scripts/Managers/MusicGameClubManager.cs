@@ -316,16 +316,18 @@ public class MusicGameClubManager : SceneManager<MusicGameClubManager> {
     }
 
     public void InitGame() {
-        StartCoroutine(Timer.StartTimer(10000f, ()=>{
-            nextClubState = ClubState.RESULT;
-        }));
+        DjPanelGame.gameObject.SetActive(true);
+        DjPanelGame.Init();
+        DjPanelGame.Run();
+        DjPanelGame.OnGameOver += () => { nextClubState = ClubState.RESULT; };
     }
 
     public void OnGame() {
     }
 
     public void ExitGame() {
-        
+        DjPanelGame.End();
+        DjPanelGame.gameObject.SetActive(false);
     }
 
     public void InitResult() {
