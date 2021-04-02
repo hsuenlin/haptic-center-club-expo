@@ -7,7 +7,7 @@ public class DjPanelGame : MonoBehaviour {
 
     public AudioSource audioSource;
     public AudioClip gameAudio;
-    public Dictionary<Half, GameObject> djPanelButtonDict;
+    public Dictionary<Half, GameObject> djPanelButtonHintDict;
 
     public DjPanelAnimationMetro dpAnimationMetro;
     public DjPanelJudgementMetro dpJudgementMetro;
@@ -72,19 +72,24 @@ public class DjPanelGame : MonoBehaviour {
     };
 
     public DjPanelButtonScript[] buttonScripts;
-    public GameObject[] buttons;
+    public GameObject[] buttonHints;
 
     public Action OnGameOver;
 
     private bool isAnimationMetroEnd;
     private bool isJudgementMetroEnd;
 
+    public GameObject buttonLeftAnchor;
+    public GameObject buttonRightAnchor;
+
+    public Dictionary<Half, GameObject> buttonAnchorDict;
+
     public void Init() {
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
         djPanel.Init(this);
-        djPanelButtonDict = new Dictionary<Half, GameObject>();
-        djPanelButtonDict[Half.LEFT] = buttons[0];
-        djPanelButtonDict[Half.RIGHT] = buttons[1];
+        djPanelButtonHintDict = new Dictionary<Half, GameObject>();
+        djPanelButtonHintDict[Half.LEFT] = buttonHints[0];
+        djPanelButtonHintDict[Half.RIGHT] = buttonHints[1];
         //sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
 
         dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();
@@ -92,6 +97,11 @@ public class DjPanelGame : MonoBehaviour {
 
         dpAnimationMetro.Init(this);
         dpJudgementMetro.Init(this);
+
+        buttonAnchorDict = new Dictionary<Half, GameObject>() {
+            {Half.LEFT, buttonLeftAnchor},
+            {Half.RIGHT, buttonRightAnchor}
+        };
     }
     public void Run() {
         audioSource.clip = gameAudio;

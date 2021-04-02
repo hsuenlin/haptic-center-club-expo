@@ -37,9 +37,9 @@ public class DjPanelButtonScript : MonoBehaviour {
         perfectAnimation = dpGame.perfectAnimation;
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.dopplerLevel = 0f;
-        missText = ClubUtil.InstantiateOn(dpGame.missText, gameObject.transform);
-        goodText = ClubUtil.InstantiateOn(dpGame.goodText, gameObject.transform);
-        perfectText = ClubUtil.InstantiateOn(dpGame.perfectText, gameObject.transform);
+        missText = ClubUtil.InstantiateOn(dpGame.missText, dpGame.buttonAnchorDict[_half].transform);
+        goodText = ClubUtil.InstantiateOn(dpGame.goodText, dpGame.buttonAnchorDict[_half].transform);
+        perfectText = ClubUtil.InstantiateOn(dpGame.perfectText, dpGame.buttonAnchorDict[_half].transform);
 
         missText.SetActive(false);
         goodText.SetActive(false);
@@ -73,7 +73,7 @@ public class DjPanelButtonScript : MonoBehaviour {
     void PlayHitTextAnimation(GameObject text) {
         Debug.Log("Text Start");
         text.SetActive(true);
-        text.transform.parent = dpGame.djPanelButtonDict[half].transform.parent;
+        text.transform.parent = dpGame.djPanelButtonHintDict[half].transform.parent;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);

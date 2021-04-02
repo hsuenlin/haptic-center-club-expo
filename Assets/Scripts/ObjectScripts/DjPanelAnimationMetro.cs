@@ -18,7 +18,7 @@ public class DjPanelAnimationMetro : Metronome {
     public void Init(DjPanelGame dpGame) {
         InitMetro(dpGame.beatTime, dpGame.firstBeatTime, dpGame.animationBeatWidth);
 
-        buttonDict = dpGame.djPanelButtonDict;
+        buttonDict = dpGame.djPanelButtonHintDict;
         //slider = dpGame.slider;
         activatedHalf = Half.NONE;
         isActivated = false;
