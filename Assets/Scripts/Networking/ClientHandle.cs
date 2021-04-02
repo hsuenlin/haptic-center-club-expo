@@ -113,7 +113,7 @@ public class ClientHandle : MonoBehaviour
                     if (!isCalibrationStart[3])
                     {
                         isCalibrationStart[3] = true;
-                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[3] = true; }));
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { /*isCalibrationEnd[3] = true;*/ }));
                     }
                     else if (!isCalibrationEnd[3])
                     {
@@ -140,7 +140,7 @@ public class ClientHandle : MonoBehaviour
                     if (!isCalibrationStart[5])
                     {
                         isCalibrationStart[5] = true;
-                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[5] = true; }));
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { /*isCalibrationEnd[5] = true;*/ }));
                     }
                     else if (!isCalibrationEnd[5])
                     {
@@ -152,7 +152,7 @@ public class ClientHandle : MonoBehaviour
                     if (!isCalibrationStart[6])
                     {
                         isCalibrationStart[6] = true;
-                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { isCalibrationEnd[6] = true; }));
+                        StartCoroutine(Timer.StartTimer(calibrationTime, () => { /*isCalibrationEnd[6] = true;*/ }));
                     }
                     else if (!isCalibrationEnd[6])
                     {

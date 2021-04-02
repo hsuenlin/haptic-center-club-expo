@@ -66,7 +66,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
 
     public override void Exit() {
         Debug.Log($"Default gravity: {Physics.gravity}");
-        Physics.gravity = -forestIslandRoot.up;
+        Physics.gravity = -forestIslandRoot.up * 9.81f;
         Debug.Log($"Modified gravity: {Physics.gravity}");
         transparentBlack.gameObject.SetActive(false);
         calibrationText.gameObject.SetActive(false);

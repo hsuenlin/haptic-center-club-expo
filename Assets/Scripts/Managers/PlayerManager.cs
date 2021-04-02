@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviour
         if(collider.tag == "Target" 
             && GameManager.instance.currentSceneState == SceneState.SHOOTING_CLUB) {
             TargetScript ts = collider.gameObject.GetComponent<TargetScript>();
-            health -= (health > ts.attack) ? ts.attack : 0;
+            health -= (health > ts.attack) ? ts.attack : health;
             healthBarImage.sprite = healthBarSprites[health];
             StartCoroutine(StartDamageAnimation());
         }

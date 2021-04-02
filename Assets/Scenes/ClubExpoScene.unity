@@ -5025,7 +5025,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 8456389880260725475, guid: 5b3df68e89951a240b7680146fd96898,
     type: 3}
   ballOrigin: {fileID: 1488731963}
-  elevation: 20
+  elevation: 17
   maxElevationDeviation: 0
   thrust: 650
   maxThrustDeviation: 0
