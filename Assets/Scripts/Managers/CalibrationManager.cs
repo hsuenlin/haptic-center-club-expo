@@ -12,6 +12,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     public float calibrationTime;
     private Vector3 negatePosition;
     private Quaternion negateRotation;
+    private Transform forestIslandRoot;
 
     private GameObject scenesObj;
     
@@ -26,6 +27,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
         calibrationText.gameObject.SetActive(true);
         negatePosition = Vector3.zero;
         negateRotation = Quaternion.identity;
+        forestIslandRoot = DataManager.instance.forestIslandRoot;
         
         StartCoroutine(CalibrationCountDown());
         if(GameManager.instance.gameMode == GameMode.HAPTIC_CENTER) {
@@ -63,6 +65,7 @@ public class CalibrationManager : SceneManager<CalibrationManager>
     }
 
     public override void Exit() {
+        Physics.gravity = -forestIslandRoot.up;
         transparentBlack.gameObject.SetActive(false);
         calibrationText.gameObject.SetActive(false);
     }
