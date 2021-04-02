@@ -43,7 +43,7 @@ public class BallScript : MonoBehaviour
         if(other.tag == trackTargetTag) {
             if(isTracking) {
                 StopCoroutine("Track");
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
         }
     }

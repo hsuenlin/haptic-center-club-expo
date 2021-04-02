@@ -152,6 +152,7 @@ public class DataManager : Singleton<DataManager> {
 
     public AudioClip arrivedSound;
     public AudioClip shootSound;
+    public AudioClip pickUpSound;
     public AudioSource audioSource;
 
     private void PlaySound(AudioClip clip) {
@@ -163,6 +164,14 @@ public class DataManager : Singleton<DataManager> {
 
     public void PlayShootSound() {
         PlaySound(shootSound);
+    }
+
+    public void PlayPickUpSound() {
+        PlaySound(pickUpSound);
+    }
+
+    public void Pause() {
+        audioSource.Pause();
     }
     
     protected override void OnAwake() {

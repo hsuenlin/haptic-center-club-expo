@@ -17,11 +17,13 @@ public class PickBallRegion : HandsInteractable
 
     private bool isSpawning;
     private bool isThrowing;
+    private bool isPlayingSound;
     void Awake()
     {
         ballQueue = new Queue<GameObject>();
         isSpawning = false;
         isThrowing = false;
+        isPlayingSound = false;
     }
 
     public void Init() {
@@ -70,6 +72,10 @@ public class PickBallRegion : HandsInteractable
 
     
     public override void OnNoInput() {
+        if(isPlayingSound) {
+            DataManager.instance.Pause();
+            isPlayingSound = false;
+        }
         if (isThrowing)
         {
             StopCoroutine(Throw());
@@ -79,9 +85,12 @@ public class PickBallRegion : HandsInteractable
             StartCoroutine(Spawn(spawnNum));
             isSpawning = true;
         }
-
     }
     public override void OnPrimaryInputDown() {
+        if(!isPlayingSound) {
+            DataManager.instance.PlayPickUpSound();
+            isPlayingSound = true;
+        }
         if(isSpawning) {
             StopCoroutine(Spawn(spawnNum));
             isSpawning = false;
