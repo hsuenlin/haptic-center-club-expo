@@ -1,20 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TargetScript : MonoBehaviour
 {
     public int attack;
     public int hp;
-    // Start is called before the first frame update
-    void Start() {
-        attack = 1;
-        hp = 1;
+
+    public Image attackImage;
+    public Image hpImage;
+    private bool isDisplay = false;
+
+    public IEnumerator UpdateAbilitiesView() {
+        isDisplay = true;
+        while(true) {
+            yield return null;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void OnDestroy() {
+        if(isDisplay) {
+            StopCoroutine(UpdateAbilitiesView());
+        }
     }
 }

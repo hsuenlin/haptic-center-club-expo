@@ -93,6 +93,8 @@ public class TargetMachine : Singleton<TargetMachine>
     public IEnumerator StartShooting() {
         targetColors = targetColorsList.ToArray();
         targetHps = targetHpsList.ToArray();
+        Debug.Log($"targetHpsList: {targetHpsList}");
+        Debug.Log($"targetHps: {targetHps}");
         targetAttacks = targetAttacksList.ToArray();
         for(int round = 0; round < shootingOrder.Length / 3; ++round) {
             for (int i = 0; i < targetGenerators.Length; ++i)
@@ -114,9 +116,13 @@ public class TargetMachine : Singleton<TargetMachine>
 
                     //Set target hp
                     target.GetComponent<TargetScript>().hp = targetHps[colorIndex];
+                    Debug.Log($"targetHps[{colorIndex}] = {targetHps[colorIndex]}");
                     
                     //Set target attack
                     target.GetComponent<TargetScript>().attack = targetAttacks[colorIndex];
+                    
+                    //Display hp and attack
+                    StartCoroutine(target.GetComponent<TargetScript>().UpdateAbilitiesView());
 
                     TargetRise(target);
                 }

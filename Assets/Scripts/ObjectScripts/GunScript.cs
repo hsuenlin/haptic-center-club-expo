@@ -64,6 +64,7 @@ public class GunScript : MonoBehaviour {
                 }
                 if(hit.collider.tag == "Target") {
                     TargetScript ts = hit.collider.gameObject.GetComponent<TargetScript>();
+                    Debug.Log($"Hit target hp: {ts.hp}");
                     ts.hp--;
                     if(ts.hp == 0) {
                         TargetMachine.instance.KillTarget(hit.collider.gameObject);
