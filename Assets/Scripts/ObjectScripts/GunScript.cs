@@ -30,7 +30,7 @@ public class GunScript : MonoBehaviour {
     }
 
     public IEnumerator StartShotEffect() {
-        //gunAudio.Play();
+        DataManager.instance.PlayShootSound();
         lineRenderer.enabled = true;
         yield return new WaitForSeconds(shotDuration);
         lineRenderer.enabled = false;

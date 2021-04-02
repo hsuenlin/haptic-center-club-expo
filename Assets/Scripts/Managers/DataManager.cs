@@ -151,10 +151,18 @@ public class DataManager : Singleton<DataManager> {
     public GameObject rightHandPrefab;
 
     public AudioClip arrivedSound;
+    public AudioClip shootSound;
     public AudioSource audioSource;
 
+    private void PlaySound(AudioClip clip) {
+        audioSource.PlayOneShot(clip);
+    }
     public void PlayArrivedSound() {
-        audioSource.PlayOneShot(arrivedSound);
+        PlaySound(arrivedSound);
+    }
+
+    public void PlayShootSound() {
+        PlaySound(shootSound);
     }
     
     protected override void OnAwake() {

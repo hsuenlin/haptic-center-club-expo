@@ -9465,6 +9465,7 @@ MonoBehaviour:
   leftHandPrefab: {fileID: 718714023525120086}
   rightHandPrefab: {fileID: 718714023595678775}
   arrivedSound: {fileID: 8300000, guid: fb27726bfd6b749748b4e958966d9798, type: 3}
+  shootSound: {fileID: 8300000, guid: 31ee7296a65fabb469a256b136cdacd0, type: 3}
   audioSource: {fileID: 962558948}
 --- !u!82 &962558948
 AudioSource:
