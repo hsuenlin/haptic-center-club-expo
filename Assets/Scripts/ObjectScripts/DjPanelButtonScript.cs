@@ -73,7 +73,7 @@ public class DjPanelButtonScript : MonoBehaviour {
     void PlayHitTextAnimation(GameObject text) {
         Debug.Log("Text Start");
         text.SetActive(true);
-        text.transform.parent = dpGame.djPanelButtonDict[half].transform;
+        text.transform.parent = dpGame.djPanelButtonDict[half].transform.parent;
         text.transform.localPosition = Vector3.zero;
         text.transform.localRotation = Quaternion.identity;
         text.GetComponent<Renderer>().material.DOFade(1f, 0f);
