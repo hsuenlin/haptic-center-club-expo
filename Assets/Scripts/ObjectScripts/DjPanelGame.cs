@@ -84,12 +84,21 @@ public class DjPanelGame : MonoBehaviour {
 
     public Dictionary<Half, GameObject> buttonAnchorDict;
 
+    void Awake() {
+        buttonAnchorDict = new Dictionary<Half, GameObject>() {
+            {Half.LEFT, buttonLeftAnchor},
+            {Half.RIGHT, buttonRightAnchor}
+        };
+    }
+
     public void Init() {
+        
         djPanel = DataManager.instance.djPanelObj.GetComponent<DjPanelScript>();
         djPanel.Init(this);
-        djPanelButtonHintDict = new Dictionary<Half, GameObject>();
-        djPanelButtonHintDict[Half.LEFT] = buttonHints[0];
-        djPanelButtonHintDict[Half.RIGHT] = buttonHints[1];
+        djPanelButtonHintDict = new Dictionary<Half, GameObject>() {
+            {Half.LEFT, buttonHints[0]},
+            {Half.RIGHT, buttonHints[1]}
+        };
         //sliderIndicator.transform.GetChild(0).GetComponent<Renderer>().material.DOFade(0f, 0f);
 
         dpAnimationMetro = dpAnimationMetroObj.GetComponent<DjPanelAnimationMetro>();
@@ -98,10 +107,7 @@ public class DjPanelGame : MonoBehaviour {
         dpAnimationMetro.Init(this);
         dpJudgementMetro.Init(this);
 
-        buttonAnchorDict = new Dictionary<Half, GameObject>() {
-            {Half.LEFT, buttonLeftAnchor},
-            {Half.RIGHT, buttonRightAnchor}
-        };
+        
     }
     public void Run() {
         audioSource.clip = gameAudio;
