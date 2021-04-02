@@ -16343,6 +16343,8 @@ MonoBehaviour:
   - {fileID: 662936146}
   - {fileID: 148549643}
   buttonHints: []
+  buttonLeftAnchor: {fileID: 0}
+  buttonRightAnchor: {fileID: 0}
 --- !u!1001 &1844924457
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,9 +12,18 @@ public class TargetScript : MonoBehaviour
     public Image hpImage;
     private bool isDisplay = false;
 
+    void Awake() {
+        attackImage.gameObject.SetActive(false);
+        hpImage.gameObject.SetActive(false);
+    }
+
     public IEnumerator UpdateAbilitiesView() {
         isDisplay = true;
+        attackImage.gameObject.SetActive(true);
+        hpImage.gameObject.SetActive(true);
         while(true) {
+            hpImage.fillAmount = ((float)hp) / 5;
+            attackImage.fillAmount = ((float)attack) / 5;
             yield return null;
         }
     }
