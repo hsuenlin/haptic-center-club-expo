@@ -1585,6 +1585,7 @@ MonoBehaviour:
   controlButton: {fileID: 575176565}
   selectionCylinder: {fileID: 1409547336}
   signifiedScene: 0
+  hackcnt: 0
 --- !u!1 &175449820
 GameObject:
   m_ObjectHideFlags: 0
@@ -4878,6 +4879,7 @@ MonoBehaviour:
   controlButton: {fileID: 65146716}
   selectionCylinder: {fileID: 1994641065}
   signifiedScene: -1
+  hackcnt: 0
 --- !u!1 &505870504
 GameObject:
   m_ObjectHideFlags: 0
@@ -7692,6 +7694,7 @@ MonoBehaviour:
   controlButton: {fileID: 58855871}
   selectionCylinder: {fileID: 1582415641}
   signifiedScene: -1
+  hackcnt: 0
 --- !u!114 &784607297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10109,6 +10112,7 @@ MonoBehaviour:
   controlButton: {fileID: 442532287}
   selectionCylinder: {fileID: 513983346}
   signifiedScene: 1
+  hackcnt: 0
 --- !u!1001 &1085940790
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11328,13 +11332,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1212203135}
-  m_LocalRotation: {x: 0.27059805, y: -0.6532815, z: 0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: -0.08, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.21643952, z: 0, w: 0.97629607}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 718714024058332819}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 45, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -25, z: 0}
 --- !u!1 &1213864250
 GameObject:
   m_ObjectHideFlags: 0
@@ -12034,7 +12038,7 @@ Transform:
   m_GameObject: {fileID: 1298136092}
   m_LocalRotation: {x: 0, y: 0.9523958, z: 0, w: 0.30486432}
   m_LocalPosition: {x: 2.77, y: 1.4, z: 16.2}
-  m_LocalScale: {x: 0.029999997, y: 0.03, z: 0.029999997}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_Children: []
   m_Father: {fileID: 670514684}
   m_RootOrder: 0
@@ -12085,7 +12089,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298136092}
-  m_Text: 'Please turn left
+  m_Text: 'Please turn left and face the "Music Game Club" text
 
 '
   m_OffsetZ: 0
@@ -12448,7 +12452,7 @@ Transform:
   m_GameObject: {fileID: 1359552605}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -7.33, y: 2.21, z: -5.48}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_Children: []
   m_Father: {fileID: 580701152}
   m_RootOrder: 0
@@ -12499,7 +12503,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1359552605}
-  m_Text: Please turn right
+  m_Text: Please turn right and face the "Tennis Club" text
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -14185,6 +14189,7 @@ MonoBehaviour:
   controlButton: {fileID: 567548681}
   selectionCylinder: {fileID: 1815376015}
   signifiedScene: 2
+  hackcnt: 0
 --- !u!4 &1586760110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4121957669690104, guid: 1617cfd7d856042459cec623d111378d,
@@ -18112,6 +18117,7 @@ MonoBehaviour:
   controlButton: {fileID: 132730249}
   selectionCylinder: {fileID: 1294685460}
   signifiedScene: -1
+  hackcnt: 0
 --- !u!114 &2130095763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18329,13 +18335,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2145488176}
-  m_LocalRotation: {x: 0.27059805, y: -0.6532815, z: 0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: -0.08, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.21643952, z: 0, w: 0.97629607}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 718714024058327703}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 45, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -25, z: 0}
 --- !u!1 &1216448270388322
 GameObject:
   m_ObjectHideFlags: 0
