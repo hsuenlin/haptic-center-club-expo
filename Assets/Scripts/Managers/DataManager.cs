@@ -173,6 +173,10 @@ public class DataManager : Singleton<DataManager> {
     public void Pause() {
         audioSource.Pause();
     }
+
+    public void StopSound() {
+        audioSource.Stop();
+    }
     
     protected override void OnAwake() {
         Assert.IsNotNull(forestIslandRoot);

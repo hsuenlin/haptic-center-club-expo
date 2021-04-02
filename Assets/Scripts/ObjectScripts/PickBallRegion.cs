@@ -102,6 +102,7 @@ public class PickBallRegion : HandsInteractable
         }
     }
     void OnDestroy() {
+        DataManager.instance.StopSound();
         if(isThrowing) {
             StopCoroutine(Throw());
         }
