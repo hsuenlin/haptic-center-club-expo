@@ -43,6 +43,8 @@ public class BallScript : MonoBehaviour
         if(other.tag == trackTargetTag) {
             if(isTracking) {
                 StopCoroutine("Track");
+                gameObject.layer = 0;
+                gameObject.AddComponent<Rigidbody>();
                 //Destroy(gameObject);
             }
         }
