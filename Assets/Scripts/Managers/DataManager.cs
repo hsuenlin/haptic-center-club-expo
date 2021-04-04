@@ -167,6 +167,7 @@ public class DataManager : Singleton<DataManager> {
     }
 
     public void PlayPickUpSound() {
+        Debug.Log($"Is pick up sound null?: {pickUpSound == null}");
         PlaySound(pickUpSound);
     }
 

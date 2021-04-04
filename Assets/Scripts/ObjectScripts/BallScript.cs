@@ -13,6 +13,8 @@ public class BallScript : MonoBehaviour
     public int id;
     public bool isHit;
 
+    private float cnt = 0;
+
     void Awake() {
         Assert.AreNotApproximatelyEqual(0f, trackSpeed);
         trackTargetTag = "BallContainer";
@@ -22,29 +24,40 @@ public class BallScript : MonoBehaviour
         gameObject.tag = "Ball";
     }
     public IEnumerator Track(GameObject target) {
-        gameObject.layer = 8;
+        ClubUtil.SetLayerRecursively(gameObject, 8);
         trackTargetTag = target.tag;
         isTracking = true;
-        //gameObject.GetComponent<Rigidbody>().useGravity = false;
-        //gameObject.GetComponent<Rigidbody>().isKinematic = false;
-        Destroy(gameObject.GetComponent<Rigidbody>());
+        gameObject.GetComponent<Rigidbody>().useGravity = false;
+        //gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        //Destroy(gameObject.GetComponent<Rigidbody>());
         
         trackSpeed = 0.05f;
         while(true) {
             // Ball goes straight toward the target
             Vector3 direction = target.transform.position - gameObject.transform.position;
             Vector3.Normalize(direction);
-            gameObject.transform.position = gameObject.transform.position + direction * trackSpeed;
+            gameObject.transform.position = gameObject.transform.position + direction * trackSpeed + new Vector3(0.01f, 0.01f, 0.01f);
             yield return null;
+            cnt += Time.deltaTime;
+            if(cnt > 3f) {
+                //StopCoroutine("Track");
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+                yield break;
+            }
         }
     }
 
     void OnTriggerEnter(Collider other) {
         if(other.tag == trackTargetTag) {
+            Debug.Log($"{other.name}");
             if(isTracking) {
                 StopCoroutine("Track");
-                gameObject.layer = 0;
-                gameObject.AddComponent<Rigidbody>();
+                ClubUtil.SetLayerRecursively(gameObject, 13);
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+                
+                //gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+                //gameObject.AddComponent<Rigidbody>();
                 //Destroy(gameObject);
             }
         }

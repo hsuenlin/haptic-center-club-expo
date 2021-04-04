@@ -42,7 +42,7 @@ public class PickBallMachine : MonoBehaviour
         float d = sideLength / 2;
         float[] xs = new float[8] {0f, d, d, d, 0, -d, -d, -d};
         float[] zs = new float[8] {d, d, 0, -d, -d, -d, 0, d};
-        for(int i = 0; i < 8; ++i) {
+        for(int i = 1; i < 8; ++i) {
             GameObject regionObj = Instantiate(regionPrefab);
             PickBallRegion region = regionObj.GetComponent<PickBallRegion>();
             region.transform.parent = transform;
@@ -54,6 +54,7 @@ public class PickBallMachine : MonoBehaviour
             region.spawnThreshold = spawnThreshold;
             region.spawnNum = spawnNum;
             region.ballContainer = ballContainer;
+            region.ballContainerAnchor = ballContainerAnchor;
             regions[i] = region;
             region.Init();
         }

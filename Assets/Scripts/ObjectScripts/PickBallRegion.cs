@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 using OculusSampleFramework;
 public class PickBallRegion : HandsInteractable
@@ -18,6 +19,8 @@ public class PickBallRegion : HandsInteractable
     private bool isSpawning;
     private bool isThrowing;
     private bool isPlayingSound;
+
+    public GameObject ballContainerAnchor;
     void Awake()
     {
         ballQueue = new Queue<GameObject>();
@@ -56,6 +59,20 @@ public class PickBallRegion : HandsInteractable
         }
     }
 
+    public void ThrowAnimation() {
+        if (ballQueue.Count > 0)
+        {
+            GameObject ball = ballQueue.Dequeue();
+            Sequence seq = DOTween.Sequence();
+            seq.Append(ball.transform.DOMove(ballContainerAnchor.transform.position + new Vector3(Random.Range(-0.02f, 0.02f), Random.Range(-0.02f, 0.02f), 0f), 1f))
+               .AppendCallback(()=>{ 
+                   ball.GetComponent<Rigidbody>().useGravity = true;
+                   ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                });
+            seq.Play();
+        }
+    }
+
     public IEnumerator Spawn(int nSpawn) {
         while(true) {
             if (ballQueue.Count / maxBallNum < spawnThreshold) {
@@ -78,7 +95,8 @@ public class PickBallRegion : HandsInteractable
         }
         if (isThrowing)
         {
-            StopCoroutine(Throw());
+            //StopCoroutine(Throw());
+            
             isThrowing = false;
         }
         if(!isSpawning) {
@@ -97,7 +115,8 @@ public class PickBallRegion : HandsInteractable
         }
         if(!isThrowing) {
             Debug.Log("Throw start");
-            StartCoroutine(Throw());
+            //StartCoroutine(Throw());
+            ThrowAnimation();
             isThrowing = true;
         }
     }

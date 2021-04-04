@@ -32,4 +32,14 @@ public class ClubUtil : MonoBehaviour {
         tmp.y += 180f;
         obj.transform.eulerAngles = tmp;
     }
+
+    public static void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
+    }
 }

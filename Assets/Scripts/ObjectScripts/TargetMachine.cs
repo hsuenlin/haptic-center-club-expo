@@ -194,9 +194,10 @@ public class TargetMachine : Singleton<TargetMachine>
         targetDemos = targetDemoList.ToArray();
         for(int i = handbookIdx; i < targetDemos.Length; ++i) {
             int regionIdx = Random.Range(0, targetSpawnRegions.Length);
-            float dx = Random.Range(-1f, 1f);
-            float dz = Random.Range(-1f, 1f);
-            Vector3 pos = targetSpawnRegions[regionIdx].transform.position + new Vector3(dx, 0f, dz);
+            float dx = Random.Range(-2f, 2f);
+            float dz = Random.Range(-2f, 2f);
+            targetDemos[i].transform.parent = targetSpawnRegions[regionIdx].transform;
+            targetDemos[i].transform.localPosition = new Vector3(dx, 0f, dz);
             targetDemos[i].transform.LookAt(Camera.main.transform);
             handbookIdx++;
         }
