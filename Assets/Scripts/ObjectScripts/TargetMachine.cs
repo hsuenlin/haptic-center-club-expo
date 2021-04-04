@@ -75,6 +75,9 @@ public class TargetMachine : Singleton<TargetMachine>
 
     private GameObject targetDemo;
     private GameObject target;
+
+    private int handbookIdx = 0;
+    public GameObject[] targetSpawnRegions;
     //private TargetMachineState state = TargetMachineState.IDLE;
     protected override void OnAwake()
     {
@@ -187,7 +190,21 @@ public class TargetMachine : Singleton<TargetMachine>
         targetAttackImage.fillAmount = ((float)attack) / 5;
     }
 
+    private void SetTargetRandomPosition() {
+        targetDemos = targetDemoList.ToArray();
+        for(int i = handbookIdx; i < targetDemos.Length; ++i) {
+            int regionIdx = Random.Range(0, targetSpawnRegions.Length);
+            float dx = Random.Range(-1f, 1f);
+            float dz = Random.Range(-1f, 1f);
+            Vector3 pos = targetSpawnRegions[regionIdx].transform.position + new Vector3(dx, 0f, dz);
+            targetDemos[i].transform.LookAt(Camera.main.transform);
+            handbookIdx++;
+        }
+    }
+
     public void UpdateHandbook() {
+        SetTargetRandomPosition();
+        /*
         targetDemos = targetDemoList.ToArray();
         Vector3 upLeftCorner = new Vector3(2f, -0.5f, 0f);
         
@@ -205,6 +222,7 @@ public class TargetMachine : Singleton<TargetMachine>
                 = new Vector3(upLeftCorner.x - hSpacing * col, upLeftCorner.y - vSpacing * row, upLeftCorner.z);
             targetDemos[row * nCol + col].transform.localScale = new Vector3(scale, scale, scale);
         }
+        */
     }
 
     public void DestroyTargetDemos() {
